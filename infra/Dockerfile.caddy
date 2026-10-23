@@ -1,0 +1,23 @@
+# syntax=docker/dockerfile:1.7
+# Image ph-caddy: SPA đã build + Caddyfile (AD-004). Build từ gốc repo:
+#   docker build -f infra/Dockerfile.caddy -t ph-caddy:dev .
+
+ARG NODE_IMAGE=node:22-bookworm-slim
+# Ghim digest khi đưa lên staging/production (S2-06).
+ARG CADDY_IMAGE=caddy:2-alpine
+
+FROM ${NODE_IMAGE} AS web-build
+RUN corepack enable
+WORKDIR /repo
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json .npmrc* ./
+RUN pnpm fetch
+COPY . .
+RUN pnpm install --frozen-lockfile --offline && pnpm --filter @ph/web build
+
+FROM ${CADDY_IMAGE}
+COPY infra/Caddyfile /etc/caddy/Caddyfile
+COPY --from=web-build /repo/apps/web/dist /srv/www
+# Không chạy root: lắng nghe cổng 8080 (không bind được cổng < 1024 khi cap_drop ALL, S7-01).
+ENV XDG_DATA_HOME=/tmp/caddy-data XDG_CONFIG_HOME=/tmp/caddy-config
+USER 1000:1000
+EXPOSE 8080

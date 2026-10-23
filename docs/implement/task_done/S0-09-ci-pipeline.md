@@ -5,7 +5,7 @@
 | Task | [S0-09](../tasks/S0-09-ci-pipeline.md) |
 | Trạng thái | Xong (code), chưa chạy trên GitHub |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `d90326a` |
 
 ## Kết quả
 

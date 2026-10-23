@@ -10,6 +10,7 @@
     "dev:up": "docker compose -f infra/compose.dev.yml up -d --wait",
     "dev:down": "docker compose -f infra/compose.dev.yml down",
     "dev:reset": "psql -v ON_ERROR_STOP=1 -q -f infra/dev/db-reset.sql \"postgres://ph_owner:ph_owner_dev@localhost:5432/postgres\"",
+    "docker:full": "docker compose -f infra/compose.dev.yml --profile full up -d --build",
     "db:migrate": "pnpm --filter @ph/api migrate",
     "openapi:gen": "pnpm --filter @ph/api openapi:gen",
     "dev": "pnpm --parallel --filter @ph/api --filter @ph/web dev",

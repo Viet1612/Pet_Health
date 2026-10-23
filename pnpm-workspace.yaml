@@ -5,6 +5,7 @@ packages:
 # Chỉ cho phép script cài đặt của các package cần thiết (pnpm chặn mặc định)
 allowBuilds:
   esbuild: true
+  sharp: true
   cpu-features: false
   protobufjs: false
   ssh2: false

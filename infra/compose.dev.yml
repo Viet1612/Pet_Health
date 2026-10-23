@@ -1,6 +1,29 @@
 # Môi trường dev (S0-02). PostgreSQL 16 dùng bản cài sẵn của ServBay trên máy (127.0.0.1:5432),
-# tạo user/database bằng infra/dev/init-db.sql. Compose chỉ chạy Mailpit để nhận email thử.
+# tạo user/database bằng infra/dev/init-db.sql. Mặc định compose chỉ chạy Mailpit để nhận email thử.
+#
+# Profile `full` (S0-10): chạy api, worker, caddy từ image vừa build, gọi DB của ServBay qua
+# host.docker.internal. Lệnh: docker compose -f infra/compose.dev.yml --profile full up -d --build
+# Mở http://localhost:8080 (trình duyệt → Caddy → API → DB).
 name: ph-dev
+
+x-app: &app
+  build:
+    context: ..
+    dockerfile: infra/Dockerfile
+  image: ph-app:dev
+  env_file: ../apps/api/.env
+  environment:
+    NODE_ENV: development
+    DATABASE_URL: postgres://ph_owner:ph_owner_dev@host.docker.internal:5432/pethealth
+    WORKER_DATABASE_URL: postgres://ph_owner:ph_owner_dev@host.docker.internal:5432/pethealth
+    MIGRATION_DATABASE_URL: postgres://ph_owner:ph_owner_dev@host.docker.internal:5432/pethealth
+    SMTP_HOST: mailpit
+    HEARTBEAT_FILE: /tmp/alive
+    MEDIA_ROOT: /data/media
+  extra_hosts:
+    - 'host.docker.internal:host-gateway'
+  profiles: [full]
+
 services:
   mailpit:
     image: axllent/mailpit:v1.29
@@ -11,3 +34,41 @@ services:
       test: ['CMD', '/mailpit', 'readyz']
       interval: 5s
       retries: 10
+
+  migrate:
+    <<: *app
+    command: migrate
+    restart: 'no'
+    healthcheck:
+      disable: true
+
+  api:
+    <<: *app
+    command: api
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    stop_grace_period: 20s
+
+  worker:
+    <<: *app
+    command: worker
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    stop_grace_period: 20s
+    healthcheck:
+      test: ['CMD', '/app/docker-entrypoint.sh', 'healthcheck-worker']
+      interval: 30s
+      retries: 3
+      start_period: 30s
+
+  caddy:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.caddy
+    image: ph-caddy:dev
+    ports:
+      - '127.0.0.1:8080:8080'
+    depends_on: [api]
+    profiles: [full]
