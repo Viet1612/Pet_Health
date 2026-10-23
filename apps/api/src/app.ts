@@ -1,5 +1,5 @@
 import fastifyCookie from '@fastify/cookie';
-import Fastify, { type FastifyBaseLogger, type FastifyInstance } from 'fastify';
+import Fastify, { type FastifyBaseLogger, type FastifyInstance, type RouteOptions } from 'fastify';
 import type { Kysely } from 'kysely';
 import {
   serializerCompiler,
@@ -38,6 +38,8 @@ export interface AppDeps extends HealthDeps {
   logger?: FastifyBaseLogger;
   /** Đăng ký thêm route (mô-đun nghiệp vụ, hoặc route chỉ dùng trong test). */
   registerRoutes?: (api: FastifyInstance) => Promise<void> | void;
+  /** Nhận mọi route được đăng ký (bộ test IDOR S1-08 dùng để liệt kê route). */
+  onRoute?: (route: RouteOptions) => void;
 }
 
 const BODY_LIMIT_BYTES = 65_536;
@@ -55,6 +57,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     loggerInstance: deps.logger,
   }).withTypeProvider<ZodTypeProvider>();
 
+  if (deps.onRoute) app.addHook('onRoute', deps.onRoute);
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
   registerErrorHandling(app, deps.appOrigin);

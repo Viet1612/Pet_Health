@@ -5,7 +5,7 @@
 | Task | [S1-07](../tasks/S1-07-auth-ui.md) |
 | Trạng thái | Xong (code), chưa chạy thử trên trình duyệt |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `3d0ed02` |
 
 ## Kết quả
 
