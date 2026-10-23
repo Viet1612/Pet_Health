@@ -3,9 +3,9 @@
 | Thuộc tính | Giá trị |
 |---|---|
 | Task | [S0-01](../tasks/S0-01-monorepo.md) |
-| Trạng thái | Xong, chưa commit |
+| Trạng thái | Xong |
 | Ngày hoàn thành | 2026-10-23 |
-| Commit | — |
+| Commit | `845e00a` |
 
 ## Kết quả
 
