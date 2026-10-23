@@ -5,7 +5,7 @@
 | Task | [S0-03](../tasks/S0-03-backend-skeleton.md) |
 | Trạng thái | Xong |
 | Ngày hoàn thành | 2026-10-23 |
-| Commit | xem [README](README.md) |
+| Commit | `341fe67` |
 
 ## Kết quả
 
