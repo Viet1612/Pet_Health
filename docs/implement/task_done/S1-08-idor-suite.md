@@ -5,7 +5,7 @@
 | Task | [S1-08](../tasks/S1-08-idor-suite.md) |
 | Trạng thái | Xong (code), chưa chạy (cần Docker) |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `c61f4ad` |
 
 ## Kết quả
 

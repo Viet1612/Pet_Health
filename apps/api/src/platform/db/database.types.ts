@@ -22,6 +22,8 @@ export type Generated<T> =
     ? ColumnType<S, I | undefined, U>
     : ColumnType<T, T | undefined, T>;
 
+export type Numeric = ColumnType<string, number | string, number | string>;
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface AuthTokens {
@@ -42,6 +44,20 @@ export interface IdempotencyKeys {
   request_hash: Buffer;
   response_body: Json | null;
   status_code: number | null;
+}
+
+export interface Pets {
+  avatar_key: string | null;
+  birth_date: string;
+  breed: string;
+  created_at: Generated<Timestamp>;
+  description: string | null;
+  id: string;
+  name: string;
+  owner_id: string;
+  sex: string;
+  updated_at: Generated<Timestamp>;
+  weight_target_kg: Numeric | null;
 }
 
 export interface RateLimits {
@@ -78,6 +94,7 @@ export interface Users {
 export interface DB {
   auth_tokens: AuthTokens;
   idempotency_keys: IdempotencyKeys;
+  pets: Pets;
   rate_limits: RateLimits;
   sessions: Sessions;
   users: Users;

@@ -6,5 +6,6 @@
     "outDir": "dist",
     "sourceMap": true
   },
-  "include": ["src", "migrations"]
+  "include": ["src", "migrations"],
+  "exclude": ["src/**/__idor__/**"]
 }

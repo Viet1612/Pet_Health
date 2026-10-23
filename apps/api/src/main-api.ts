@@ -22,6 +22,7 @@ const moduleDeps: ModuleDeps = {
     trustCfConnectingIp: config.TRUST_CF_CONNECTING_IP,
     analyticsHmacKey: config.ANALYTICS_HMAC_KEY,
   },
+  pets: { clock: runtime.clock },
 };
 
 const app = await buildApp({

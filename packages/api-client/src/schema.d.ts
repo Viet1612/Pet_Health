@@ -452,6 +452,218 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/pets': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Danh sách thú cưng */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                breed: string;
+                /** @enum {string} */
+                sex: 'MALE' | 'FEMALE';
+                /** Format: date */
+                birthDate: string;
+                ageText: string;
+                description: string | null;
+                avatarUrl: string | null;
+                avatarThumbUrl: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Thêm thú cưng (tối đa 10) */
+    post: {
+      parameters: {
+        query?: never;
+        header?: {
+          'idempotency-key'?: string;
+        };
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            name?: string;
+            breed?: string;
+            /** @description MALE | FEMALE */
+            sex?: string;
+            /** @description YYYY-MM-DD, không sau hôm nay */
+            birthDate?: string;
+            description?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              name: string;
+              breed: string;
+              /** @enum {string} */
+              sex: 'MALE' | 'FEMALE';
+              /** Format: date */
+              birthDate: string;
+              ageText: string;
+              description: string | null;
+              avatarUrl: string | null;
+              avatarThumbUrl: string | null;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/pets/{petId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Hồ sơ thú cưng */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              name: string;
+              breed: string;
+              /** @enum {string} */
+              sex: 'MALE' | 'FEMALE';
+              /** Format: date */
+              birthDate: string;
+              ageText: string;
+              description: string | null;
+              avatarUrl: string | null;
+              avatarThumbUrl: string | null;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Sửa hồ sơ thú cưng */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            name?: string;
+            breed?: string;
+            /** @description MALE | FEMALE */
+            sex?: string;
+            /** @description YYYY-MM-DD, không sau hôm nay */
+            birthDate?: string;
+            description?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              name: string;
+              breed: string;
+              /** @enum {string} */
+              sex: 'MALE' | 'FEMALE';
+              /** Format: date */
+              birthDate: string;
+              ageText: string;
+              description: string | null;
+              avatarUrl: string | null;
+              avatarThumbUrl: string | null;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {

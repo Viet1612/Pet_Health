@@ -45,7 +45,7 @@ const PUBLIC_ALLOWLIST = new Set([
 ]);
 
 // Chỉ để liệt kê route khi thu thập ca test; handler không chạy nên deps để trống.
-const stubDeps = { identity: {} } as unknown as ModuleDeps;
+const stubDeps = { identity: {}, pets: {} } as unknown as ModuleDeps;
 
 async function collectRoutes(
   nodeEnv: 'test' | 'production',
@@ -101,7 +101,7 @@ beforeAll(async () => {
     db: env.appDb,
     sessionResolver: new CookieSessionResolver(env.appDb, clock),
     registerRoutes: async (api) => {
-      await registerModules(api, { identity });
+      await registerModules(api, { identity, pets: { clock } });
       await api.register(probeRoutes);
     },
   });
