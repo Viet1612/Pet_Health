@@ -11,7 +11,8 @@ export const READ_TIMEOUT_MS = 15_000;
 export interface ApiClientOptions {
   baseUrl?: string;
   getCsrfToken: () => string | undefined;
-  onUnauthorized?: (problem: Problem) => void;
+  /** Gọi khi API trả 401; nhận thêm method và đường dẫn để bỏ qua lời gọi kiểm phiên. */
+  onUnauthorized?: (problem: Problem, request: { method: string; path: string }) => void;
   fetch?: typeof fetch;
 }
 
@@ -46,7 +47,12 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
 
     if (!response.ok) {
       const problem = await readProblem(response);
-      if (problem.status === 401) options.onUnauthorized?.(problem);
+      if (problem.status === 401) {
+        options.onUnauthorized?.(problem, {
+          method: input.method.toUpperCase(),
+          path: new URL(input.url).pathname,
+        });
+      }
       throw new ApiError(problem);
     }
     return response;

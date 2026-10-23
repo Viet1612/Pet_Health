@@ -2,6 +2,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router';
 
 import { useRouteTitleAndFocus } from '../app/route-meta';
+import { useSessionExpiredRedirect } from '../features/session';
 import { vi } from '../i18n/vi';
 import { buttonClassName } from '../ui/Button';
 import { ErrorState } from '../ui/ErrorState';
@@ -12,6 +13,7 @@ export interface RouterContext {
 
 function RootLayout() {
   useRouteTitleAndFocus();
+  useSessionExpiredRedirect();
   return <Outlet />;
 }
 

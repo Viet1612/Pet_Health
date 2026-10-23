@@ -5,7 +5,7 @@
 | Task | [S1-06](../tasks/S1-06-password-reset-api.md) |
 | Trạng thái | Xong (code), chưa gọi thử |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) (chung commit với S1-05) |
+| Commit | `e5010da` |
 
 ## Kết quả
 

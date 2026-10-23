@@ -1,6 +1,8 @@
 import { useRouterState } from '@tanstack/react-router';
-import { Bell, Menu, Plus } from 'lucide-react';
+import { Bell, LogOut, Menu, Plus } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
+import { useLogoutAction } from '../../features/session';
 import { vi } from '../../i18n/vi';
 import { Button } from '../../ui/Button';
 import { IconButton } from '../../ui/IconButton';
@@ -8,6 +10,61 @@ import { IconButton } from '../../ui/IconButton';
 /** CMP-07: chuông (S0 chỉ hiển thị; số chưa xem ở S4-05). */
 function BellButton() {
   return <IconButton aria-label={vi.topBar.notifications} icon={<Bell size={24} />} />;
+}
+
+/** Menu phone: hiện mục Đăng xuất (các mục khác thêm ở task sau). */
+function PhoneMenu() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const logout = useLogoutAction();
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent | KeyboardEvent) => {
+      if (
+        e instanceof KeyboardEvent ? e.key === 'Escape' : !ref.current?.contains(e.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', close);
+    document.addEventListener('keydown', close);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      document.removeEventListener('keydown', close);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative md:hidden">
+      <IconButton
+        aria-label={vi.topBar.menu}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        icon={<Menu size={24} />}
+        onClick={() => {
+          setOpen((v) => !v);
+        }}
+      />
+      {open && (
+        <div
+          role="menu"
+          className="border-divider bg-surface absolute top-12 right-0 z-50 min-w-48 rounded-md border py-1 shadow-lg"
+        >
+          <button
+            type="button"
+            role="menuitem"
+            disabled={logout.isPending}
+            className="text-body hover:bg-surface-2 flex min-h-11 w-full items-center gap-3 px-4"
+            onClick={() => void logout.run()}
+          >
+            <LogOut size={20} aria-hidden />
+            {vi.auth.logout}
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -29,7 +86,7 @@ export function TopBar() {
       <Button variant="primary" icon={<Plus size={20} />} className="hidden md:inline-flex">
         Thêm
       </Button>
-      <IconButton aria-label={vi.topBar.menu} icon={<Menu size={24} />} className="md:hidden" />
+      <PhoneMenu />
     </header>
   );
 }

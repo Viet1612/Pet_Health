@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 16 / 51 task
+**Tiến độ:** 17 / 51 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -22,5 +22,6 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S1-02 | Worker email: React Email, SMTP, retry, hạn mức ngày | Xong (code), chưa gửi thử | 2026-10-24 | `11efaf3` | [S1-02](S1-02-email-worker.md) |
 | S1-03 | API đăng ký, Argon2id, phiên, cookie | Xong (code), chưa gọi thử | 2026-10-24 | `e6e28c3` | [S1-03](S1-03-register-api.md) |
 | S1-04 | Đăng nhập, đăng xuất, phiên, CSRF, khóa tạm | Xong (code), chưa gọi thử | 2026-10-24 | `cc36008` | [S1-04](S1-04-login-session-api.md) |
-| S1-05 | Xác minh email và gửi lại | Xong (code), chưa gọi thử | 2026-10-24 | — | [S1-05](S1-05-verify-email-api.md) |
-| S1-06 | Quên và đặt lại mật khẩu | Xong (code), chưa gọi thử | 2026-10-24 | — | [S1-06](S1-06-password-reset-api.md) |
+| S1-05 | Xác minh email và gửi lại | Xong (code), chưa gọi thử | 2026-10-24 | `e5010da` | [S1-05](S1-05-verify-email-api.md) |
+| S1-06 | Quên và đặt lại mật khẩu | Xong (code), chưa gọi thử | 2026-10-24 | `e5010da` | [S1-06](S1-06-password-reset-api.md) |
+| S1-07 | Giao diện đăng nhập, đăng ký, quên/đặt lại mật khẩu, xác minh email; route guard | Xong (code), chưa chạy thử trên trình duyệt | 2026-10-24 | — | [S1-07](S1-07-auth-ui.md) |

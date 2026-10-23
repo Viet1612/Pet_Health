@@ -18,15 +18,3 @@ export function AppShell() {
     </div>
   );
 }
-
-/** Khung trang tài khoản (đăng nhập, đăng ký…), không có điều hướng. */
-export function AuthLayout() {
-  return (
-    <main
-      id="main"
-      className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4 py-8"
-    >
-      <Outlet />
-    </main>
-  );
-}

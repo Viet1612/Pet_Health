@@ -1,7 +1,8 @@
 import { Link, useRouterState } from '@tanstack/react-router';
-import { CalendarDays, Heart, House, PawPrint, Settings } from 'lucide-react';
+import { CalendarDays, Heart, House, LogOut, PawPrint, Settings } from 'lucide-react';
 import type { ReactNode } from 'react';
 
+import { useLogoutAction } from '../../features/session';
 import { vi } from '../../i18n/vi';
 import { getSelectedPetId } from '../../lib/selected-pet';
 import { cx } from '../../ui/cx';
@@ -78,6 +79,23 @@ function NavLink({ item, path, rail }: { item: NavItem; path: string; rail: bool
   );
 }
 
+function RailLogout() {
+  const logout = useLogoutAction();
+  return (
+    <button
+      type="button"
+      disabled={logout.isPending}
+      onClick={() => void logout.run()}
+      className="text-caption text-text-muted flex min-h-11 w-full flex-col items-center justify-center gap-1 py-2"
+    >
+      <span aria-hidden className="inline-flex items-center justify-center rounded-full px-4 py-1">
+        <LogOut size={24} />
+      </span>
+      {vi.auth.logout}
+    </button>
+  );
+}
+
 /** CMP-08: BottomNav ở < 768 px, SideRail 88 px ở ≥ 768 px (UXD-004). */
 export function Navigation() {
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -116,6 +134,7 @@ export function Navigation() {
           path={path}
           rail
         />
+        <RailLogout />
       </nav>
     </>
   );
