@@ -5,7 +5,7 @@
 | Task | [S2-05](../tasks/S2-05-delete-pet.md) |
 | Trạng thái | Xong; API đã chạy thử trên server dev, hộp thoại chưa bấm thử |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `911ca12` |
 
 ## Kết quả
 
