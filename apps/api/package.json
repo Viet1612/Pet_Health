@@ -18,6 +18,7 @@
     "fastify": "^5.12.7",
     "fastify-type-provider-zod": "^7.0.0",
     "kysely": "^0.29.7",
+    "luxon": "^3.7.2",
     "pg": "^8.23.1",
     "pg-boss": "^12.38.0",
     "pino": "^10.4.0",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@testcontainers/postgresql": "^12.2.1",
+    "@types/luxon": "^3.7.6",
     "@types/pg": "^8.23.1",
     "kysely-codegen": "^0.20.0",
     "openapi-types": "^12.1.3",
