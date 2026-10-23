@@ -1,4 +1,5 @@
 import Fastify, { type FastifyBaseLogger, type FastifyInstance } from 'fastify';
+import type { Kysely } from 'kysely';
 import {
   serializerCompiler,
   validatorCompiler,
@@ -6,6 +7,7 @@ import {
 } from 'fastify-type-provider-zod';
 
 import { FakeClock, type ClockPort } from './platform/clock/clock.js';
+import type { Database } from './platform/db/kysely.js';
 import { testClockRoute } from './platform/clock/test-clock.route.js';
 import {
   NullSessionResolver,
@@ -17,6 +19,7 @@ import { healthRoutes, type HealthDeps } from './platform/http/health.routes.js'
 import { registerIdempotencyHook } from './platform/idempotency/idempotency.hook.js';
 import { API_PREFIX, registerOpenApi } from './platform/http/openapi.js';
 import { genReqId } from './platform/http/request-id.js';
+import { registerUserTx } from './platform/http/user-tx.js';
 import { installVietnameseZodMessages } from './platform/http/zod-messages.vi.js';
 import './platform/http/route-config.js';
 
@@ -24,6 +27,8 @@ export interface AppDeps extends HealthDeps {
   appOrigin: string;
   nodeEnv: 'development' | 'test' | 'production';
   clock?: ClockPort;
+  /** DB cho `request.withTx` (route có phiên). Không truyền khi chỉ sinh OpenAPI. */
+  db?: Kysely<Database>;
   sessionResolver?: SessionResolverPort;
   /** Logger pino (đã cấu hình redact). Không truyền thì tắt log. */
   logger?: FastifyBaseLogger;
@@ -84,6 +89,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     deps.sessionResolver ?? new NullSessionResolver(),
   );
   registerIdempotencyHook(app);
+  registerUserTx(app, deps.db);
   app.addHook('onReady', (done) => {
     app.log.info({ publicRoutes }, 'public routes');
     done();

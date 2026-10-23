@@ -5,7 +5,7 @@
 | Task | [S0-10](../tasks/S0-10-docker-images.md) |
 | Trạng thái | Xong (code), chưa build image |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `1e6818a` |
 
 ## Kết quả
 

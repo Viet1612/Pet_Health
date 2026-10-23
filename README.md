@@ -16,6 +16,11 @@ Yêu cầu: Node 22, Docker Desktop, PostgreSQL 16 chạy ở `127.0.0.1:5432` (
    psql -h 127.0.0.1 -p 5432 -U <superuser> -d postgres -f infra/dev/init-db.sql
    ```
    Lệnh này tạo role `ph_owner` (mật khẩu dev `ph_owner_dev`) và database `pethealth`.
+   Sau đó tạo role ứng dụng (cần superuser vì `app_worker` có `BYPASSRLS`):
+   ```sh
+   psql -h 127.0.0.1 -p 5432 -U <superuser> -d pethealth -f infra/dev/roles.sql
+   ```
+   `api` kết nối bằng `app_rw` (bị RLS chặn), `worker` bằng `app_worker`, migration bằng `ph_owner`.
 3. Sao chép `apps/api/.env.example` → `apps/api/.env` và `apps/web/.env.example` → `apps/web/.env`.
 4. Bật Mailpit (nhận email thử): `pnpm dev:up`. Giao diện Mailpit ở <http://localhost:8025>.
 5. Chạy migration và ứng dụng: `pnpm db:migrate`, rồi `pnpm dev`.

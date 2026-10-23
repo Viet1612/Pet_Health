@@ -17,7 +17,23 @@ export type JsonPrimitive = boolean | number | string | null;
 
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
 
+export type Generated<T> =
+  T extends ColumnType<infer S, infer I, infer U>
+    ? ColumnType<S, I | undefined, U>
+    : ColumnType<T, T | undefined, T>;
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
+
+export interface AuthTokens {
+  created_at: Generated<Timestamp>;
+  expires_at: Timestamp;
+  id: string;
+  kind: string;
+  payload: Json | null;
+  token_hash: Buffer;
+  used_at: Timestamp | null;
+  user_id: string;
+}
 
 export interface IdempotencyKeys {
   created_at: Timestamp;
@@ -34,7 +50,35 @@ export interface RateLimits {
   window_start: Timestamp;
 }
 
+export interface Sessions {
+  client_type: Generated<string>;
+  created_at: Generated<Timestamp>;
+  csrf_secret: Buffer | null;
+  expires_at: Timestamp;
+  id: string;
+  last_seen_at: Timestamp;
+  refresh_family: string | null;
+  token_hash: Buffer;
+  user_id: string;
+}
+
+export interface Users {
+  created_at: Generated<Timestamp>;
+  email: string;
+  email_verified_at: Timestamp | null;
+  failed_login_count: Generated<number>;
+  failed_login_window_start: Timestamp | null;
+  id: string;
+  locked_until: Timestamp | null;
+  notifications_synced_on: string | null;
+  password_hash: string;
+  timezone: Generated<string>;
+}
+
 export interface DB {
+  auth_tokens: AuthTokens;
   idempotency_keys: IdempotencyKeys;
   rate_limits: RateLimits;
+  sessions: Sessions;
+  users: Users;
 }
