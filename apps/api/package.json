@@ -1,0 +1,13 @@
+{
+  "name": "@ph/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@ph/email-templates": "workspace:*"
+  }
+}

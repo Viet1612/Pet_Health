@@ -1,0 +1,14 @@
+pnpm exec lint-staged
+
+# gitleaks: chặn commit lộ bí mật (SAD §4.1.6)
+GITLEAKS=$(command -v gitleaks || command -v gitleaks.exe || true)
+if [ -z "$GITLEAKS" ] && [ -n "$LOCALAPPDATA" ]; then
+  for f in "$LOCALAPPDATA"/Microsoft/WinGet/Packages/Gitleaks.Gitleaks_*/gitleaks.exe; do
+    [ -x "$f" ] && GITLEAKS="$f" && break
+  done
+fi
+if [ -z "$GITLEAKS" ]; then
+  echo "pre-commit: chưa cài gitleaks. Cài bằng 'winget install Gitleaks.Gitleaks' (Windows) rồi commit lại." >&2
+  exit 1
+fi
+"$GITLEAKS" git --pre-commit --staged --redact --no-banner --config .gitleaks.toml

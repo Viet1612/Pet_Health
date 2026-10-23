@@ -1,0 +1,8 @@
+title = "Pet Health gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Dev placeholder values in env templates"
+paths = ['''(^|/)[^/]*\.env\.example$''']
