@@ -23,6 +23,10 @@ const configSchema = z.object({
   SMTP_DAILY_LIMIT: z.coerce.number().int().positive().default(400),
   /** Khóa HMAC cho userIdHash (analytics, FR-ANL-002). */
   ANALYTICS_HMAC_KEY: z.string().min(16),
+
+  // Ảnh (S2-02): thư mục gốc lưu tệp và khóa ký URL /media (≥ 32 ký tự, openssl rand -base64 32).
+  MEDIA_ROOT: z.string().min(1).default('./.data/media'),
+  MEDIA_SIGNING_KEY: z.string().min(32),
 });
 
 export type Config = z.infer<typeof configSchema>;

@@ -78,6 +78,17 @@ export interface Sessions {
   user_id: string;
 }
 
+export interface Uploads {
+  created_at: Generated<Timestamp>;
+  fail_reason: string | null;
+  id: string;
+  incoming_key: string;
+  owner_id: string;
+  status: Generated<string>;
+  target_id: string;
+  target_kind: string;
+}
+
 export interface Users {
   created_at: Generated<Timestamp>;
   email: string;
@@ -97,5 +108,6 @@ export interface DB {
   pets: Pets;
   rate_limits: RateLimits;
   sessions: Sessions;
+  uploads: Uploads;
   users: Users;
 }

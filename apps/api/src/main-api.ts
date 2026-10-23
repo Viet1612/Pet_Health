@@ -3,8 +3,9 @@ import { createRuntime } from './composition-root.js';
 import { loadConfigOrExit } from './config.js';
 import { PasswordHasher } from './modules/identity/application/password-hasher.js';
 import { CookieSessionResolver } from './modules/identity/index.js';
-import { registerModules, type ModuleDeps } from './modules/index.js';
+import { registerModules, registerRootModuleRoutes, type ModuleDeps } from './modules/index.js';
 import { RateLimiter } from './platform/rate-limit/rate-limiter.js';
+import { LocalDiskStorage } from './platform/storage/local-disk-storage.js';
 
 const SHUTDOWN_TIMEOUT_MS = 15_000;
 
@@ -23,6 +24,13 @@ const moduleDeps: ModuleDeps = {
     analyticsHmacKey: config.ANALYTICS_HMAC_KEY,
   },
   pets: { clock: runtime.clock },
+  media: {
+    // Container api chỉ ghi được `incoming/` (mount ro cho phần còn lại).
+    storage: new LocalDiskStorage(config.MEDIA_ROOT),
+    jobQueue: runtime.jobQueue,
+    clock: runtime.clock,
+    signingKey: config.MEDIA_SIGNING_KEY,
+  },
 };
 
 const app = await buildApp({
@@ -35,6 +43,7 @@ const app = await buildApp({
   lifecycle,
   logger: runtime.logger,
   registerRoutes: (api) => registerModules(api, moduleDeps),
+  registerRootRoutes: (root) => registerRootModuleRoutes(root, moduleDeps),
 });
 
 await app.listen({ host: '0.0.0.0', port: config.PORT });

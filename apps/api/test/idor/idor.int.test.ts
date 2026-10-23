@@ -4,17 +4,26 @@
 // Route mới có path param → thêm `src/modules/<module>/adapters/http/__idor__/*.idor.ts` gọi
 // registerIdorParam (+ registerIdorBody cho POST/PUT/PATCH), hoặc exemptFromIdor có lý do.
 import type { FastifyInstance, InjectOptions } from 'fastify';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
 import { sql } from 'kysely';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { buildApp } from '../../src/app.js';
 import { PasswordHasher } from '../../src/modules/identity/application/password-hasher.js';
 import { CookieSessionResolver } from '../../src/modules/identity/index.js';
-import { registerModules, type ModuleDeps } from '../../src/modules/index.js';
+import {
+  registerModules,
+  registerRootModuleRoutes,
+  type ModuleDeps,
+} from '../../src/modules/index.js';
 import { FakeClock } from '../../src/platform/clock/clock.js';
 import { newId } from '../../src/platform/ids.js';
 import type { JobQueuePort } from '../../src/platform/queue/job-queue.port.js';
 import { RateLimiter } from '../../src/platform/rate-limit/rate-limiter.js';
+import { LocalDiskStorage } from '../../src/platform/storage/local-disk-storage.js';
 import { TEST_ORIGIN, testDeps } from '../helpers.js';
 import { authHeaders, createTwoAccounts, type Account } from './accounts.js';
 import { probeRoutes } from './probe.js';
@@ -40,12 +49,12 @@ const PUBLIC_ALLOWLIST = new Set([
   'POST /auth/password/reset',
   'GET /healthz',
   'GET /readyz',
-  'GET /media/:key',
+  'GET /media/*',
   'POST /__test/clock',
 ]);
 
 // Chỉ để liệt kê route khi thu thập ca test; handler không chạy nên deps để trống.
-const stubDeps = { identity: {}, pets: {} } as unknown as ModuleDeps;
+const stubDeps = { identity: {}, pets: {}, media: {} } as unknown as ModuleDeps;
 
 async function collectRoutes(
   nodeEnv: 'test' | 'production',
@@ -61,6 +70,7 @@ async function collectRoutes(
       await registerModules(api, stubDeps);
       if (withProbe) await api.register(probeRoutes);
     },
+    registerRootRoutes: (root) => registerRootModuleRoutes(root, stubDeps),
   });
   await app.ready();
   await app.close();
@@ -80,6 +90,7 @@ let env: IdorDb;
 let app: FastifyInstance;
 let a: Account;
 let b: Account;
+let mediaRoot: string;
 
 beforeAll(async () => {
   env = await startIdorDb();
@@ -94,6 +105,17 @@ beforeAll(async () => {
     trustCfConnectingIp: false,
     analyticsHmacKey: 'idor-test-analytics-hmac-key',
   };
+  mediaRoot = await mkdtemp(join(tmpdir(), 'ph-idor-media-'));
+  const deps: ModuleDeps = {
+    identity,
+    pets: { clock },
+    media: {
+      storage: new LocalDiskStorage(mediaRoot),
+      jobQueue: fakeJobQueue,
+      clock,
+      signingKey: 'idor-test-media-signing-key-0000000000',
+    },
+  };
   app = await buildApp({
     ...testDeps(),
     csrf: true,
@@ -101,9 +123,10 @@ beforeAll(async () => {
     db: env.appDb,
     sessionResolver: new CookieSessionResolver(env.appDb, clock),
     registerRoutes: async (api) => {
-      await registerModules(api, { identity, pets: { clock } });
+      await registerModules(api, deps);
       await api.register(probeRoutes);
     },
+    registerRootRoutes: (root) => registerRootModuleRoutes(root, deps),
   });
   await app.ready();
   ({ a, b } = await createTwoAccounts(app));
@@ -112,6 +135,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await app.close().catch(() => undefined);
   await env.close();
+  await rm(mediaRoot, { recursive: true, force: true });
 }, 60_000);
 
 function call(route: CatalogRoute, ids: Record<string, string>, account?: Account) {

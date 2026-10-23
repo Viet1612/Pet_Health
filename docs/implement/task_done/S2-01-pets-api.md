@@ -5,7 +5,7 @@
 | Task | [S2-01](../tasks/S2-01-pets-api.md) |
 | Trạng thái | Xong, đã gọi thử trên DB dev |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `c5ec824` |
 
 ## Kết quả
 

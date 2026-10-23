@@ -1,4 +1,5 @@
 import fastifyCookie from '@fastify/cookie';
+import fastifyMultipart from '@fastify/multipart';
 import Fastify, { type FastifyBaseLogger, type FastifyInstance, type RouteOptions } from 'fastify';
 import type { Kysely } from 'kysely';
 import {
@@ -20,6 +21,7 @@ import { registerErrorHandling } from './platform/http/error-handler.js';
 import { healthRoutes, type HealthDeps } from './platform/http/health.routes.js';
 import { registerIdempotencyHook } from './platform/idempotency/idempotency.hook.js';
 import { API_PREFIX, registerOpenApi } from './platform/http/openapi.js';
+import { MULTIPART_LIMITS } from './platform/http/multipart.js';
 import { genReqId } from './platform/http/request-id.js';
 import { registerUserTx } from './platform/http/user-tx.js';
 import { installVietnameseZodMessages } from './platform/http/zod-messages.vi.js';
@@ -38,6 +40,8 @@ export interface AppDeps extends HealthDeps {
   logger?: FastifyBaseLogger;
   /** Đăng ký thêm route (mô-đun nghiệp vụ, hoặc route chỉ dùng trong test). */
   registerRoutes?: (api: FastifyInstance) => Promise<void> | void;
+  /** Route ở gốc, ngoài `/api/v1` (ví dụ `GET /media/*`). */
+  registerRootRoutes?: (app: FastifyInstance) => Promise<void> | void;
   /** Nhận mọi route được đăng ký (bộ test IDOR S1-08 dùng để liệt kê route). */
   onRoute?: (route: RouteOptions) => void;
 }
@@ -62,6 +66,8 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
   app.setSerializerCompiler(serializerCompiler);
   registerErrorHandling(app, deps.appOrigin);
   await app.register(fastifyCookie);
+  // Ảnh tải lên (S2-02); chỉ route gọi `req.file()` mới đọc multipart.
+  await app.register(fastifyMultipart, { limits: MULTIPART_LIMITS });
 
   // Chỉ nhận JSON; multipart thêm ở S2-02. Content-type khác → 415.
   app.removeContentTypeParser('text/plain');
@@ -116,6 +122,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     },
     { prefix: API_PREFIX },
   );
+  await deps.registerRootRoutes?.(app);
 
   return app;
 }

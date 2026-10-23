@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 19 / 51 task
+**Tiến độ:** 20 / 51 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -26,4 +26,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S1-06 | Quên và đặt lại mật khẩu | Xong (code), chưa gọi thử | 2026-10-24 | `e5010da` | [S1-06](S1-06-password-reset-api.md) |
 | S1-07 | Giao diện đăng nhập, đăng ký, quên/đặt lại mật khẩu, xác minh email; route guard | Xong (code), chưa chạy thử trên trình duyệt | 2026-10-24 | `3d0ed02` | [S1-07](S1-07-auth-ui.md) |
 | S1-08 | Bộ test IDOR dùng chung: phủ route, deny-by-default, RLS | Xong (code), chưa chạy (cần Docker) | 2026-10-24 | `c61f4ad` | [S1-08](S1-08-idor-suite.md) |
-| S2-01 | Schema `pets`, API CRUD, giới hạn 10, tuổi | Xong, đã gọi thử trên DB dev | 2026-10-24 | — | [S2-01](S2-01-pets-api.md) |
+| S2-01 | Schema `pets`, API CRUD, giới hạn 10, tuổi | Xong, đã gọi thử trên DB dev | 2026-10-24 | `c5ec824` | [S2-01](S2-01-pets-api.md) |
+| S2-02 | Pipeline ảnh: tải lên, `media.process`, URL ký, `GET /media`, `purge-prefix` | Xong (code), chưa chạy với ảnh HEIC thật | 2026-10-24 | — | [S2-02](S2-02-media-pipeline.md) |

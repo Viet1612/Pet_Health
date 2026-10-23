@@ -664,6 +664,49 @@ export interface paths {
     };
     trace?: never;
   };
+  '/uploads/{uploadId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Trạng thái xử lý ảnh */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          uploadId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {string} */
+              status: 'PROCESSING' | 'READY' | 'FAILED';
+              /** @enum {string} */
+              reason?: 'UNSUPPORTED_FORMAT' | 'CORRUPT' | 'TOO_MANY_PIXELS' | 'PROCESSING_ERROR';
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {

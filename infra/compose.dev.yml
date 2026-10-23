@@ -45,6 +45,10 @@ services:
   api:
     <<: *app
     command: api
+    # Ảnh (S2-02): api chỉ ghi được incoming/, phần còn lại read-only.
+    volumes:
+      - ../apps/api/.data/media:/data/media:ro
+      - ../apps/api/.data/media/incoming:/data/media/incoming:rw
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -53,6 +57,8 @@ services:
   worker:
     <<: *app
     command: worker
+    volumes:
+      - ../apps/api/.data/media:/data/media:rw
     depends_on:
       migrate:
         condition: service_completed_successfully
