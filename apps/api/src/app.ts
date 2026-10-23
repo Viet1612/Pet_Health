@@ -15,6 +15,7 @@ import {
   registerAuthGuard,
   type SessionResolverPort,
 } from './platform/http/auth.js';
+import { registerCsrf } from './platform/http/csrf.js';
 import { registerErrorHandling } from './platform/http/error-handler.js';
 import { healthRoutes, type HealthDeps } from './platform/http/health.routes.js';
 import { registerIdempotencyHook } from './platform/idempotency/idempotency.hook.js';
@@ -31,6 +32,8 @@ export interface AppDeps extends HealthDeps {
   /** DB cho `request.withTx` (route có phiên). Không truyền khi chỉ sinh OpenAPI. */
   db?: Kysely<Database>;
   sessionResolver?: SessionResolverPort;
+  /** Kiểm Origin + X-CSRF-Token cho method ghi (mặc định bật). Chỉ tắt trong test không liên quan CSRF. */
+  csrf?: boolean;
   /** Logger pino (đã cấu hình redact). Không truyền thì tắt log. */
   logger?: FastifyBaseLogger;
   /** Đăng ký thêm route (mô-đun nghiệp vụ, hoặc route chỉ dùng trong test). */
@@ -90,6 +93,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     app,
     deps.sessionResolver ?? new NullSessionResolver(),
   );
+  if (deps.csrf !== false) registerCsrf(app, deps.appOrigin);
   registerIdempotencyHook(app);
   registerUserTx(app, deps.db);
   app.addHook('onReady', (done) => {

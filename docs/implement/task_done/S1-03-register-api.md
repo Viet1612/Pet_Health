@@ -5,7 +5,7 @@
 | Task | [S1-03](../tasks/S1-03-register-api.md) |
 | Trạng thái | Xong (code), chưa gọi thử |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `e6e28c3` |
 
 ## Kết quả
 

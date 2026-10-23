@@ -207,7 +207,7 @@ describe('deny-by-default', () => {
 
   it('resolver trả phiên thì route riêng tư chạy và có request.auth', async () => {
     const resolver: SessionResolverPort = {
-      resolve: () => Promise.resolve({ userId: 'u1', sessionId: 's1' }),
+      resolve: () => Promise.resolve({ userId: 'u1', sessionId: 's1', csrfSecret: null }),
     };
     const a = await makeApp({ sessionResolver: resolver });
     expect((await a.inject({ method: 'GET', url: '/api/v1/__private' })).statusCode).toBe(200);

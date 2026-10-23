@@ -12,6 +12,8 @@ export function testDeps(overrides: Partial<AppDeps> = {}): AppDeps {
   return {
     appOrigin: TEST_ORIGIN,
     nodeEnv: 'test',
+    // Test của S0 không gửi Origin/X-CSRF-Token; CSRF được kiểm ở test của S1.
+    csrf: false,
     checkDb: () => Promise.resolve(),
     lifecycle: { shuttingDown: false },
     ...overrides,

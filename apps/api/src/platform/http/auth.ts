@@ -1,15 +1,19 @@
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { UnauthenticatedError } from '../errors/app-error.js';
 
 export interface AuthContext {
   userId: string;
   sessionId: string;
+  /** Bí mật CSRF của phiên web; header X-CSRF-Token phải bằng base64url của giá trị này. */
+  csrfSecret: Buffer | null;
 }
 
-/** Tìm phiên từ request. Bản thật đọc cookie/bearer ở S1-04. */
+/**
+ * Tìm phiên từ request (S1-04: cookie `__Host-ph_sid`). Nhận `reply` để gia hạn hoặc xóa cookie.
+ */
 export interface SessionResolverPort {
-  resolve(request: FastifyRequest): Promise<AuthContext | null>;
+  resolve(request: FastifyRequest, reply: FastifyReply): Promise<AuthContext | null>;
 }
 
 /** Bản S0: chưa có phiên nào, mọi route không public đều trả 401. */
@@ -38,10 +42,10 @@ export function registerAuthGuard(
     }
   });
 
-  app.addHook('preHandler', async (request) => {
+  app.addHook('preHandler', async (request, reply) => {
     // Đường dẫn không tồn tại: để not-found handler trả 404.
     if (request.is404 || request.routeOptions.config.public === true) return;
-    const auth = await resolver.resolve(request);
+    const auth = await resolver.resolve(request, reply);
     if (!auth) throw new UnauthenticatedError();
     request.auth = auth;
   });

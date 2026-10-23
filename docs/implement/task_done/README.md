@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 13 / 51 task
+**Tiến độ:** 14 / 51 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -20,4 +20,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S0-10 | Dockerfile ph-app (libvips + libheif), ph-caddy, Caddyfile, profile `full` | Xong (code), chưa build image | 2026-10-24 | `1e6818a` | [S0-10](S0-10-docker-images.md) |
 | S1-01 | Schema users/sessions/auth_tokens, role CSDL, RLS helper, withTx | Xong (code), chưa chạy migration | 2026-10-24 | `731f0af` | [S1-01](S1-01-identity-schema-rls.md) |
 | S1-02 | Worker email: React Email, SMTP, retry, hạn mức ngày | Xong (code), chưa gửi thử | 2026-10-24 | `11efaf3` | [S1-02](S1-02-email-worker.md) |
-| S1-03 | API đăng ký, Argon2id, phiên, cookie | Xong (code), chưa gọi thử | 2026-10-24 | — | [S1-03](S1-03-register-api.md) |
+| S1-03 | API đăng ký, Argon2id, phiên, cookie | Xong (code), chưa gọi thử | 2026-10-24 | `e6e28c3` | [S1-03](S1-03-register-api.md) |
+| S1-04 | Đăng nhập, đăng xuất, phiên, CSRF, khóa tạm | Xong (code), chưa gọi thử | 2026-10-24 | — | [S1-04](S1-04-login-session-api.md) |

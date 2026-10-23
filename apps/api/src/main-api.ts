@@ -2,6 +2,7 @@ import { buildApp } from './app.js';
 import { createRuntime } from './composition-root.js';
 import { loadConfigOrExit } from './config.js';
 import { PasswordHasher } from './modules/identity/application/password-hasher.js';
+import { CookieSessionResolver } from './modules/identity/index.js';
 import { registerModules, type ModuleDeps } from './modules/index.js';
 import { RateLimiter } from './platform/rate-limit/rate-limiter.js';
 
@@ -28,6 +29,7 @@ const app = await buildApp({
   nodeEnv: config.NODE_ENV,
   clock: runtime.clock,
   db: runtime.db,
+  sessionResolver: new CookieSessionResolver(runtime.db, runtime.clock),
   checkDb: runtime.checkDb,
   lifecycle,
   logger: runtime.logger,
