@@ -8,6 +8,7 @@ import type { IdentityDeps } from './identity-deps.js';
 
 export type { IdentityDeps } from './identity-deps.js';
 export { CookieSessionResolver } from './adapters/http/session-resolver.js';
+export { configureSessionCookie } from './adapters/http/cookies.js';
 
 /** Route của mô-đun identity dưới `/api/v1`. */
 export async function registerIdentityRoutes(

@@ -11,6 +11,8 @@ export default defineConfig({
   plugins: [tanstackRouter({ target: 'react', autoCodeSplitting: true }), react(), tailwindcss()],
   server: {
     port: 5173,
+    // Nghe mọi địa chỉ để mở được bằng IP LAN (API cần EXTRA_ORIGINS, xem apps/api/.env.example).
+    host: true,
     proxy: {
       '/api': { target: apiTarget, changeOrigin: false },
       '/media': { target: apiTarget, changeOrigin: false },

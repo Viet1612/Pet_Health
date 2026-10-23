@@ -29,6 +29,8 @@ import './platform/http/route-config.js';
 
 export interface AppDeps extends HealthDeps {
   appOrigin: string;
+  /** Origin thêm cho CSRF (máy dev mở bằng IP LAN). */
+  extraOrigins?: readonly string[];
   nodeEnv: 'development' | 'test' | 'production';
   clock?: ClockPort;
   /** DB cho `request.withTx` (route có phiên). Không truyền khi chỉ sinh OpenAPI. */
@@ -102,7 +104,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     app,
     deps.sessionResolver ?? new NullSessionResolver(),
   );
-  if (deps.csrf !== false) registerCsrf(app, deps.appOrigin);
+  if (deps.csrf !== false) registerCsrf(app, [deps.appOrigin, ...(deps.extraOrigins ?? [])]);
   registerIdempotencyHook(app);
   registerUserTx(app, deps.db);
   app.addHook('onReady', (done) => {

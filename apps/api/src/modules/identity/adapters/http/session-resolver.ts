@@ -7,7 +7,7 @@ import type { AuthContext, SessionResolverPort } from '../../../../platform/http
 import { SESSION_TOUCH_INTERVAL_MS, SESSION_TTL_MS } from '../../application/session-service.js';
 import { tokenService } from '../../application/token-service.js';
 import { sessionRepository } from '../persistence/session-repository.js';
-import { clearSessionCookie, SESSION_COOKIE, setSessionCookie } from './cookies.js';
+import { clearSessionCookie, sessionCookieName, setSessionCookie } from './cookies.js';
 
 /**
  * Đọc phiên từ cookie `__Host-ph_sid` (FR-AUTH-012, SD-003): phiên hết hạn → xóa cookie; quá 5 phút
@@ -20,7 +20,7 @@ export class CookieSessionResolver implements SessionResolverPort {
   ) {}
 
   async resolve(request: FastifyRequest, reply: FastifyReply): Promise<AuthContext | null> {
-    const token = request.cookies[SESSION_COOKIE];
+    const token = request.cookies[sessionCookieName()];
     if (!token) return null;
 
     const now = this.clock.now();

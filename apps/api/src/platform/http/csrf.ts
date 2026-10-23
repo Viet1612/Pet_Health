@@ -17,18 +17,19 @@ function safeEqual(a: string, b: string): boolean {
 
 /**
  * Chống CSRF cho method ghi (NFR-SEC-002, SAD §4.1.1):
- * - Header `Origin` phải bằng `APP_ORIGIN`, kể cả route `public` (đăng nhập, đăng ký…).
+ * - Header `Origin` phải là `APP_ORIGIN` (hoặc `EXTRA_ORIGINS` ở máy dev), kể cả route `public`.
  * - Route có phiên: `X-CSRF-Token` phải bằng token của phiên (synchronizer token).
  * Đăng ký sau auth guard để request chưa đăng nhập nhận 401 trước.
  */
-export function registerCsrf(app: FastifyInstance, appOrigin: string): void {
+export function registerCsrf(app: FastifyInstance, allowedOrigins: readonly string[]): void {
+  const allowed = new Set(allowedOrigins);
   app.addHook('preHandler', (request, _reply, done) => {
     if (request.is404 || !WRITE_METHODS.has(request.method)) {
       done();
       return;
     }
 
-    if (request.headers.origin !== appOrigin) {
+    if (!request.headers.origin || !allowed.has(request.headers.origin)) {
       done(csrfInvalid());
       return;
     }

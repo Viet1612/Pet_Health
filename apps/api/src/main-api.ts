@@ -2,7 +2,7 @@ import { buildApp } from './app.js';
 import { createRuntime } from './composition-root.js';
 import { loadConfigOrExit } from './config.js';
 import { PasswordHasher } from './modules/identity/application/password-hasher.js';
-import { CookieSessionResolver } from './modules/identity/index.js';
+import { configureSessionCookie, CookieSessionResolver } from './modules/identity/index.js';
 import { registerModules, registerRootModuleRoutes, type ModuleDeps } from './modules/index.js';
 import { RateLimiter } from './platform/rate-limit/rate-limiter.js';
 import { LocalDiskStorage } from './platform/storage/local-disk-storage.js';
@@ -11,6 +11,7 @@ const SHUTDOWN_TIMEOUT_MS = 15_000;
 
 const config = loadConfigOrExit();
 const runtime = await createRuntime(config, 'api');
+configureSessionCookie({ secure: config.SESSION_COOKIE_SECURE });
 const lifecycle = { shuttingDown: false };
 
 const moduleDeps: ModuleDeps = {
@@ -35,6 +36,7 @@ const moduleDeps: ModuleDeps = {
 
 const app = await buildApp({
   appOrigin: config.APP_ORIGIN,
+  extraOrigins: config.EXTRA_ORIGINS,
   nodeEnv: config.NODE_ENV,
   clock: runtime.clock,
   db: runtime.db,
