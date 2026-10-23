@@ -98,6 +98,8 @@ describe('createPet theo múi giờ tài khoản', () => {
           updated_at: p.now,
         } satisfies PetRow),
       update: () => Promise.resolve(undefined),
+      lockAvatarKey: () => Promise.resolve(undefined),
+      setAvatarKey: () => Promise.resolve(undefined),
     };
     return { clock, pets };
   }

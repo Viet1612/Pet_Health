@@ -70,6 +70,36 @@ export const kyselyPetRepository: PetRepository = {
       .executeTakeFirstOrThrow();
   },
 
+  async lockAvatarKey(trx, ownerId, id) {
+    const row = await trx
+      .selectFrom('pets')
+      .select('avatar_key')
+      .where('id', '=', id)
+      .where('owner_id', '=', ownerId)
+      .forUpdate()
+      .executeTakeFirst();
+    return row && { avatarKey: row.avatar_key };
+  },
+
+  async setAvatarKey(trx, ownerId, id, key, now) {
+    // Khóa dòng, đọc khóa cũ rồi ghi khóa mới.
+    const old = await trx
+      .selectFrom('pets')
+      .select('avatar_key')
+      .where('id', '=', id)
+      .where('owner_id', '=', ownerId)
+      .forUpdate()
+      .executeTakeFirst();
+    if (!old) return undefined;
+    await trx
+      .updateTable('pets')
+      .set({ avatar_key: key, updated_at: now })
+      .where('id', '=', id)
+      .where('owner_id', '=', ownerId)
+      .execute();
+    return { oldKey: old.avatar_key };
+  },
+
   update(trx, ownerId, id, patch, now) {
     return trx
       .updateTable('pets')

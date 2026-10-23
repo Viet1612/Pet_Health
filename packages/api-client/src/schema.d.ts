@@ -664,6 +664,72 @@ export interface paths {
     };
     trace?: never;
   };
+  '/pets/{petId}/avatar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Đặt / thay ảnh đại diện (multipart, field `file`, ≤ 5 MB)
+     * @description Không cần Idempotency-Key (PUT thay thế). Ảnh xử lý nền; hỏi trạng thái ở GET /uploads/{uploadId}.
+     */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        202: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              uploadId: string;
+              /** @enum {string} */
+              status: 'PROCESSING';
+            };
+          };
+        };
+      };
+    };
+    post?: never;
+    /** Gỡ ảnh đại diện */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/uploads/{uploadId}': {
     parameters: {
       query?: never;

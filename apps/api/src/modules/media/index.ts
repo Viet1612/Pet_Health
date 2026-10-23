@@ -14,6 +14,7 @@ import type { TargetKind } from './application/ports.js';
 import { enqueuePurgePrefix } from './application/purge-prefix.js';
 import { signMediaUrl } from './domain/signed-url.js';
 
+export { TargetGoneError } from './application/ports.js';
 export type {
   FailReason,
   MediaProcessJob,

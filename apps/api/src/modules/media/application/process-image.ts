@@ -5,7 +5,12 @@ import sharp from 'sharp';
 import type { Database } from '../../../platform/db/kysely.js';
 import type { ObjectStoragePort } from '../../../platform/storage/object-storage.port.js';
 import { thumbKeyOf } from '../domain/media-key.js';
-import type { FailReason, TargetResolvers, UploadRepository } from './ports.js';
+import {
+  TargetGoneError,
+  type FailReason,
+  type TargetResolvers,
+  type UploadRepository,
+} from './ports.js';
 
 export const MAX_INPUT_PIXELS = 50_000_000;
 const MAIN_EDGE = 2048;
@@ -98,11 +103,25 @@ export async function processImage(
 
     await deps.storage.put(finalKey, output.main);
     await deps.storage.put(thumbKeyOf(finalKey), output.thumb);
-    await deps.db.transaction().execute(async (trx) => {
-      await deps.uploads.markReady(trx, upload.id);
-      await resolver.onReady(trx, upload, finalKey);
-    });
+    let staleKeys: string[];
+    try {
+      staleKeys = await deps.db.transaction().execute(async (trx) => {
+        await deps.uploads.markReady(trx, upload.id);
+        return resolver.onReady(trx, upload, finalKey);
+      });
+    } catch (error) {
+      if (!(error instanceof TargetGoneError)) throw error;
+      await deps.storage.delete(finalKey);
+      await deps.storage.delete(thumbKeyOf(finalKey));
+      await fail('PROCESSING_ERROR');
+      return;
+    }
     await deps.storage.delete(upload.incomingKey);
+    // Ảnh cũ (ảnh đại diện bị thay): xóa sau commit, kèm thumbnail.
+    for (const key of staleKeys) {
+      await deps.storage.delete(key);
+      await deps.storage.delete(thumbKeyOf(key));
+    }
   } catch (error) {
     if (!isLastAttempt) throw error;
     deps.logger.error({ err: error, uploadId }, 'media.process lần thử cuối thất bại');

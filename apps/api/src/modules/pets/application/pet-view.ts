@@ -3,6 +3,7 @@ import type { LocalDate } from '../../../platform/calendar/local-date.js';
 import type { PetSex } from '../domain/pet.js';
 import type { PetRow } from './ports.js';
 
+/** Thú cưng sau use case; URL ảnh được ký ở presenter (adapters/http/pet-presenter.ts). */
 export interface PetView {
   id: string;
   name: string;
@@ -12,8 +13,7 @@ export interface PetView {
   /** Tuổi tính ở server theo múi giờ tài khoản (US-011). */
   ageText: string;
   description: string | null;
-  avatarUrl: string | null;
-  avatarThumbUrl: string | null;
+  avatarKey: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -29,9 +29,7 @@ export function toPetView(row: PetRow, today: LocalDate): PetView {
     // Người dùng đổi sang múi giờ "chậm" hơn có thể khiến ngày sinh thành ngày mai: coi như 0 tháng.
     ageText: formatAge(ageInMonths(birth <= today ? birth : today, today)),
     description: row.description,
-    // Ảnh đại diện thêm ở S2-03.
-    avatarUrl: null,
-    avatarThumbUrl: null,
+    avatarKey: row.avatar_key,
     createdAt: row.created_at.toISOString(),
     updatedAt: row.updated_at.toISOString(),
   };

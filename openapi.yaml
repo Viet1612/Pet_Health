@@ -660,6 +660,52 @@ paths:
                   - createdAt
                   - updatedAt
                 additionalProperties: false
+  /pets/{petId}/avatar:
+    put:
+      summary: Đặt / thay ảnh đại diện (multipart, field `file`, ≤ 5 MB)
+      tags:
+        - pets
+      description: Không cần Idempotency-Key (PUT thay thế). Ảnh xử lý nền; hỏi trạng
+        thái ở GET /uploads/{uploadId}.
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: petId
+          required: true
+      responses:
+        "202":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uploadId:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                      - PROCESSING
+                required:
+                  - uploadId
+                  - status
+                additionalProperties: false
+    delete:
+      summary: Gỡ ảnh đại diện
+      tags:
+        - pets
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: petId
+          required: true
+      responses:
+        "204":
+          description: Default Response
   /uploads/{uploadId}:
     get:
       summary: Trạng thái xử lý ảnh

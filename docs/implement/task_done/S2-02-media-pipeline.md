@@ -5,7 +5,7 @@
 | Task | [S2-02](../tasks/S2-02-media-pipeline.md) |
 | Trạng thái | Xong (code), chưa chạy với ảnh HEIC thật |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `7e4e10d` |
 
 ## Kết quả
 

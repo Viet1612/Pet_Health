@@ -7,7 +7,8 @@ import {
   type MediaDeps,
   type TargetResolvers,
 } from './media/index.js';
-import { registerPetsRoutes, type PetsDeps } from './pets/index.js';
+import { petAvatarTargetResolver, registerPetsRoutes, type PetsDeps } from './pets/index.js';
+import type { ClockPort } from '../platform/clock/clock.js';
 
 export interface ModuleDeps {
   identity: IdentityDeps;
@@ -18,13 +19,13 @@ export interface ModuleDeps {
 /** Đăng ký route của mọi mô-đun nghiệp vụ. Dùng chung cho main-api và sinh OpenAPI. */
 export async function registerModules(api: FastifyInstance, deps: ModuleDeps): Promise<void> {
   await registerIdentityRoutes(api, deps.identity);
-  await registerPetsRoutes(api, deps.pets);
+  await registerPetsRoutes(api, deps.pets, deps.media);
   await registerMediaApiRoutes(api);
 }
 
 /** Nơi lưu và gắn ảnh theo loại mục tiêu; mô-đun sở hữu mục tiêu thêm vào (AVATAR ở S2-03). */
-export function mediaTargetResolvers(): TargetResolvers {
-  return {};
+export function mediaTargetResolvers(clock: ClockPort): TargetResolvers {
+  return { AVATAR: petAvatarTargetResolver(clock) };
 }
 
 /** Route ở gốc (ngoài `/api/v1`) của các mô-đun. */

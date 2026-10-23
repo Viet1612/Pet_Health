@@ -46,7 +46,7 @@ const processImageHandler = createMediaProcessHandler({
   db: runtime.db,
   storage,
   uploads: kyselyUploadRepository,
-  resolvers: mediaTargetResolvers(),
+  resolvers: mediaTargetResolvers(runtime.clock),
   logger: runtime.logger,
 });
 await runtime.boss.work(

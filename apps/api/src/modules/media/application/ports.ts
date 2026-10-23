@@ -38,9 +38,20 @@ export interface UploadRepository {
 export interface TargetResolver {
   /** Khóa đích `u/{owner}/p/{pet}/…/{id}.jpg`; `null` nếu mục tiêu không còn. */
   finalKey(q: Q, upload: UploadRecord): Promise<string | null>;
-  /** Gắn ảnh vào mục tiêu; chạy cùng transaction với `uploads.status = READY`. */
-  onReady(trx: Transaction<Database>, upload: UploadRecord, key: string): Promise<void>;
+  /**
+   * Gắn ảnh vào mục tiêu; chạy cùng transaction với `uploads.status = READY`. Trả các khóa ảnh cũ
+   * cần xóa sau commit. Mục tiêu vừa bị xóa → ném `TargetGoneError`.
+   */
+  onReady(trx: Transaction<Database>, upload: UploadRecord, key: string): Promise<string[]>;
   onFailed?(q: Q, upload: UploadRecord, reason: FailReason): Promise<void>;
+}
+
+/** Mục tiêu (thú cưng, lần khám) không còn khi ảnh xử lý xong. */
+export class TargetGoneError extends Error {
+  constructor() {
+    super('Mục tiêu của ảnh không còn');
+    this.name = 'TargetGoneError';
+  }
 }
 
 export type TargetResolvers = Partial<Record<TargetKind, TargetResolver>>;
