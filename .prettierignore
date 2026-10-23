@@ -5,3 +5,4 @@ pnpm-lock.yaml
 docs/
 *.drawio
 openapi.yaml
+apps/web/src/routeTree.gen.ts

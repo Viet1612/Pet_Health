@@ -1,0 +1,48 @@
+import type { QueryClient } from '@tanstack/react-query';
+import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router';
+
+import { useRouteTitleAndFocus } from '../app/route-meta';
+import { vi } from '../i18n/vi';
+import { buttonClassName } from '../ui/Button';
+import { ErrorState } from '../ui/ErrorState';
+
+export interface RouterContext {
+  queryClient: QueryClient;
+}
+
+function RootLayout() {
+  useRouteTitleAndFocus();
+  return <Outlet />;
+}
+
+function NotFound() {
+  return (
+    <main id="main" className="mx-auto max-w-2xl px-4">
+      <ErrorState
+        kind="not-found"
+        action={
+          <Link to="/" className={buttonClassName()}>
+            {vi.error.backHome}
+          </Link>
+        }
+      />
+    </main>
+  );
+}
+
+function RootError({ error, reset }: { error: unknown; reset: () => void }) {
+  const refCode =
+    typeof error === 'object' && error !== null && 'ref' in error ? String(error.ref) : undefined;
+  return (
+    <main id="main" className="mx-auto max-w-2xl px-4">
+      <ErrorState kind="server" refCode={refCode} onRetry={reset} />
+    </main>
+  );
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
+  component: RootLayout,
+  notFoundComponent: NotFound,
+  errorComponent: RootError,
+  staticData: { title: vi.appName },
+});

@@ -21,6 +21,8 @@ export default tseslint.config(
       'infra/',
       // Sinh tự động bằng kysely-codegen
       'apps/api/src/platform/db/database.types.ts',
+      // Sinh tự động bằng TanStack Router plugin
+      'apps/web/src/routeTree.gen.ts',
     ],
   },
 

@@ -5,7 +5,7 @@
 | Task | [S0-06](../tasks/S0-06-calendar-domain.md) |
 | Trạng thái | Xong |
 | Ngày hoàn thành | 2026-10-23 |
-| Commit | xem [README](README.md) |
+| Commit | `35b1779` |
 
 ## Kết quả
 

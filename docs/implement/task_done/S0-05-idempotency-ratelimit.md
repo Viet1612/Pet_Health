@@ -5,7 +5,7 @@
 | Task | [S0-05](../tasks/S0-05-idempotency-ratelimit.md) |
 | Trạng thái | Xong (code), chưa kiểm thử tích hợp |
 | Ngày hoàn thành | 2026-10-23 |
-| Commit | xem [README](README.md) |
+| Commit | `28c1343` |
 
 ## Kết quả
 
