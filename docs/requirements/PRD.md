@@ -3,10 +3,10 @@
 | Trường | Giá trị |
 |---|---|
 | Mã tài liệu | PH-PRD-001 |
-| Phiên bản | **1.2 (Baselined)**. v0.2: thêm lộ trình app (§1.3). v1.0: Việt duyệt PD-001→008, GAP-001→004, ưu tiên và OKR (BRD DEC-012→DEC-015). v1.1: bỏ email nhắc, chuyển nhắc nhở vào web app (banner + mục Thông báo), bỏ launch gate giám sát (BRD DEC-016→DEC-018). v1.2: duyệt PD-009, bỏ gate sao lưu G-13 (BRD DEC-019, DEC-020) |
+| Phiên bản | **1.3 (Baselined)**. v0.2: thêm lộ trình app (§1.3). v1.0: Việt duyệt PD-001→008, GAP-001→004, ưu tiên và OKR (BRD DEC-012→DEC-015). v1.1: bỏ email nhắc, chuyển nhắc nhở vào web app (banner + mục Thông báo), bỏ launch gate giám sát (BRD DEC-016→DEC-018). v1.2: duyệt PD-009, bỏ gate sao lưu G-13 (BRD DEC-019, DEC-020). v1.3: thêm US-008 đổi email tài khoản (BRD DEC-022) |
 | Ngày | 2026-10-22 |
 | Product Owner / Người phê duyệt | Việt |
-| Tài liệu nguồn | [BRD.md](BRD.md) v1.2 (PH-BRD-001) |
+| Tài liệu nguồn | [BRD.md](BRD.md) v1.3 (PH-BRD-001) |
 | Chuẩn áp dụng | IEEE 29148-2018 (truy vết BR → User Story → AC) |
 | Prompt nguồn | `docs/requirements/PRD_Prompt_IEEE_standard.md` |
 
@@ -190,7 +190,7 @@ journey
 
 | Epic | Tên | BR nguồn (BRD) | Số story | P0 | P1 | P2 |
 |---|---|---|---|---|---|---|
-| E1 | Tài khoản và truy cập | BR-025→BR-028, BR-035→BR-038 | 7 | 4 | 2 | 1 |
+| E1 | Tài khoản và truy cập | BR-025→BR-028, BR-035→BR-038, BR-044 | 8 | 4 | 3 | 1 |
 | E2 | Hồ sơ thú cưng | BR-001→BR-005, BR-029 | 6 | 3 | 3 | 0 |
 | E3 | Theo dõi cân nặng | BR-006→BR-010 | 4 | 3 | 1 | 0 |
 | E4 | Sổ y tế điện tử | BR-011→BR-014, BR-030, BR-031 | 5 | 3 | 2 | 0 |
@@ -213,6 +213,7 @@ journey
 | US-005 | Là chủ nuôi, tôi muốn xóa vĩnh viễn tài khoản và toàn bộ dữ liệu của mình, để kiểm soát dữ liệu cá nhân. | P2 | BR-038 |
 | US-006 | Là chủ nuôi, tôi muốn chắc chắn không ai khác xem hoặc sửa được dữ liệu thú cưng của tôi. | P0 | BR-026 |
 | US-007 | Là chủ nuôi, tôi muốn dữ liệu vừa lưu trên điện thoại hiện ra khi tôi mở máy tính bảng. | P0 | BR-027 |
+| US-008 | Là chủ nuôi, tôi muốn đổi địa chỉ email của tài khoản, để sửa email gõ sai hoặc chuyển sang hộp thư mới mà vẫn lấy lại được mật khẩu. | P1 | BR-044 |
 
 **AC — US-001 (Đăng ký)**
 - **Given** khách chưa có tài khoản ở trang đăng ký, **When** nhập email hợp lệ chưa dùng và mật khẩu ≥ 8 ký tự rồi bấm "Đăng ký", **Then** tài khoản được tạo ở trạng thái *chưa xác minh* và hệ thống gửi email xác minh trong vòng 1 phút.
@@ -237,6 +238,8 @@ journey
 **AC — US-007 (Nhất quán đa thiết bị)** ↔ BRD AC-027
 - **Given** người dùng đã đăng nhập trên điện thoại và máy tính bảng, **When** lưu một số đo trên điện thoại và nhận thông báo "Đã lưu", rồi tải lại màn hình cân nặng trên máy tính bảng, **Then** số đo hiển thị trên máy tính bảng.
 
+
+**Ghi chú P1 — US-008:** mở từ Cài đặt tài khoản; nhập email mới + mật khẩu hiện tại; email mới nhận liên kết xác minh (60 phút, dùng 1 lần) và chỉ có hiệu lực sau khi xác minh; email cũ nhận thư thông báo "Email tài khoản vừa được đổi". Kiểm chứng bằng BRD AC-044.
 ---
 
 ### E2 — Hồ sơ thú cưng
@@ -662,13 +665,14 @@ Do là P1, E6 không bắt buộc Given-When-Then theo prompt. Vì E6 được k
 | BR-036 | US-002 | Từ GAP-001, PD-001 |
 | BR-037 | US-004 | Từ GAP-001 |
 | BR-038 | US-005 | Từ GAP-004 |
+| BR-044 | US-008 | DEC-022 (từ SRS OQ-S01) |
 | BR-039 | US-014 | Từ GAP-002 |
 | BR-040 | US-045 | Từ GAP-003 |
 | BR-041 | US-048 | DEC-016 |
 | BR-042 | US-049 | DEC-016 |
 | BR-043 | US-062 | DEC-016 |
 
-**Độ phủ:** 43/43 BR có ít nhất một user story, và 39/39 user story truy vết về một BR. Không còn story mồ côi.
+**Độ phủ:** 44/44 BR có ít nhất một user story, và 40/40 user story truy vết về một BR. Không còn story mồ côi.
 
 ---
 
@@ -686,6 +690,7 @@ Việt đã duyệt toàn bộ đề xuất. Mọi quyết định được ghi 
 | 6 | **Bỏ email nhắc, nhắc trong app** (banner + mục Thông báo); US-041 viết lại; thêm US-048, US-049, US-062; US-002 hạ P1; PD-004 thay bằng PD-009 | ✅ Hướng đi do Việt quyết định; PD-009 duyệt ở DEC-019 | DEC-016, DEC-019 |
 | 7 | **Bỏ G-16** (không xây hệ thống giám sát); G-14 chuyển sang email tài khoản qua SMTP Gmail | ✅ | DEC-017, DEC-018 |
 | 8 | **Bỏ G-13** (chưa sao lưu ở Giai đoạn 1) | ✅ Chấp nhận rủi ro RSK-006 | DEC-020 |
+| 9 | **Thêm US-008** (đổi email tài khoản, P1) | ✅ | DEC-022 |
 
 **Phạm vi ra mắt Giai đoạn 1:** toàn bộ P0 (gồm nhắc trong app US-041, US-049, US-062) (bắt buộc qua launch gate) + toàn bộ E6. Các story P1 khác được làm theo thứ tự backlog. P2 (US-005) làm nếu còn thời gian.
 

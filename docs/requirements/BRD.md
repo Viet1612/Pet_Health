@@ -12,7 +12,7 @@
 | Mã | Nội dung | Ghi chú |
 |---|---|---|
 | SRC-001 | Mô tả nghiệp vụ dự án "Pet Health" (mục 2.1 của prompt): mục tiêu, nền tảng, phạm vi tính năng cốt lõi | Tác giả và ngày ban hành chưa ghi rõ |
-| SRC-002 | Trả lời câu hỏi mở và phê duyệt của Việt ngày 2026-10-22 | Ghi nhận thành DEC-001→DEC-021, mục 12.1 |
+| SRC-002 | Trả lời câu hỏi mở và phê duyệt của Việt ngày 2026-10-22 | Ghi nhận thành DEC-001→DEC-022, mục 12.1 |
 | SRC-003 | PRD v1.0 (`docs/requirements/PRD.md`): quyết định sản phẩm PD-001→PD-008 và khoảng trống GAP-001→GAP-004 | Đã được Việt phê duyệt (DEC-012, DEC-013) |
 
 **Đầu vào còn thiếu**
@@ -36,8 +36,8 @@
 |---|---|
 | Tiêu đề | BRD — Pet Health & Schedule Diary (Web Version) |
 | Mã tài liệu | PH-BRD-001 |
-| Phiên bản | **1.2** |
-| Trạng thái | **Baselined** (v1.0 phê duyệt 2026-10-22, DEC-015; v1.1 theo DEC-016→DEC-018; v1.2 theo DEC-019→DEC-021) |
+| Phiên bản | **1.3** |
+| Trạng thái | **Baselined** (v1.0 phê duyệt 2026-10-22, DEC-015; v1.1 theo DEC-016→DEC-018; v1.2 theo DEC-019→DEC-021; v1.3 theo DEC-022) |
 | Loại dự án | Dự án tự học, cá nhân. Việt đảm nhiệm mọi vai trò: nhà tài trợ, chủ sở hữu nghiệp vụ, Product Owner, Business Analyst, người phê duyệt (DEC-001) |
 | Tác giả | Việt (soạn với Claude) |
 | Người đóng góp | Việt |
@@ -57,6 +57,7 @@
 | 1.0 | 2026-10-22 | Việt | **Baseline.** Duyệt PD-001→PD-008 (DEC-012): chốt AC-004, AC-011, BRU-001→003, BRU-005, BRU-006, CON-001, CON-003; đóng OQ-014, OQ-021→026. Thêm BR-035→BR-040 từ GAP-001→004 (DEC-013). BR-020 Should → Must (DEC-014). Chấp nhận OQ-009 và phê duyệt baseline (DEC-015). Sửa định dạng bảng mục 7.3 và 7.4 |
 | **1.1** | 2026-10-22 | Việt | **Bỏ email nhắc** (DEC-016): nhắc mốc y tế chỉ hiển thị trong web app. Sửa BR-016, BR-017, BR-019, BR-036, BRU-005, CON-002, ASM-001, DEP-001, RSK-002 và AC liên quan. Thêm BR-041→BR-043, AC-041→AC-043. Không xây hệ thống giám sát vận hành (DEC-017). Hạ tầng tự dựng, email tài khoản qua SMTP Gmail (DEC-018): sửa CON-003, DEP-002 |
 | **1.2** | 2026-10-22 | Việt | Duyệt quy tắc nhắc trong app PD-009 và kiến trúc SAD (DEC-019). Chưa làm sao lưu dữ liệu ở Giai đoạn 1 (DEC-020): sửa DEP-002, thêm RSK-006. Dùng tên miền ví dụ `pethealth.example` tới khi có tên miền thật (DEC-021). Không thay đổi BR |
+| **1.3** | 2026-10-23 | Việt | Duyệt SRS v1.0 kèm đề xuất OQ-S01 (DEC-022): thêm BR-044 (đổi email tài khoản), AC-044 |
 
 > **Kiểm soát thay đổi:** từ v1.0, mọi thay đổi yêu cầu phải tăng phiên bản (1.x), ghi một DEC mới ở mục 12.1 và cập nhật PRD tương ứng. ID đã cấp không bao giờ đánh lại; yêu cầu bị bỏ được đánh dấu *Withdrawn*.
 
@@ -310,6 +311,7 @@ Phương pháp kiểm chứng: **T** = Test, **D** = Demonstration, **I** = Insp
 | BR-036 | Hệ thống **phải** cho chủ nuôi xác minh quyền sở hữu địa chỉ email của tài khoản. *(Sửa theo DEC-016: không còn email nhắc nên xác minh chỉ phục vụ khôi phục tài khoản, hạ từ Must xuống Should.)* | Bảo đảm email khôi phục mật khẩu (BR-037) đến đúng người, phát hiện sớm email gõ sai | SN-007 (DEC-012, DEC-013, DEC-016) | Should | AC-036 | T |
 | BR-037 | Chủ nuôi **phải** lấy lại được quyền truy cập tài khoản khi quên mật khẩu, thông qua email đã xác minh. | Không mất toàn bộ dữ liệu vì quên mật khẩu | SN-007 (DEC-013) | Should | AC-037 | T |
 | BR-038 | Chủ nuôi **được phép** xóa vĩnh viễn tài khoản cùng toàn bộ dữ liệu của mình. | Quyền kiểm soát dữ liệu cá nhân (RSK-004) | SN-007 (DEC-013) | Could | AC-038 | T |
+| BR-044 | Chủ nuôi **phải** đổi được địa chỉ email của tài khoản; email mới chỉ có hiệu lực sau khi được xác minh. | Sửa email gõ sai khi đăng ký hoặc đổi hộp thư, để vẫn khôi phục được mật khẩu (BR-037) | SN-007 (DEC-022) | Should | AC-044 | T |
 
 > *Ghi chú cho PRD:* layout dashboard đa cột trên máy tính bảng (biểu đồ một bên, to-do một bên) và layout một cột trên điện thoại là đầu vào thiết kế UX của BR-028, xem CON-004.
 
@@ -360,6 +362,7 @@ Phương pháp kiểm chứng: **T** = Test, **D** = Demonstration, **I** = Insp
 | AC-041 | BR-041 | Mốc hạn 2026-11-15 chưa thực hiện thì mở web app ngày 2026-11-16 có đúng 1 nhắc "quá hạn" cho mốc đó. Mốc đã thực hiện trước 11-16 thì không có nhắc quá hạn. |
 | AC-042 | BR-042 | Có 3 nhắc, trong đó 2 chưa xem, thì mục Thông báo hiển thị đủ 3 nhắc và số chưa xem là 2. Chọn một nhắc chưa xem thì số chưa xem còn 1, và trạng thái đó được giữ khi mở trên thiết bị khác. |
 | AC-043 | BR-043 | Có ít nhất 1 nhắc chưa xem thì ngay sau khi đăng nhập, màn hình đầu tiên hiển thị nhắc đó mà không cần điều hướng thêm. Không có nhắc chưa xem thì không hiển thị gì. |
+| AC-044 | BR-044 | Yêu cầu đổi email sang một địa chỉ chưa dùng (kèm nhập lại mật khẩu) thì email mới nhận liên kết xác minh, còn email cũ vẫn dùng để đăng nhập. Mở liên kết thì đăng nhập được bằng email mới và không còn đăng nhập được bằng email cũ. Đổi sang email đã có tài khoản khác thì bị từ chối. |
 
 ---
 
@@ -454,6 +457,7 @@ Phương pháp kiểm chứng: **T** = Test, **D** = Demonstration, **I** = Insp
 | — | SN-007 | BR-035 | AC-035 | US-001 | FR-AUTH-001 |
 | — | SN-007 | BR-037 | AC-037 | US-004 | FR-AUTH-008, FR-AUTH-009 |
 | — | SN-007 | BR-038 | AC-038 | US-005 | FR-AUTH-016 |
+| — | SN-007 | BR-044 | AC-044 | US-008 | FR-AUTH-015 |
 
 **Báo cáo độ phủ**
 
@@ -461,9 +465,9 @@ Phương pháp kiểm chứng: **T** = Test, **D** = Demonstration, **I** = Insp
 - **Yêu cầu mồ côi (không có BO hoặc SN):** không có.
 - **Nhu cầu không có yêu cầu:** SN-008 (STK-003, bác sĩ thú y). Chủ ý chưa đặt yêu cầu cho đến khi trả lời OQ-011.
 - **Yêu cầu thiếu AC hoặc phương pháp kiểm chứng:** không có. Không còn AC nào chứa tham số [TBD].
-- **Yêu cầu chưa có user story trong PRD:** không có (43/43).
+- **Yêu cầu chưa có user story trong PRD:** không có (44/44).
 - **SN-009 (STK-004):** được đáp ứng bởi toàn bộ tập BR-001→BR-040, không cần BR riêng.
-- **Cột SRS:** điền từ SRS v0.2 §8.1 (2026-10-22).
+- **Cột SRS:** điền từ SRS v1.0 §8.1 (2026-10-23).
 
 ---
 
@@ -527,6 +531,7 @@ Phương pháp kiểm chứng: **T** = Test, **D** = Demonstration, **I** = Insp
 | DEC-019 | Duyệt PD-009 (quy tắc nhắc trong app) của PRD và AD-001→AD-017 của SAD | — | Việt | 2026-10-22 | Chấp nhận đề xuất | PRD v1.2; SAD v1.0 |
 | DEC-020 | **Chưa làm sao lưu dữ liệu** ở Giai đoạn 1 | — | Việt | 2026-10-22 | Chưa cần ở giai đoạn tự dùng | PRD G-13 (Withdrawn); SRS NFR-REL-002 (Withdrawn), SD-012; RSK-006 |
 | DEC-021 | Dùng tên miền ví dụ `pethealth.example` (`app.pethealth.example`, `staging.pethealth.example`) trong tài liệu; thay bằng tên miền thật trên Cloudflare khi triển khai | — | Việt | 2026-10-22 | Tên miền thật cung cấp sau | SAD (đóng OQ-A01) |
+| DEC-022 | **Phê duyệt SRS v1.0 làm baseline**, gồm SD-001→SD-014 và đề xuất của OQ-S01: cho đổi email tài khoản (Should) | OQ-S01 (SRS) | Việt | 2026-10-23 | Chấp nhận đề xuất | BR-044, AC-044; PRD US-008; SRS FR-AUTH-015 |
 
 ### 12.2 Câu hỏi còn mở sau baseline
 
@@ -578,7 +583,7 @@ Các câu dưới đây không chặn Giai đoạn 1 và được giữ để xe
 | Nhà tài trợ, chủ sở hữu nghiệp vụ, Product Owner | Việt | **Approve** | Việt — 2026-10-22 (DEC-015) |
 | Pháp lý (nếu áp dụng) | Không áp dụng cho dự án tự học, cho đến khi có người dùng ngoài (OQ-027) | — | — |
 
-**Phiên bản được phê duyệt:** **1.2 (Baselined)**, cùng PRD v1.2. (v1.0 phê duyệt 2026-10-22 theo DEC-015; v1.1 theo DEC-016→DEC-018; v1.2 theo DEC-019→DEC-021.)
+**Phiên bản được phê duyệt:** **1.3 (Baselined)**, cùng PRD v1.3 và SRS v1.0. (v1.0 phê duyệt 2026-10-22 theo DEC-015; v1.1 theo DEC-016→DEC-018; v1.2 theo DEC-019→DEC-021; v1.3 theo DEC-022.)
 **Điều kiện kèm theo:** không có. Các câu hỏi ở mục 12.2 được theo dõi tiếp nhưng không ảnh hưởng baseline.
 
 ---
@@ -598,7 +603,7 @@ Các câu dưới đây không chặn Giai đoạn 1 và được giữ để xe
 | ID duy nhất, cố định | Đạt | |
 | Mỗi BO có ít nhất một BR | Đạt | |
 | Mỗi BR truy vết được tới BO hoặc SN | Đạt | |
-| Mỗi BR có AC và phương pháp kiểm chứng | Đạt | 43/43 BR; không còn tham số TBD |
+| Mỗi BR có AC và phương pháp kiểm chứng | Đạt | 44/44 BR; không còn tham số TBD |
 | Mỗi nhóm bên liên quan có nhu cầu | Một phần | STK-004 có SN-009. STK-005 chờ OQ-010 |
 | Scope, loại trừ, giả định, phụ thuộc, rủi ro đầy đủ | Đạt | |
 | Mọi OQ có chủ thể và hạn | Đạt | |
@@ -610,4 +615,4 @@ Các câu dưới đây không chặn Giai đoạn 1 và được giữ để xe
 
 ### 15.2 Tuyên bố mức sẵn sàng
 
-**Baselined — v1.2, cập nhật 2026-10-22 (DEC-016→DEC-021).** 43 yêu cầu nghiệp vụ (25 Must, 17 Should, 1 Could) đều đạt checklist chất lượng và có tiêu chí chấp nhận quyết định được. Tài liệu là đầu vào chính thức cho SRS và SAD. Mọi thay đổi tiếp theo đi qua quy trình kiểm soát thay đổi ở mục 1.
+**Baselined — v1.3, cập nhật 2026-10-23 (DEC-016→DEC-022).** 44 yêu cầu nghiệp vụ (25 Must, 18 Should, 1 Could) đều đạt checklist chất lượng và có tiêu chí chấp nhận quyết định được. Tài liệu là đầu vào chính thức cho SRS và SAD. Mọi thay đổi tiếp theo đi qua quy trình kiểm soát thay đổi ở mục 1.

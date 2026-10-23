@@ -3,13 +3,13 @@
 | Trường | Giá trị |
 |---|---|
 | Mã tài liệu | PH-SAD-001 |
-| Phiên bản | **1.0** |
+| Phiên bản | **1.1** |
 | Trạng thái | **Approved** — AD-001→AD-017 được Việt duyệt 2026-10-22 (BRD DEC-019) |
 | Ngày | 2026-10-22 |
 | Tác giả | Việt (soạn với Claude) |
 | Người phê duyệt | Việt |
 | Chuẩn áp dụng | IEEE 1016-2009 (Software Design Descriptions) |
-| Baseline đầu vào | [BRD.md](../requirements/BRD.md) v1.2 · [PRD.md](../requirements/PRD.md) v1.2 · [SRS.md](../requirements/SRS.md) v0.3 |
+| Baseline đầu vào | [BRD.md](../requirements/BRD.md) v1.3 · [PRD.md](../requirements/PRD.md) v1.3 · [SRS.md](../requirements/SRS.md) v1.0 |
 | Prompt nguồn | `docs/requirements/SAD_Prompt_IEEE_standard.md` |
 
 **Lịch sử phiên bản**
@@ -19,8 +19,9 @@
 | 0.1 | 2026-10-22 | Việt | Bản nháp đầu tiên: cloud (Fly.io, Neon, R2, SES), email nhắc, có hệ thống giám sát |
 | 0.2 | 2026-10-22 | Việt | Viết lại theo BRD DEC-016→DEC-018: **nhắc nhở trong app** thay email (bỏ bộ lập lịch gửi); **hạ tầng tự dựng** công bố qua Cloudflare Tunnel; email tài khoản qua **SMTP Gmail**; **không có hệ thống giám sát**; analytics tự lưu trong PostgreSQL |
 | **1.0** | 2026-10-22 | Việt | **Approved.** Duyệt AD-001→AD-017 (DEC-019). Bỏ sao lưu ở Giai đoạn 1 (DEC-020): bỏ container `backup`, §4.2.4 chuyển thành phương án dự phòng chưa bật. Tên miền ví dụ `pethealth.example` (DEC-021). Đóng OQ-A01→OQ-A03 |
+| **1.1** | 2026-10-23 | Việt | Đồng bộ với SRS v1.0 (DEC-022): `POST /me/email` thành chức năng chính thức (FR-AUTH-015, BR-044) |
 
-**Quy ước:** `AD-xxx` = quyết định kiến trúc (chờ duyệt) · `OQ-Axx` = câu hỏi mở của SAD · `RSK-Axx` = rủi ro kỹ thuật. Mã `FR-`, `NFR-`, `IF-`, `DC-`, `SD-` tham chiếu SRS; `MR-`, `G-`, `PD-` tham chiếu PRD; `BR-`, `BRU-`, `CON-`, `DEC-` tham chiếu BRD.
+**Quy ước:** `AD-xxx` = quyết định kiến trúc (đã duyệt, DEC-019) · `OQ-Axx` = câu hỏi mở của SAD · `RSK-Axx` = rủi ro kỹ thuật. Mã `FR-`, `NFR-`, `IF-`, `DC-`, `SD-` tham chiếu SRS; `MR-`, `G-`, `PD-` tham chiếu PRD; `BR-`, `BRU-`, `CON-`, `DEC-` tham chiếu BRD.
 
 ---
 
@@ -390,7 +391,7 @@ Cron dọn dẹp có lỡ một đêm cũng không ảnh hưởng chức năng: 
 | `POST /auth/password/reset` | `{ token, newPassword }` | `204`, hủy mọi phiên | `410`, `400` | AUTH-008, 009 |
 | `GET /me` · `PATCH /me` | `{ timezone }` | `200 { user }` | `422 INVALID_TIMEZONE` | AUTH-011 |
 | `POST /me/password` | `{ currentPassword, newPassword }` | `204`, hủy các phiên khác | `401 WRONG_PASSWORD` | AUTH-010 |
-| `POST /me/email` *(P1, chờ OQ-S01)* | `{ newEmail, password }` | `202` | `409` | AUTH-015 |
+| `POST /me/email` | `{ newEmail, password }` | `202`; gửi liên kết xác minh tới email mới (`auth_tokens.kind = CHANGE_EMAIL`, 60 phút) | `401 WRONG_PASSWORD`, `409 EMAIL_TAKEN`, `429` | AUTH-015 |
 | `DELETE /me` | `{ password }` | `204` | `401` | AUTH-016 |
 
 **pets & health-records**
@@ -963,16 +964,15 @@ flowchart LR
 | OQ-A02 | Bản sao lưu ngoài máy chủ đặt ở đâu? | — | **Closed** → DEC-020 (chưa sao lưu) |
 | OQ-A03 | Chính sách giữ dữ liệu đã xóa trong bản sao lưu | — | **Closed** → không có bản sao lưu (DEC-020) |
 | OQ-A04 | Máy chủ có được đặt trong mạng tách biệt (VLAN / mạng khách của router)? | RSK-A08 | Có, nếu router hỗ trợ |
-| OQ-S01 (SRS) | Có cho đổi email tài khoản không? | Endpoint `POST /me/email` | Thiết kế đã chừa sẵn; chờ quyết định ở SRS |
+| OQ-S01 (SRS) | Có cho đổi email tài khoản không? | Endpoint `POST /me/email` | **Closed** → DEC-022 (có, P1) |
 | PD-009 (PRD) | Quy tắc nhắc trong app | `dueLevel`, FR-NTF-* | **Closed** → DEC-019 |
 
 ### 6.3 Mức sẵn sàng
 
 **Approved — v1.0.** AD-001→AD-017 được duyệt (DEC-019). Còn mở, không chặn bắt đầu xây dựng:
 
-1. SRS baseline v1.0 (chờ duyệt SD-001→SD-014 và OQ-S01).
-2. OQ-A04 (tách mạng cho máy chủ).
-3. Thay tên miền ví dụ bằng tên miền thật khi triển khai (DEC-021).
+1. OQ-A04 (tách mạng cho máy chủ).
+2. Thay tên miền ví dụ bằng tên miền thật khi triển khai (DEC-021).
 
 Bước tiếp theo trong SDLC: đặc tả `openapi.yaml` v1 đầy đủ từ §2.4, viết migration đầu tiên từ §3.1.3, dựng `compose.dev.yml` và khung repository theo §4.4.2.
 

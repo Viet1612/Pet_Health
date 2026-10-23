@@ -3,13 +3,13 @@
 | Trường | Giá trị |
 |---|---|
 | Mã tài liệu | PH-SRS-001 |
-| Phiên bản | 0.3 |
-| Trạng thái | **Draft** (chờ Việt duyệt các SD-xxx ở §1.6) |
+| Phiên bản | **1.0** |
+| Trạng thái | **Baselined** (Việt phê duyệt 2026-10-23, BRD DEC-022) |
 | Ngày | 2026-10-22 |
 | Tác giả | Việt (soạn với Claude) |
 | Người phê duyệt | Việt |
 | Chuẩn áp dụng | IEEE 29148-2018, §9.6 (SRS content) |
-| Baseline đầu vào | [BRD.md](BRD.md) v1.2 · [PRD.md](PRD.md) v1.2 |
+| Baseline đầu vào | [BRD.md](BRD.md) v1.3 · [PRD.md](PRD.md) v1.3 |
 
 **Lịch sử phiên bản**
 
@@ -18,6 +18,7 @@
 | 0.1 | 2026-10-22 | Việt | Bản nháp đầu tiên, dựng từ BRD v1.0 và PRD v1.0 |
 | 0.2 | 2026-10-22 | Việt | Theo BRD DEC-016→DEC-018: bỏ email nhắc, viết lại mô-đun NTF thành **nhắc nhở trong app** (banner + mục Thông báo); email chỉ còn cho tài khoản qua SMTP; bỏ yêu cầu giám sát (IF-SW-004, NFR-REL-004), webhook email (IF-COM-004), chỉ tiêu bounce (NFR-REL-005); bỏ SD-010; sửa SD-012 cho hạ tầng tự dựng; thêm DC-006 |
 | 0.3 | 2026-10-22 | Việt | PD-009 được duyệt (DEC-019). Chưa sao lưu (DEC-020): NFR-REL-002 Withdrawn, SD-012 bỏ RPO/RTO |
+| **1.0** | 2026-10-23 | Việt | **Baseline.** Duyệt SD-001→SD-014 và đóng OQ-S01: FR-AUTH-015 truy vết về BR-044 (DEC-022) |
 
 ---
 
@@ -131,7 +132,7 @@ Người dùng có kỹ năng dùng web và điện thoại phổ thông, không
 
 ### 1.6 Quyết định đặc tả mới cần duyệt
 
-Baseline chưa quy định các chi tiết dưới đây, nhưng thiếu chúng thì không cài đặt hay kiểm thử được. Mình đề xuất giá trị mặc định:
+Baseline chưa quy định các chi tiết dưới đây, nhưng thiếu chúng thì không cài đặt hay kiểm thử được. Toàn bộ SD-001→SD-014 (trừ SD-010 đã Withdrawn) **đã được Việt duyệt** ngày 2026-10-23 (DEC-022):
 
 | ID | Quyết định đề xuất | Lý do | Ảnh hưởng |
 |---|---|---|---|
@@ -154,7 +155,7 @@ Baseline chưa quy định các chi tiết dưới đây, nhưng thiếu chúng 
 
 | ID | Câu hỏi | Ảnh hưởng | Đề xuất |
 |---|---|---|---|
-| OQ-S01 | Baseline chưa có chức năng **đổi địa chỉ email** tài khoản. Nếu gõ sai email khi đăng ký, người dùng không tự sửa được | Không lấy lại được mật khẩu khi quên | Thêm BR mới (Should) ở BRD v1.1: đổi email kèm xác minh lại. Tạm đặc tả ở FR-AUTH-015 với ưu tiên P1 |
+| OQ-S01 | Baseline chưa có chức năng **đổi địa chỉ email** tài khoản. Nếu gõ sai email khi đăng ký, người dùng không tự sửa được | Không lấy lại được mật khẩu khi quên | **Closed** → DEC-022: thêm BR-044 (Should) ở BRD v1.3; đặc tả ở FR-AUTH-015, ưu tiên P1 |
 
 ---
 
@@ -180,7 +181,7 @@ Cột **Nguồn** truy vết về BR (BRD) và US (PRD). Tiêu chí chấp nhậ
 | FR-AUTH-012 | Phiên đăng nhập **phải** hết hạn sau 30 ngày không hoạt động (SD-003). | NFR-SEC | P0 | T |
 | FR-AUTH-013 | Hệ thống **phải** chỉ trả về và chỉ cho thay đổi tài nguyên thuộc tài khoản đang đăng nhập. Truy cập tài nguyên của tài khoản khác hoặc tài nguyên không tồn tại **phải** nhận cùng một phản hồi "không tìm thấy" (404). | BR-026 / US-006 | P0 | T |
 | FR-AUTH-014 | Khách truy cập trang cần đăng nhập thì **phải** bị chuyển về trang đăng nhập. Đăng nhập thành công thì quay lại đúng trang đã yêu cầu. | BR-025 / US-006 | P0 | T |
-| FR-AUTH-015 | Người dùng **nên** đổi được email tài khoản; email mới phải xác minh trước khi có hiệu lực. *(Chờ OQ-S01)* | OQ-S01 | P1 | T |
+| FR-AUTH-015 | Hệ thống **phải** cho phép đổi email tài khoản khi nhập đúng mật khẩu hiện tại. Email mới phải chưa được dùng, nhận liên kết xác minh dùng một lần hiệu lực 60 phút, và chỉ thay email cũ sau khi xác minh. Đổi xong thì email cũ nhận thư thông báo và trạng thái tài khoản là *đã xác minh*. | BR-044 / US-008 | P1 | T |
 | FR-AUTH-016 | Người dùng **phải** xóa được tài khoản sau khi nhập lại mật khẩu. Ngay sau khi xóa: không đăng nhập được, mọi phiên bị hủy, và mọi dữ liệu (kể cả thông báo) cùng ảnh bị xóa khỏi hệ thống chính. | BR-038 / US-005 | P2 | T |
 
 ### 2.2 PET — Hồ sơ thú cưng
@@ -635,8 +636,9 @@ erDiagram
 | BR-041 | FR-NTF-002 |
 | BR-042 | FR-NTF-008, FR-NTF-010, FR-NTF-011 |
 | BR-043 | FR-NTF-009, FR-NTF-010, FR-DSH-002 |
+| BR-044 | FR-AUTH-015 |
 
-**Độ phủ:** 43/43 BR có ít nhất 1 FR. Các FR không có BR trực tiếp đều truy vết về PRD (PD, IX, §4.2, §5.2, MR) hoặc SD, không có FR mồ côi.
+**Độ phủ:** 44/44 BR có ít nhất 1 FR. Các FR không có BR trực tiếp đều truy vết về PRD (PD, IX, §4.2, §5.2, MR) hoặc SD, không có FR mồ côi.
 
 ### 8.2 Thống kê
 
@@ -658,7 +660,4 @@ Ngoài ra: 9 yêu cầu giao diện ngoài còn hiệu lực (IF-SW-004, IF-COM-
 
 ### 8.3 Mức sẵn sàng
 
-**Draft — Ready for review.** SRS truy vết đủ 43/43 BR. Để baseline v1.0, cần:
-
-1. Việt duyệt **SD-001→SD-014** (§1.6). PD-009 của PRD đã được duyệt (DEC-019).
-2. Việt quyết định **OQ-S01** (đổi email tài khoản). Nếu đồng ý, bổ sung BR vào BRD v1.1.
+**Baselined — v1.0, phê duyệt 2026-10-23 (BRD DEC-022).** SRS truy vết đủ 44/44 BR, mọi SD đã được duyệt, không còn câu hỏi mở. Mọi thay đổi tiếp theo phải tăng phiên bản (1.x) và có DEC tương ứng trong BRD.
