@@ -5,6 +5,14 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
+    "generate": "openapi-typescript ../../openapi.yaml -o src/schema.d.ts && prettier --write src/schema.d.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json"
-  }
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.17.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.13.0"
+  },
+  "types": "src/index.ts"
 }

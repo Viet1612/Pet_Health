@@ -18,6 +18,7 @@ export const vi = {
   error: {
     serverTitle: 'Có lỗi xảy ra',
     serverDescription: 'Vui lòng thử lại sau. Nếu vẫn lỗi, gửi mã bên dưới cho người hỗ trợ.',
+    serverToast: 'Có lỗi xảy ra, vui lòng thử lại sau.',
     refLabel: 'Mã',
     copy: 'Sao chép',
     copied: 'Đã sao chép',

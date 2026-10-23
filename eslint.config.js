@@ -23,6 +23,8 @@ export default tseslint.config(
       'apps/api/src/platform/db/database.types.ts',
       // Sinh tự động bằng TanStack Router plugin
       'apps/web/src/routeTree.gen.ts',
+      // Sinh tự động bằng openapi-typescript
+      'packages/api-client/src/schema.d.ts',
     ],
   },
 

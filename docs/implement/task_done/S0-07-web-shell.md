@@ -5,7 +5,7 @@
 | Task | [S0-07](../tasks/S0-07-web-shell.md) |
 | Trạng thái | Xong (code), chưa kiểm thử giao diện |
 | Ngày hoàn thành | 2026-10-23 |
-| Commit | xem [README](README.md) |
+| Commit | `3b31b89` |
 
 ## Kết quả
 

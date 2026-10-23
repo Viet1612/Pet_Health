@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 7 / 51 task
+**Tiến độ:** 8 / 51 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -14,4 +14,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S0-04 | Platform: Clock, logging redact, lỗi problem+json, deny-by-default | Xong | 2026-10-23 | `31d5db2` | [S0-04](S0-04-platform-core.md) |
 | S0-05 | Idempotency-Key, rate limit | Xong (code), chưa kiểm thử tích hợp | 2026-10-23 | `28c1343` | [S0-05](S0-05-idempotency-ratelimit.md) |
 | S0-06 | Hàm thuần lịch và mức nhắc | Xong | 2026-10-23 | `35b1779` | [S0-06](S0-06-calendar-domain.md) |
-| S0-07 | Khung web: Vite, React, Tailwind token, Router, Query, AppShell, component lõi | Xong (code), chưa kiểm thử giao diện | 2026-10-23 | — | [S0-07](S0-07-web-shell.md) |
+| S0-07 | Khung web: Vite, React, Tailwind token, Router, Query, AppShell, component lõi | Xong (code), chưa kiểm thử giao diện | 2026-10-23 | `3b31b89` | [S0-07](S0-07-web-shell.md) |
+| S0-08 | Package api-client: type sinh từ OpenAPI, timeout, CSRF, problem+json, idempotency | Xong (code), chưa có unit test | 2026-10-24 | — | [S0-08](S0-08-api-client.md) |
