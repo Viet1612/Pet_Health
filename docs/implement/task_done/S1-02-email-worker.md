@@ -5,7 +5,7 @@
 | Task | [S1-02](../tasks/S1-02-email-worker.md) |
 | Trạng thái | Xong (code), chưa gửi thử |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `11efaf3` |
 
 ## Kết quả
 

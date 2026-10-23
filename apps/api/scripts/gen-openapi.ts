@@ -3,6 +3,10 @@ import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 import { buildApp } from '../src/app.js';
+import { registerModules, type ModuleDeps } from '../src/modules/index.js';
+
+// Chỉ cần đăng ký route để lấy schema; handler không bao giờ chạy nên deps để trống.
+const stubDeps = { identity: {} } as unknown as ModuleDeps;
 
 const target = fileURLToPath(new URL('../../../openapi.yaml', import.meta.url));
 
@@ -12,6 +16,7 @@ const app = await buildApp({
   nodeEnv: 'production',
   checkDb: () => Promise.resolve(),
   lifecycle: { shuttingDown: false },
+  registerRoutes: (api) => registerModules(api, stubDeps),
 });
 await app.ready();
 await writeFile(target, app.swagger({ yaml: true }));

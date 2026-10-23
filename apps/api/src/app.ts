@@ -1,3 +1,4 @@
+import fastifyCookie from '@fastify/cookie';
 import Fastify, { type FastifyBaseLogger, type FastifyInstance } from 'fastify';
 import type { Kysely } from 'kysely';
 import {
@@ -54,6 +55,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
   registerErrorHandling(app, deps.appOrigin);
+  await app.register(fastifyCookie);
 
   // Chỉ nhận JSON; multipart thêm ở S2-02. Content-type khác → 415.
   app.removeContentTypeParser('text/plain');
