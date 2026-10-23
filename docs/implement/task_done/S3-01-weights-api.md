@@ -5,7 +5,7 @@
 | Task | [S3-01](../tasks/S3-01-weights-api.md) |
 | Trạng thái | Xong, đã gọi thử trên server dev |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `07ba216` |
 
 ## Kết quả
 

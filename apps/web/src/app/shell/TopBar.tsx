@@ -1,11 +1,11 @@
 import { useRouterState } from '@tanstack/react-router';
-import { Bell, LogOut, Menu, Plus } from 'lucide-react';
+import { Bell, LogOut, Menu } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { PetSwitcher } from '../../features/pets';
 import { useLogoutAction } from '../../features/session';
 import { vi } from '../../i18n/vi';
-import { Button } from '../../ui/Button';
+import { QuickAdd } from './QuickAdd';
 import { IconButton } from '../../ui/IconButton';
 
 /** CMP-07: chuông (S0 chỉ hiển thị; số chưa xem ở S4-05). */
@@ -84,10 +84,7 @@ export function TopBar() {
         <PetSwitcher />
       </div>
       <BellButton />
-      <IconButton aria-label={vi.topBar.quickAdd} icon={<Plus size={24} />} className="md:hidden" />
-      <Button variant="primary" icon={<Plus size={20} />} className="hidden md:inline-flex">
-        Thêm
-      </Button>
+      <QuickAdd />
       <PhoneMenu />
     </header>
   );

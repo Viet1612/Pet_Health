@@ -22,7 +22,9 @@ import { Route as AppPetsIndexRouteImport } from './routes/_app/pets/index'
 import { Route as AppPetsNewRouteImport } from './routes/_app/pets/new'
 import { Route as AppPetsPetIdIndexRouteImport } from './routes/_app/pets/$petId/index'
 import { Route as AppPetsPetIdEditRouteImport } from './routes/_app/pets/$petId/edit'
+import { Route as AppPetsPetIdHealthRouteImport } from './routes/_app/pets/$petId/health'
 import { Route as AppPetsPetIdMilestonesRouteImport } from './routes/_app/pets/$petId/milestones'
+import { Route as AppPetsPetIdHealthIndexRouteImport } from './routes/_app/pets/$petId/health/index'
 import { Route as AppPetsPetIdHealthWeightRouteImport } from './routes/_app/pets/$petId/health/weight'
 
 const AppRoute = AppRouteImport.update({
@@ -88,16 +90,26 @@ const AppPetsPetIdEditRoute = AppPetsPetIdEditRouteImport.update({
   path: '/pets/$petId/edit',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPetsPetIdHealthRoute = AppPetsPetIdHealthRouteImport.update({
+  id: '/pets/$petId/health',
+  path: '/pets/$petId/health',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPetsPetIdMilestonesRoute = AppPetsPetIdMilestonesRouteImport.update({
   id: '/pets/$petId/milestones',
   path: '/pets/$petId/milestones',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPetsPetIdHealthIndexRoute = AppPetsPetIdHealthIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppPetsPetIdHealthRoute,
+} as any)
 const AppPetsPetIdHealthWeightRoute =
   AppPetsPetIdHealthWeightRouteImport.update({
-    id: '/pets/$petId/health/weight',
-    path: '/pets/$petId/health/weight',
-    getParentRoute: () => AppRoute,
+    id: '/weight',
+    path: '/weight',
+    getParentRoute: () => AppPetsPetIdHealthRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -111,9 +123,11 @@ export interface FileRoutesByFullPath {
   '/pets/new': typeof AppPetsNewRoute
   '/pets/': typeof AppPetsIndexRoute
   '/pets/$petId/edit': typeof AppPetsPetIdEditRoute
+  '/pets/$petId/health': typeof AppPetsPetIdHealthRouteWithChildren
   '/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
   '/pets/$petId/': typeof AppPetsPetIdIndexRoute
   '/pets/$petId/health/weight': typeof AppPetsPetIdHealthWeightRoute
+  '/pets/$petId/health/': typeof AppPetsPetIdHealthIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
@@ -129,6 +143,7 @@ export interface FileRoutesByTo {
   '/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
   '/pets/$petId': typeof AppPetsPetIdIndexRoute
   '/pets/$petId/health/weight': typeof AppPetsPetIdHealthWeightRoute
+  '/pets/$petId/health': typeof AppPetsPetIdHealthIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -144,9 +159,11 @@ export interface FileRoutesById {
   '/_app/pets/new': typeof AppPetsNewRoute
   '/_app/pets/': typeof AppPetsIndexRoute
   '/_app/pets/$petId/edit': typeof AppPetsPetIdEditRoute
+  '/_app/pets/$petId/health': typeof AppPetsPetIdHealthRouteWithChildren
   '/_app/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
   '/_app/pets/$petId/': typeof AppPetsPetIdIndexRoute
   '/_app/pets/$petId/health/weight': typeof AppPetsPetIdHealthWeightRoute
+  '/_app/pets/$petId/health/': typeof AppPetsPetIdHealthIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,9 +178,11 @@ export interface FileRouteTypes {
     | '/pets/new'
     | '/pets/'
     | '/pets/$petId/edit'
+    | '/pets/$petId/health'
     | '/pets/$petId/milestones'
     | '/pets/$petId/'
     | '/pets/$petId/health/weight'
+    | '/pets/$petId/health/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -179,6 +198,7 @@ export interface FileRouteTypes {
     | '/pets/$petId/milestones'
     | '/pets/$petId'
     | '/pets/$petId/health/weight'
+    | '/pets/$petId/health'
   id:
     | '__root__'
     | '/_app'
@@ -193,9 +213,11 @@ export interface FileRouteTypes {
     | '/_app/pets/new'
     | '/_app/pets/'
     | '/_app/pets/$petId/edit'
+    | '/_app/pets/$petId/health'
     | '/_app/pets/$petId/milestones'
     | '/_app/pets/$petId/'
     | '/_app/pets/$petId/health/weight'
+    | '/_app/pets/$petId/health/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -296,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPetsPetIdEditRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/pets/$petId/health': {
+      id: '/_app/pets/$petId/health'
+      path: '/pets/$petId/health'
+      fullPath: '/pets/$petId/health'
+      preLoaderRoute: typeof AppPetsPetIdHealthRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/pets/$petId/milestones': {
       id: '/_app/pets/$petId/milestones'
       path: '/pets/$petId/milestones'
@@ -303,15 +332,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPetsPetIdMilestonesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/pets/$petId/health/': {
+      id: '/_app/pets/$petId/health/'
+      path: '/'
+      fullPath: '/pets/$petId/health/'
+      preLoaderRoute: typeof AppPetsPetIdHealthIndexRouteImport
+      parentRoute: typeof AppPetsPetIdHealthRoute
+    }
     '/_app/pets/$petId/health/weight': {
       id: '/_app/pets/$petId/health/weight'
-      path: '/pets/$petId/health/weight'
+      path: '/weight'
       fullPath: '/pets/$petId/health/weight'
       preLoaderRoute: typeof AppPetsPetIdHealthWeightRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppPetsPetIdHealthRoute
     }
   }
 }
+
+interface AppPetsPetIdHealthRouteChildren {
+  AppPetsPetIdHealthWeightRoute: typeof AppPetsPetIdHealthWeightRoute
+  AppPetsPetIdHealthIndexRoute: typeof AppPetsPetIdHealthIndexRoute
+}
+
+const AppPetsPetIdHealthRouteChildren: AppPetsPetIdHealthRouteChildren = {
+  AppPetsPetIdHealthWeightRoute: AppPetsPetIdHealthWeightRoute,
+  AppPetsPetIdHealthIndexRoute: AppPetsPetIdHealthIndexRoute,
+}
+
+const AppPetsPetIdHealthRouteWithChildren =
+  AppPetsPetIdHealthRoute._addFileChildren(AppPetsPetIdHealthRouteChildren)
 
 interface AppRouteChildren {
   AppSettingsRoute: typeof AppSettingsRoute
@@ -319,9 +368,9 @@ interface AppRouteChildren {
   AppPetsNewRoute: typeof AppPetsNewRoute
   AppPetsIndexRoute: typeof AppPetsIndexRoute
   AppPetsPetIdEditRoute: typeof AppPetsPetIdEditRoute
+  AppPetsPetIdHealthRoute: typeof AppPetsPetIdHealthRouteWithChildren
   AppPetsPetIdMilestonesRoute: typeof AppPetsPetIdMilestonesRoute
   AppPetsPetIdIndexRoute: typeof AppPetsPetIdIndexRoute
-  AppPetsPetIdHealthWeightRoute: typeof AppPetsPetIdHealthWeightRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -330,9 +379,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppPetsNewRoute: AppPetsNewRoute,
   AppPetsIndexRoute: AppPetsIndexRoute,
   AppPetsPetIdEditRoute: AppPetsPetIdEditRoute,
+  AppPetsPetIdHealthRoute: AppPetsPetIdHealthRouteWithChildren,
   AppPetsPetIdMilestonesRoute: AppPetsPetIdMilestonesRoute,
   AppPetsPetIdIndexRoute: AppPetsPetIdIndexRoute,
-  AppPetsPetIdHealthWeightRoute: AppPetsPetIdHealthWeightRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
