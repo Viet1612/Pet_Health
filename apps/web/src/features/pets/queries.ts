@@ -50,6 +50,19 @@ export function useUpdatePet(petId: string) {
   });
 }
 
+export function useDeletePet(petId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (confirmName: string) => {
+      await api.DELETE('/pets/{petId}', { params: { path: { petId } }, body: { confirmName } });
+    },
+    onSuccess: async () => {
+      queryClient.removeQueries({ queryKey: [...PETS_KEY, petId], exact: true });
+      await queryClient.invalidateQueries({ queryKey: PETS_KEY });
+    },
+  });
+}
+
 export function useRemoveAvatar(petId: string) {
   const queryClient = useQueryClient();
   return useMutation({

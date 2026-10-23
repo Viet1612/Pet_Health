@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { createPet } from '../src/modules/pets/application/create-pet.js';
 import type { PetRepository, PetRow } from '../src/modules/pets/application/ports.js';
+import { matchesConfirmName } from '../src/modules/pets/domain/confirm-name.js';
 import { validatePetInput } from '../src/modules/pets/domain/pet.js';
 import type { LocalDate } from '../src/platform/calendar/local-date.js';
 import { FakeClock } from '../src/platform/clock/clock.js';
@@ -100,6 +101,8 @@ describe('createPet theo múi giờ tài khoản', () => {
       update: () => Promise.resolve(undefined),
       lockAvatarKey: () => Promise.resolve(undefined),
       setAvatarKey: () => Promise.resolve(undefined),
+      lockForDelete: () => Promise.resolve(undefined),
+      delete: () => Promise.resolve(),
     };
     return { clock, pets };
   }
@@ -124,5 +127,16 @@ describe('createPet theo múi giờ tài khoản', () => {
     );
     expect(err).toBeInstanceOf(AppError);
     expect(err).toMatchObject({ status: 409, code: 'PET_LIMIT_REACHED' });
+  });
+});
+
+describe('matchesConfirmName', () => {
+  it('bỏ khoảng trắng đầu/cuối, không phân biệt hoa thường, giữ dấu', () => {
+    expect(matchesConfirmName('  mochi ', 'Mochi')).toBe(true);
+    expect(matchesConfirmName('MÍT', 'mít')).toBe(true);
+    expect(matchesConfirmName('mit', 'Mít')).toBe(false);
+    // NFD (dấu tách rời) vẫn khớp NFC.
+    expect(matchesConfirmName('Mít', 'Mít')).toBe(true);
+    expect(matchesConfirmName('Mochi 2', 'Mochi')).toBe(false);
   });
 });

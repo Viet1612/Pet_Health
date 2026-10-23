@@ -660,6 +660,32 @@ paths:
                   - createdAt
                   - updatedAt
                 additionalProperties: false
+    delete:
+      summary: Xóa vĩnh viễn thú cưng (nhập lại đúng tên)
+      tags:
+        - pets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                confirmName:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+              required:
+                - confirmName
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: petId
+          required: true
+      responses:
+        "204":
+          description: Default Response
   /pets/{petId}/avatar:
     put:
       summary: Đặt / thay ảnh đại diện (multipart, field `file`, ≤ 5 MB)

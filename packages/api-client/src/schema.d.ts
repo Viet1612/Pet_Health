@@ -607,7 +607,33 @@ export interface paths {
     };
     put?: never;
     post?: never;
-    delete?: never;
+    /** Xóa vĩnh viễn thú cưng (nhập lại đúng tên) */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            confirmName: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
     options?: never;
     head?: never;
     /** Sửa hồ sơ thú cưng */

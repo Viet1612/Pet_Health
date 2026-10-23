@@ -21,3 +21,5 @@ registerIdorParam(/^\/pets\/:petId(\/|$)/, 'petId', {
 });
 
 registerIdorBody('PATCH', '/pets/:petId', () => ({ name: 'Bị sửa' }));
+// Fixture tạo thú cưng tên 'Mochi': B xóa con của mình (ca 7) thì tên khớp → 204.
+registerIdorBody('DELETE', '/pets/:petId', () => ({ confirmName: 'Mochi' }));

@@ -27,6 +27,9 @@ export interface PetRepository {
     patch: Partial<PetInput>,
     now: Date,
   ): Promise<PetRow | undefined>;
+  /** Khóa dòng thú cưng trước khi xóa; `undefined` nếu không có. */
+  lockForDelete(trx: Trx, ownerId: string, id: string): Promise<{ name: string } | undefined>;
+  delete(trx: Trx, ownerId: string, id: string): Promise<void>;
   /** Khóa dòng thú cưng và trả `avatar_key` hiện tại; `undefined` nếu không còn. */
   lockAvatarKey(
     trx: Trx,

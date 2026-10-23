@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { runIdempotent, sendIdempotent } from '../../../../platform/idempotency/run-idempotent.js';
 import type { MediaService } from '../../../media/index.js';
 import { createPet } from '../../application/create-pet.js';
+import { deletePet } from '../../application/delete-pet.js';
 import { getPet } from '../../application/get-pet.js';
 import { listPets } from '../../application/list-pets.js';
 import type { PetsAppDeps } from '../../application/pets-deps.js';
@@ -96,6 +97,25 @@ export const petsRoutes: FastifyPluginAsyncZod<PetsRouteDeps> = (app, deps) => {
       const petId = petIdOf(req.params.petId);
       const view = await req.withTx((trx) => updatePet(deps, trx, ownerId, petId, req.body));
       return toPetDto(view, sign);
+    },
+  );
+
+  app.delete(
+    '/pets/:petId',
+    {
+      schema: {
+        tags: ['pets'],
+        summary: 'Xóa vĩnh viễn thú cưng (nhập lại đúng tên)',
+        params: zPetParams,
+        body: z.object({ confirmName: z.string().min(1).max(200) }),
+        response: { 204: z.null() },
+      },
+    },
+    async (req, reply) => {
+      const ownerId = ownerOf(req);
+      const petId = petIdOf(req.params.petId);
+      await req.withTx((trx) => deletePet(deps, trx, ownerId, petId, req.body.confirmName));
+      return reply.code(204).send(null);
     },
   );
 

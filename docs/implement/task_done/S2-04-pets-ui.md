@@ -5,7 +5,7 @@
 | Task | [S2-04](../tasks/S2-04-pets-ui.md) |
 | Trạng thái | Xong (code), chưa bấm thử trên trình duyệt |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `d715749` |
 
 ## Kết quả
 

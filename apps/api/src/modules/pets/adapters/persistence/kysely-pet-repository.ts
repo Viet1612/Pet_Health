@@ -70,6 +70,20 @@ export const kyselyPetRepository: PetRepository = {
       .executeTakeFirstOrThrow();
   },
 
+  lockForDelete(trx, ownerId, id) {
+    return trx
+      .selectFrom('pets')
+      .select('name')
+      .where('id', '=', id)
+      .where('owner_id', '=', ownerId)
+      .forUpdate()
+      .executeTakeFirst();
+  },
+
+  async delete(trx, ownerId, id) {
+    await trx.deleteFrom('pets').where('id', '=', id).where('owner_id', '=', ownerId).execute();
+  },
+
   async lockAvatarKey(trx, ownerId, id) {
     const row = await trx
       .selectFrom('pets')

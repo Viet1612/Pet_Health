@@ -17,6 +17,16 @@ export function initialOf(name: string): string {
 export const sexLabel = (sex: Pet['sex']): string =>
   sex === 'MALE' ? vi.pets.male : vi.pets.female;
 
+/**
+ * So khớp tên khi xác nhận xóa (SD-009), bản sao y hệt `pets/domain/confirm-name.ts` của API:
+ * NFC, bỏ khoảng trắng đầu/cuối, không phân biệt hoa thường, giữ dấu.
+ */
+const normalizeForConfirm = (s: string): string =>
+  s.normalize('NFC').trim().toLocaleLowerCase('vi');
+
+export const matchesConfirmName = (input: string, petName: string): boolean =>
+  normalizeForConfirm(input) === normalizeForConfirm(petName);
+
 /** "7 năm 7 tháng · Poodle · Cái" */
 export const petSubline = (pet: Pet): string =>
   `${pet.ageText} · ${pet.breed} · ${sexLabel(pet.sex)}`;

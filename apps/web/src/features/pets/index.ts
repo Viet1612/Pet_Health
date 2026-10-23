@@ -1,5 +1,6 @@
 export { AvatarEditor, AvatarPicker } from './AvatarField';
-export { formatLocalDate, initialOf, petSubline, sexLabel } from './format';
+export { DeletePetDialog } from './DeletePetDialog';
+export { formatLocalDate, initialOf, matchesConfirmName, petSubline, sexLabel } from './format';
 export { PetAvatar } from './PetAvatar';
 export { PetCard } from './PetCard';
 export { PetForm } from './PetForm';

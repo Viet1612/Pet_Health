@@ -12,6 +12,7 @@ import {
 import { useEffect, type ReactNode } from 'react';
 
 import {
+  DeletePetDialog,
   formatLocalDate,
   PetAvatar,
   petQuery,
@@ -22,6 +23,7 @@ import {
 import { vi } from '../../../../i18n/vi';
 import { cx } from '../../../../ui/cx';
 import { Skeleton } from '../../../../ui/Skeleton';
+import { useDialogParam } from '../../../../ui/use-dialog-param';
 
 const t = vi.pets;
 
@@ -53,11 +55,14 @@ function Shortcut({ icon, label, to }: { icon: ReactNode; label: string; to?: st
   );
 }
 
-function DeleteLink({ pet }: { pet: Pet }) {
-  // Hộp xác nhận xóa làm ở S2-05; ở đây chỉ đặt chỗ.
+function DeleteLink({ pet, onOpen }: { pet: Pet; onOpen: () => void }) {
   return (
     <div className="flex flex-col gap-1">
-      <button type="button" disabled className="text-danger text-body self-start font-semibold">
+      <button
+        type="button"
+        onClick={onOpen}
+        className="text-danger text-body min-h-11 self-start font-semibold"
+      >
         {t.deleteLink}
       </button>
       <p className="text-small text-text-muted">{t.deleteHint(pet.name)}</p>
@@ -70,6 +75,7 @@ function PetProfilePage() {
   const { petId } = Route.useParams();
   const { data: pet } = useSuspenseQuery(petQuery(petId));
   const { select } = useSelectedPet();
+  const deleteDialog = useDialogParam('delete-pet');
 
   // Mở hồ sơ của con nào thì con đó thành thú cưng đang chọn.
   useEffect(() => {
@@ -104,7 +110,7 @@ function PetProfilePage() {
           <p className="text-body text-text-muted">{petSubline(pet)}</p>
           <p className="text-small text-text-muted">{t.born(formatLocalDate(pet.birthDate))}</p>
           <div className="mt-6 hidden w-full md:block">
-            <DeleteLink pet={pet} />
+            <DeleteLink pet={pet} onOpen={deleteDialog.show} />
           </div>
         </section>
 
@@ -130,10 +136,11 @@ function PetProfilePage() {
             <Shortcut icon={<ListChecks size={22} />} label={t.shortcuts.routines} />
           </nav>
           <div className="md:hidden">
-            <DeleteLink pet={pet} />
+            <DeleteLink pet={pet} onOpen={deleteDialog.show} />
           </div>
         </div>
       </div>
+      <DeletePetDialog pet={pet} open={deleteDialog.open} onClose={deleteDialog.close} />
     </>
   );
 }

@@ -65,6 +65,17 @@ export const vi = {
       soon: 'Sắp có',
     },
     deleteLink: 'Xóa thú cưng',
+    deleteDialog: {
+      title: (name: string) => `Xóa ${name}?`,
+      body: (name: string) =>
+        `Toàn bộ số đo cân nặng, sổ y tế kèm ảnh, lịch mốc y tế, việc hằng ngày và nhắc nhở của ${name} sẽ bị xóa vĩnh viễn. Không hoàn tác được.`,
+      confirmLabel: (name: string) => `Nhập "${name}" để xác nhận`,
+      confirmHint: 'Không phân biệt hoa thường, bỏ khoảng trắng đầu và cuối',
+      mismatch: 'Tên không khớp',
+      submit: 'Xóa vĩnh viễn',
+      cancel: 'Hủy',
+      deleted: (name: string) => `Đã xóa ${name}`,
+    },
     deleteHint: (name: string) =>
       `Xóa toàn bộ số đo, sổ y tế, ảnh và lịch của ${name}. Không hoàn tác được.`,
     form: {

@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 22 / 51 task
+**Tiến độ:** 23 / 51 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -29,4 +29,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S2-01 | Schema `pets`, API CRUD, giới hạn 10, tuổi | Xong, đã gọi thử trên DB dev | 2026-10-24 | `c5ec824` | [S2-01](S2-01-pets-api.md) |
 | S2-02 | Pipeline ảnh: tải lên, `media.process`, URL ký, `GET /media`, `purge-prefix` | Xong (code), chưa chạy với ảnh HEIC thật | 2026-10-24 | `7e4e10d` | [S2-02](S2-02-media-pipeline.md) |
 | S2-03 | API ảnh đại diện | Xong, đã chạy đầu-cuối trên server dev (chưa thử HEIC) | 2026-10-24 | `889d2d8` | [S2-03](S2-03-pet-avatar-api.md) |
-| S2-04 | Giao diện SCR-07, 08, 09 và PetSwitcher | Xong (code), chưa bấm thử trên trình duyệt | 2026-10-24 | — | [S2-04](S2-04-pets-ui.md) |
+| S2-04 | Giao diện SCR-07, 08, 09 và PetSwitcher | Xong (code), chưa bấm thử trên trình duyệt | 2026-10-24 | `d715749` | [S2-04](S2-04-pets-ui.md) |
+| S2-05 | Xóa thú cưng (API + giao diện) | Xong; API đã chạy thử, hộp thoại chưa bấm thử | 2026-10-24 | — | [S2-05](S2-05-delete-pet.md) |
