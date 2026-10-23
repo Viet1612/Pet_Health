@@ -13,6 +13,16 @@ const configSchema = z.object({
   HEARTBEAT_FILE: z.string().min(1).default('/tmp/alive'),
   /** Request đi qua cloudflared: tin header CF-Connecting-IP (SAD §4.2.3). */
   TRUST_CF_CONNECTING_IP: z.stringbool().default(false),
+  // Email tài khoản (AD-008): Mailpit ở local/staging, SMTP Gmail ở production.
+  SMTP_HOST: z.string().min(1).default('localhost'),
+  SMTP_PORT: z.coerce.number().int().min(1).max(65_535).default(1025),
+  SMTP_SECURE: z.stringbool().default(false),
+  SMTP_USER: z.string().default(''),
+  SMTP_PASS: z.string().default(''),
+  SMTP_FROM: z.string().min(1).default('Pet Health <no-reply@pethealth.example>'),
+  SMTP_DAILY_LIMIT: z.coerce.number().int().positive().default(400),
+  /** Khóa HMAC cho userIdHash (analytics, FR-ANL-002). */
+  ANALYTICS_HMAC_KEY: z.string().min(16),
 });
 
 export type Config = z.infer<typeof configSchema>;

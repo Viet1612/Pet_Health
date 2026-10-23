@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 11 / 51 task
+**Tiến độ:** 12 / 51 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -18,4 +18,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S0-08 | Package api-client: type sinh từ OpenAPI, timeout, CSRF, problem+json, idempotency | Xong (code), chưa có unit test | 2026-10-24 | `8d27fd4` | [S0-08](S0-08-api-client.md) |
 | S0-09 | CI GitHub Actions: lint, test, contract, security, size; dependency-cruiser | Xong (code), chưa chạy trên GitHub | 2026-10-24 | `d90326a` | [S0-09](S0-09-ci-pipeline.md) |
 | S0-10 | Dockerfile ph-app (libvips + libheif), ph-caddy, Caddyfile, profile `full` | Xong (code), chưa build image | 2026-10-24 | `1e6818a` | [S0-10](S0-10-docker-images.md) |
-| S1-01 | Schema users/sessions/auth_tokens, role CSDL, RLS helper, withTx | Xong (code), chưa chạy migration | 2026-10-24 | — | [S1-01](S1-01-identity-schema-rls.md) |
+| S1-01 | Schema users/sessions/auth_tokens, role CSDL, RLS helper, withTx | Xong (code), chưa chạy migration | 2026-10-24 | `731f0af` | [S1-01](S1-01-identity-schema-rls.md) |
+| S1-02 | Worker email: React Email, SMTP, retry, hạn mức ngày | Xong (code), chưa gửi thử | 2026-10-24 | — | [S1-02](S1-02-email-worker.md) |

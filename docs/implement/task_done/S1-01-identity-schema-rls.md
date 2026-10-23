@@ -5,7 +5,7 @@
 | Task | [S1-01](../tasks/S1-01-identity-schema-rls.md) |
 | Trạng thái | Xong (code), chưa chạy migration |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `731f0af` |
 
 ## Kết quả
 

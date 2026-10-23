@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
   "scripts": {
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "preview": "email dev --dir src/templates"
   },
   "dependencies": {
     "@react-email/components": "^1.0.12",
@@ -16,5 +17,14 @@
   "devDependencies": {
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0"
-  }
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ]
 }

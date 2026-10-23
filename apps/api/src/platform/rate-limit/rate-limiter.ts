@@ -42,18 +42,28 @@ export class RateLimiter {
    */
   async hit(bucket: string, limit: number, windowSec: number): Promise<void> {
     const { start, retryAfter } = fixedWindow(this.clock.now().getTime(), windowSec);
-    const row = await this.db
-      .insertInto('rate_limits')
-      .values({ bucket, window_start: start, count: 1 })
-      .onConflict((oc) =>
-        oc.columns(['bucket', 'window_start']).doUpdateSet((eb) => ({
-          count: eb('rate_limits.count', '+', 1),
-        })),
-      )
-      .returning('count')
-      .executeTakeFirstOrThrow();
-    if (row.count > limit) throw new RateLimitedError(retryAfter);
+    const count = await incrementCounter(this.db, bucket, start);
+    if (count > limit) throw new RateLimitedError(retryAfter);
   }
+}
+
+/** Tăng bộ đếm (bucket, đầu cửa sổ) một cách nguyên tử; trả số đếm mới. */
+export async function incrementCounter(
+  db: Kysely<Database>,
+  bucket: string,
+  windowStart: Date,
+): Promise<number> {
+  const row = await db
+    .insertInto('rate_limits')
+    .values({ bucket, window_start: windowStart, count: 1 })
+    .onConflict((oc) =>
+      oc.columns(['bucket', 'window_start']).doUpdateSet((eb) => ({
+        count: eb('rate_limits.count', '+', 1),
+      })),
+    )
+    .returning('count')
+    .executeTakeFirstOrThrow();
+  return row.count;
 }
 
 /** IP thật của client: sau cloudflared lấy `CF-Connecting-IP` (SAD §4.2.3). */

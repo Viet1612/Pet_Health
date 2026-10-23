@@ -6,12 +6,12 @@
   "scripts": {
     "dev": "pnpm run --parallel \"/^dev:/\"",
     "dev:api": "tsx watch --env-file=.env src/main-api.ts",
-    "dev:worker": "tsx watch --env-file=.env src/main-worker.ts",
+    "dev:worker": "pnpm --filter @ph/email-templates build && tsx watch --env-file=.env src/main-worker.ts",
     "migrate": "tsx --env-file=.env src/main-migrate.ts",
     "openapi:gen": "tsx scripts/gen-openapi.ts",
     "db:types": "kysely-codegen --env-file .env --url \"env(MIGRATION_DATABASE_URL)\" --dialect postgres --date-parser string --exclude-pattern \"pgboss.*\" --out-file src/platform/db/database.types.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "build": "tsc -p tsconfig.build.json"
+    "build": "pnpm --filter @ph/email-templates build && tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "@fastify/cookie": "^11.1.3",

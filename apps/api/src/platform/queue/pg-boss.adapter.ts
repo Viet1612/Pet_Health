@@ -25,12 +25,34 @@ export function createBoss(connectionString: string, role: BossRole, max: number
   });
 }
 
-/** Tạo các queue ở `queues.ts` nếu chưa có. Giữ job hoàn thành 7 ngày (SAD §2.3). */
+const DEFAULT_QUEUE_OPTIONS = { deleteAfterSeconds: SEVEN_DAYS };
+
+/**
+ * Tùy chọn riêng từng queue (SAD §2.2.4). Email: thử lại 5 lần, chờ 30 s × 2ⁿ; job xong xóa sau
+ * 1 ngày (không giữ 7 ngày) vì payload có token.
+ */
+const QUEUE_OPTIONS: Partial<Record<QueueName, Record<string, number | boolean>>> = {
+  'email.transactional': {
+    retryLimit: 5,
+    retryDelay: 30,
+    retryBackoff: true,
+    deleteAfterSeconds: 86_400,
+  },
+  'media.process': { retryLimit: 3, deleteAfterSeconds: SEVEN_DAYS },
+  'media.purge-prefix': { retryLimit: 10, deleteAfterSeconds: SEVEN_DAYS },
+  'maintenance.daily': { retryLimit: 3, deleteAfterSeconds: SEVEN_DAYS },
+};
+
+/** Tạo queue còn thiếu và cập nhật tùy chọn queue đã có. Trả tên queue mới tạo. */
 export async function ensureQueues(boss: PgBoss): Promise<QueueName[]> {
   const created: QueueName[] = [];
   for (const name of QUEUES) {
-    if (await boss.getQueue(name)) continue;
-    await boss.createQueue(name, { deleteAfterSeconds: SEVEN_DAYS });
+    const options = QUEUE_OPTIONS[name] ?? DEFAULT_QUEUE_OPTIONS;
+    if (await boss.getQueue(name)) {
+      await boss.updateQueue(name, options);
+      continue;
+    }
+    await boss.createQueue(name, options);
     created.push(name);
   }
   return created;

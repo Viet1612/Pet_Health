@@ -7,6 +7,7 @@ const valid = {
   DATABASE_URL: 'postgres://a:b@localhost:5432/x',
   WORKER_DATABASE_URL: 'postgres://a:b@localhost:5432/x',
   MIGRATION_DATABASE_URL: 'postgres://a:b@localhost:5432/x',
+  ANALYTICS_HMAC_KEY: 'test-only-analytics-key-0000',
 };
 
 describe('loadConfig', () => {
