@@ -233,5 +233,106 @@ paths:
                   - csrfToken
                   - userIdHash
                 additionalProperties: false
+  /auth/verify-email:
+    post:
+      summary: Xác minh email bằng token trong liên kết
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+              required:
+                - token
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      email:
+                        type: string
+                      emailVerified:
+                        type: boolean
+                      timezone:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                        pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                    required:
+                      - id
+                      - email
+                      - emailVerified
+                      - timezone
+                      - createdAt
+                    additionalProperties: false
+                required:
+                  - user
+                additionalProperties: false
+  /auth/verify-email/resend:
+    post:
+      summary: Gửi lại email xác minh
+      tags:
+        - auth
+      responses:
+        "202":
+          description: Default Response
+  /auth/password/forgot:
+    post:
+      summary: Gửi liên kết đặt lại mật khẩu
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  minLength: 1
+              required:
+                - email
+      responses:
+        "202":
+          description: Default Response
+  /auth/password/reset:
+    post:
+      summary: Đặt mật khẩu mới bằng token trong liên kết
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                newPassword:
+                  type: string
+              required:
+                - token
+                - newPassword
+      responses:
+        "204":
+          description: Default Response
 servers:
   - url: /api/v1

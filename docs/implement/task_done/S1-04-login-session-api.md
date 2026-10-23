@@ -5,7 +5,7 @@
 | Task | [S1-04](../tasks/S1-04-login-session-api.md) |
 | Trạng thái | Xong (code), chưa gọi thử |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `cc36008` |
 
 ## Kết quả
 
