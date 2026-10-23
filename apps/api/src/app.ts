@@ -14,6 +14,7 @@ import {
 } from './platform/http/auth.js';
 import { registerErrorHandling } from './platform/http/error-handler.js';
 import { healthRoutes, type HealthDeps } from './platform/http/health.routes.js';
+import { registerIdempotencyHook } from './platform/idempotency/idempotency.hook.js';
 import { API_PREFIX, registerOpenApi } from './platform/http/openapi.js';
 import { genReqId } from './platform/http/request-id.js';
 import { installVietnameseZodMessages } from './platform/http/zod-messages.vi.js';
@@ -82,6 +83,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     app,
     deps.sessionResolver ?? new NullSessionResolver(),
   );
+  registerIdempotencyHook(app);
   app.addHook('onReady', (done) => {
     app.log.info({ publicRoutes }, 'public routes');
     done();

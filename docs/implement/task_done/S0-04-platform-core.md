@@ -5,7 +5,7 @@
 | Task | [S0-04](../tasks/S0-04-platform-core.md) |
 | Trạng thái | Xong |
 | Ngày hoàn thành | 2026-10-23 |
-| Commit | xem [README](README.md) |
+| Commit | `31d5db2` |
 
 ## Kết quả
 

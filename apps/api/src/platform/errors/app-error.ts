@@ -52,7 +52,7 @@ export class ValidationError extends AppError {
 }
 
 export class RateLimitedError extends AppError {
-  constructor(retryAfter: number, title = 'Bạn thao tác quá nhanh, vui lòng thử lại sau') {
+  constructor(retryAfter: number, title = 'Bạn thao tác quá nhiều lần, vui lòng thử lại sau') {
     super(429, 'RATE_LIMITED', title, { retryAfter });
   }
 }

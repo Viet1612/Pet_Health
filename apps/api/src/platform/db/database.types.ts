@@ -3,4 +3,38 @@
  * Please do not edit it manually.
  */
 
-export interface DB {}
+import type { ColumnType } from 'kysely';
+
+export type Json = JsonValue;
+
+export type JsonArray = JsonValue[];
+
+export type JsonObject = {
+  [x: string]: JsonValue | undefined;
+};
+
+export type JsonPrimitive = boolean | number | string | null;
+
+export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
+
+export type Timestamp = ColumnType<Date, Date | string, Date | string>;
+
+export interface IdempotencyKeys {
+  created_at: Timestamp;
+  key: string;
+  owner_id: string;
+  request_hash: Buffer;
+  response_body: Json | null;
+  status_code: number | null;
+}
+
+export interface RateLimits {
+  bucket: string;
+  count: number;
+  window_start: Timestamp;
+}
+
+export interface DB {
+  idempotency_keys: IdempotencyKeys;
+  rate_limits: RateLimits;
+}

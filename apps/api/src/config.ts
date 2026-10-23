@@ -11,6 +11,8 @@ const configSchema = z.object({
   DB_POOL_MAX: z.coerce.number().int().positive().default(10),
   WORKER_DB_POOL_MAX: z.coerce.number().int().positive().default(5),
   HEARTBEAT_FILE: z.string().min(1).default('/tmp/alive'),
+  /** Request đi qua cloudflared: tin header CF-Connecting-IP (SAD §4.2.3). */
+  TRUST_CF_CONNECTING_IP: z.stringbool().default(false),
 });
 
 export type Config = z.infer<typeof configSchema>;
