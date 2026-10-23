@@ -7,6 +7,10 @@ export function setCsrfToken(token: string | undefined): void {
   csrfToken = token;
 }
 
+export function getCsrfToken(): string | undefined {
+  return csrfToken;
+}
+
 /** Phát khi một request có phiên nhận 401 (phiên hết hạn); root route đưa về /login. */
 export const SESSION_EXPIRED_EVENT = 'ph:session-expired';
 

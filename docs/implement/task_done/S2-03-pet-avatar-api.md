@@ -5,7 +5,7 @@
 | Task | [S2-03](../tasks/S2-03-pet-avatar-api.md) |
 | Trạng thái | Xong, đã chạy đầu-cuối trên server dev (chưa thử HEIC) |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `889d2d8` |
 
 ## Kết quả
 

@@ -2,6 +2,7 @@ import { useRouterState } from '@tanstack/react-router';
 import { Bell, LogOut, Menu, Plus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
+import { PetSwitcher } from '../../features/pets';
 import { useLogoutAction } from '../../features/session';
 import { vi } from '../../i18n/vi';
 import { Button } from '../../ui/Button';
@@ -79,8 +80,9 @@ export function TopBar() {
   return (
     <header className="border-divider bg-surface sticky top-0 z-30 flex h-14 items-center gap-2 border-b px-2 md:pr-6 md:pl-26">
       <span className="text-h2 hidden md:inline">{title}</span>
-      {/* Khe cho PetSwitcher (CMP-04, S2-04) */}
-      <div className="min-w-0 flex-1" data-slot="pet-switcher" />
+      <div className="min-w-0 flex-1">
+        <PetSwitcher />
+      </div>
       <BellButton />
       <IconButton aria-label={vi.topBar.quickAdd} icon={<Plus size={24} />} className="md:hidden" />
       <Button variant="primary" icon={<Plus size={20} />} className="hidden md:inline-flex">
