@@ -732,6 +732,55 @@ paths:
       responses:
         "204":
           description: Default Response
+  /pets/{petId}/weight-target:
+    put:
+      summary: Đặt cân nặng mục tiêu
+      tags:
+        - weights
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                weightKg:
+                  type: string
+                  description: kg, dấu chấm, ví dụ "9.0"
+              required:
+                - weightKg
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: petId
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  weightKg:
+                    type: string
+                required:
+                  - weightKg
+                additionalProperties: false
+    delete:
+      summary: Xóa cân nặng mục tiêu
+      tags:
+        - weights
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: petId
+          required: true
+      responses:
+        "204":
+          description: Default Response
   /uploads/{uploadId}:
     get:
       summary: Trạng thái xử lý ảnh
@@ -767,5 +816,225 @@ paths:
                 required:
                   - status
                 additionalProperties: false
+  /pets/{petId}/weights:
+    get:
+      summary: Số đo cân nặng, mục tiêu, số đo mới nhất và chênh lệch
+      tags:
+        - weights
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: from
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: to
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: petId
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        measuredOn:
+                          type: string
+                          format: date
+                          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                        weightKg:
+                          type: string
+                          description: 'kg, dấu chấm, 1 chữ số thập phân: "9.2"'
+                        createdAt:
+                          type: string
+                          format: date-time
+                          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                      required:
+                        - id
+                        - measuredOn
+                        - weightKg
+                        - createdAt
+                      additionalProperties: false
+                  target:
+                    type:
+                      - string
+                      - "null"
+                  latest:
+                    anyOf:
+                      - type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                            pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                          measuredOn:
+                            type: string
+                            format: date
+                            pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                          weightKg:
+                            type: string
+                            description: 'kg, dấu chấm, 1 chữ số thập phân: "9.2"'
+                          createdAt:
+                            type: string
+                            format: date-time
+                            pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                        required:
+                          - id
+                          - measuredOn
+                          - weightKg
+                          - createdAt
+                        additionalProperties: false
+                      - type: "null"
+                  deltaFromPrevious:
+                    type:
+                      - string
+                      - "null"
+                required:
+                  - items
+                  - target
+                  - latest
+                  - deltaFromPrevious
+                additionalProperties: false
+    post:
+      summary: Ghi số đo cân nặng
+      tags:
+        - weights
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                weightKg:
+                  type: string
+                  description: 'kg, dấu chấm: "9.2" (client đổi "," thành ".")'
+                measuredOn:
+                  type: string
+                  description: YYYY-MM-DD, không sau hôm nay
+              required:
+                - weightKg
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: petId
+          required: true
+        - schema:
+            type: string
+          in: header
+          name: idempotency-key
+          required: false
+      responses:
+        "201":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  measuredOn:
+                    type: string
+                    format: date
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                  weightKg:
+                    type: string
+                    description: 'kg, dấu chấm, 1 chữ số thập phân: "9.2"'
+                  createdAt:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                required:
+                  - id
+                  - measuredOn
+                  - weightKg
+                  - createdAt
+                additionalProperties: false
+  /weights/{id}:
+    patch:
+      summary: Sửa số đo cân nặng
+      tags:
+        - weights
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                weightKg:
+                  type: string
+                  description: 'kg, dấu chấm: "9.2" (client đổi "," thành ".")'
+                measuredOn:
+                  type: string
+                  description: YYYY-MM-DD, không sau hôm nay
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  measuredOn:
+                    type: string
+                    format: date
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                  weightKg:
+                    type: string
+                    description: 'kg, dấu chấm, 1 chữ số thập phân: "9.2"'
+                  createdAt:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                required:
+                  - id
+                  - measuredOn
+                  - weightKg
+                  - createdAt
+                additionalProperties: false
+    delete:
+      summary: Xóa số đo cân nặng
+      tags:
+        - weights
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "204":
+          description: Default Response
 servers:
   - url: /api/v1

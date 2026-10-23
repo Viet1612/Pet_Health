@@ -70,6 +70,17 @@ export const kyselyPetRepository: PetRepository = {
       .executeTakeFirstOrThrow();
   },
 
+  async setWeightTarget(trx, ownerId, id, kg, now) {
+    const row = await trx
+      .updateTable('pets')
+      .set({ weight_target_kg: kg, updated_at: now })
+      .where('id', '=', id)
+      .where('owner_id', '=', ownerId)
+      .returning('id')
+      .executeTakeFirst();
+    return row !== undefined;
+  },
+
   lockForDelete(trx, ownerId, id) {
     return trx
       .selectFrom('pets')

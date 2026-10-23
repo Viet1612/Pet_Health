@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
+import { registerHealthRecordsRoutes, type HealthRecordsDeps } from './health-records/index.js';
 import { registerIdentityRoutes, type IdentityDeps } from './identity/index.js';
 import {
   registerMediaApiRoutes,
@@ -14,6 +15,7 @@ export interface ModuleDeps {
   identity: IdentityDeps;
   pets: PetsDeps;
   media: MediaDeps;
+  healthRecords: HealthRecordsDeps;
 }
 
 /** Đăng ký route của mọi mô-đun nghiệp vụ. Dùng chung cho main-api và sinh OpenAPI. */
@@ -21,6 +23,7 @@ export async function registerModules(api: FastifyInstance, deps: ModuleDeps): P
   await registerIdentityRoutes(api, deps.identity);
   await registerPetsRoutes(api, deps.pets, deps.media);
   await registerMediaApiRoutes(api);
+  await registerHealthRecordsRoutes(api, deps.healthRecords);
 }
 
 /** Nơi lưu và gắn ảnh theo loại mục tiêu; mô-đun sở hữu mục tiêu thêm vào (AVATAR ở S2-03). */

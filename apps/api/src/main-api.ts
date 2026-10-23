@@ -25,6 +25,7 @@ const moduleDeps: ModuleDeps = {
     analyticsHmacKey: config.ANALYTICS_HMAC_KEY,
   },
   pets: { clock: runtime.clock },
+  healthRecords: { clock: runtime.clock },
   media: {
     // Container api chỉ ghi được `incoming/` (mount ro cho phần còn lại).
     storage: new LocalDiskStorage(config.MEDIA_ROOT),

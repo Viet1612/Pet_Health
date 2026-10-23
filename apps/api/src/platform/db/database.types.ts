@@ -102,6 +102,15 @@ export interface Users {
   timezone: Generated<string>;
 }
 
+export interface WeightEntries {
+  created_at: Generated<Timestamp>;
+  id: string;
+  measured_on: string;
+  owner_id: string;
+  pet_id: string;
+  weight_kg: Numeric;
+}
+
 export interface DB {
   auth_tokens: AuthTokens;
   idempotency_keys: IdempotencyKeys;
@@ -110,4 +119,5 @@ export interface DB {
   sessions: Sessions;
   uploads: Uploads;
   users: Users;
+  weight_entries: WeightEntries;
 }

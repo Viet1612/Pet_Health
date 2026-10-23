@@ -756,6 +756,73 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/pets/{petId}/weight-target': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** Đặt cân nặng mục tiêu */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description kg, dấu chấm, ví dụ "9.0" */
+            weightKg: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              weightKg: string;
+            };
+          };
+        };
+      };
+    };
+    post?: never;
+    /** Xóa cân nặng mục tiêu */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/uploads/{uploadId}': {
     parameters: {
       query?: never;
@@ -797,6 +864,188 @@ export interface paths {
     options?: never;
     head?: never;
     patch?: never;
+    trace?: never;
+  };
+  '/pets/{petId}/weights': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Số đo cân nặng, mục tiêu, số đo mới nhất và chênh lệch */
+    get: {
+      parameters: {
+        query?: {
+          from?: string;
+          to?: string;
+        };
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: date */
+                measuredOn: string;
+                /** @description kg, dấu chấm, 1 chữ số thập phân: "9.2" */
+                weightKg: string;
+                /** Format: date-time */
+                createdAt: string;
+              }[];
+              target: string | null;
+              latest: {
+                /** Format: uuid */
+                id: string;
+                /** Format: date */
+                measuredOn: string;
+                /** @description kg, dấu chấm, 1 chữ số thập phân: "9.2" */
+                weightKg: string;
+                /** Format: date-time */
+                createdAt: string;
+              } | null;
+              deltaFromPrevious: string | null;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Ghi số đo cân nặng */
+    post: {
+      parameters: {
+        query?: never;
+        header?: {
+          'idempotency-key'?: string;
+        };
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description kg, dấu chấm: "9.2" (client đổi "," thành ".") */
+            weightKg: string;
+            /** @description YYYY-MM-DD, không sau hôm nay */
+            measuredOn?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** Format: date */
+              measuredOn: string;
+              /** @description kg, dấu chấm, 1 chữ số thập phân: "9.2" */
+              weightKg: string;
+              /** Format: date-time */
+              createdAt: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/weights/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Xóa số đo cân nặng */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    /** Sửa số đo cân nặng */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description kg, dấu chấm: "9.2" (client đổi "," thành ".") */
+            weightKg?: string;
+            /** @description YYYY-MM-DD, không sau hôm nay */
+            measuredOn?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** Format: date */
+              measuredOn: string;
+              /** @description kg, dấu chấm, 1 chữ số thập phân: "9.2" */
+              weightKg: string;
+              /** Format: date-time */
+              createdAt: string;
+            };
+          };
+        };
+      };
+    };
     trace?: never;
   };
 }

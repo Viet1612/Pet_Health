@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 23 / 51 task
+**Tiến độ:** 24 / 51 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -32,3 +32,4 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S2-04 | Giao diện SCR-07, 08, 09 và PetSwitcher | Xong (code), chưa bấm thử trên trình duyệt | 2026-10-24 | `d715749` | [S2-04](S2-04-pets-ui.md) |
 | S2-05 | Xóa thú cưng (API + giao diện) | Xong; API đã chạy thử, hộp thoại chưa bấm thử | 2026-10-24 | `911ca12` | [S2-05](S2-05-delete-pet.md) |
 | S2-06 | Cài máy chủ, staging, `deploy.sh`, image lên GHCR | Bỏ qua: chỉ phát triển và kiểm thử trên máy dev | 2026-10-24 | — | — |
+| S3-01 | API cân nặng và mục tiêu | Xong, đã gọi thử trên server dev | 2026-10-24 | — | [S3-01](S3-01-weights-api.md) |

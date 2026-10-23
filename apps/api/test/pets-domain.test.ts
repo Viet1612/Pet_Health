@@ -102,6 +102,7 @@ describe('createPet theo múi giờ tài khoản', () => {
       lockAvatarKey: () => Promise.resolve(undefined),
       setAvatarKey: () => Promise.resolve(undefined),
       lockForDelete: () => Promise.resolve(undefined),
+      setWeightTarget: () => Promise.resolve(false),
       delete: () => Promise.resolve(),
     };
     return { clock, pets };
