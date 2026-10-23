@@ -44,3 +44,11 @@
 - **`Date.now()` gom vào `nowMs()`** vì rule React Compiler `react-hooks/purity` báo lỗi khi gọi trực tiếp trong component.
 - **Menu phone** hiện chỉ có mục Đăng xuất; các mục khác thêm ở task sau.
 - **Chưa có test component** (Testing Library) cho các màn; sẽ bổ sung khi cần.
+
+## Chỉnh sau khi chạy thử (2026-10-24)
+
+- **Bố cục desktop làm lại:**
+  - Chia đôi từ 1024 px (spec ghi 1280 px), để laptop màn nhỏ cũng có bố cục 2 cột.
+  - Cột trái rộng 45%: họa tiết chân thú, khẩu hiệu cỡ lớn, 3 tính năng chính.
+  - Cột phải: form nằm trong thẻ trắng 440 px có bóng nhẹ, trên nền `primary-soft`.
+- **Chỉ dùng giao diện sáng:** bỏ bộ token dark mode trong `tokens.css`; `index.html` khai báo `color-scheme: light`.

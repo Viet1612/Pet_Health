@@ -48,6 +48,14 @@ export const vi = {
     tagline: 'Sổ sức khỏe cho thú cưng của bạn',
     intro:
       'Lưu hồ sơ, cân nặng, sổ y tế và lịch tiêm của thú cưng ở một nơi, nhắc bạn trước mỗi mốc.',
+    features: [
+      { title: 'Theo dõi cân nặng', body: 'Biểu đồ cân nặng theo thời gian cho từng bé.' },
+      { title: 'Lịch tiêm và nhắc hẹn', body: 'Nhắc trước mỗi mũi tiêm, lần tẩy giun, lịch khám.' },
+      {
+        title: 'Sổ y tế và kỷ niệm',
+        body: 'Lưu lần khám, đơn thuốc và những khoảnh khắc đáng nhớ.',
+      },
+    ],
     email: 'Email',
     password: 'Mật khẩu',
     newPassword: 'Mật khẩu mới',

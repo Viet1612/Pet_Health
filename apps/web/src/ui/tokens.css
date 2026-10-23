@@ -25,33 +25,8 @@
   --scrim: rgb(0 0 0 / 0.4);
   --motion-fast: 120ms;
   --motion-base: 200ms;
+  /* Chỉ dùng giao diện sáng, kể cả khi hệ điều hành bật dark mode. */
   color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #121212;
-    --surface: #1c1c1e;
-    --surface-2: #2a2a2d;
-    --text: #f2f2f0;
-    --text-muted: #a8a6a0;
-    --border: #6f6d68;
-    --divider: #2f2f32;
-    --primary: #f5a3c7;
-    --on-primary: #4a0d2b;
-    --primary-soft: #3a1a28;
-    --primary-soft-fg: #f5a3c7;
-    --focus: #60a5fa;
-    --status-danger-fg: #fda29b;
-    --status-danger-bg: #55160c;
-    --status-warning-fg: #fec84b;
-    --status-warning-bg: #4e1d09;
-    --status-success-fg: #75e0a7;
-    --status-success-bg: #053321;
-    --status-neutral-fg: #d0d5dd;
-    --status-neutral-bg: #344054;
-    color-scheme: dark;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
