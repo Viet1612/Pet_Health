@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "size": "size-limit"
   },
   "dependencies": {
     "@ph/api-client": "workspace:*",
@@ -18,11 +19,13 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@size-limit/file": "^14.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/router-plugin": "^1.168.47",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "size-limit": "^14.3.0",
     "tailwindcss": "^4.3.3",
     "vite": "^8.3.5"
   }

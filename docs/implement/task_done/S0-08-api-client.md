@@ -5,7 +5,7 @@
 | Task | [S0-08](../tasks/S0-08-api-client.md) |
 | Trạng thái | Xong (code), chưa có unit test |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `8d27fd4` |
 
 ## Kết quả
 
