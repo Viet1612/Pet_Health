@@ -6,10 +6,13 @@ import type { PgBoss } from 'pg-boss';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { buildApp } from '../src/app.js';
+import { withUserTx } from '../src/platform/db/with-user-tx.js';
+import { newId } from '../src/platform/ids.js';
 import { createDb, createPool, type Database } from '../src/platform/db/kysely.js';
 import { createMigrator } from '../src/platform/db/migrator.js';
 import { createBoss, ensureQueues, PgBossJobQueue } from '../src/platform/queue/pg-boss.adapter.js';
 import { QUEUES } from '../src/platform/queue/queues.js';
+import { testDeps } from './helpers.js';
 
 let container: StartedPostgreSqlContainer;
 let db: Kysely<Database>;
@@ -84,17 +87,42 @@ describe('JobQueuePort.enqueue', () => {
   });
 });
 
+describe('withUserTx', () => {
+  const currentUser = async (q: Kysely<Database>): Promise<string | null> => {
+    const { rows } = await sql<{ v: string | null }>`
+      SELECT nullif(current_setting('app.user_id', true), '') AS v`.execute(q);
+    return rows[0]?.v ?? null;
+  };
+
+  it('đặt app.user_id trong transaction; hết transaction thì không còn', async () => {
+    const userId = newId();
+    const inside = await withUserTx(db, userId, (trx) => currentUser(trx));
+    expect(inside).toBe(userId);
+    expect(await currentUser(db)).toBeNull();
+  });
+
+  it('hai transaction song song không thấy giá trị của nhau', async () => {
+    const [a, b] = [newId(), newId()];
+    const results = await Promise.all([
+      withUserTx(db, a, (trx) => currentUser(trx)),
+      withUserTx(db, b, (trx) => currentUser(trx)),
+    ]);
+    expect(results).toEqual([a, b]);
+  });
+});
+
 // Chạy cuối cùng: dừng container.
 describe('readyz với DB thật', () => {
   it('200 khi DB chạy, 503 khi dừng container', async () => {
     const pool = createPool(container.getConnectionUri(), 1, undefined, () => undefined);
     const probeDb = createDb(pool);
-    const app = await buildApp({
-      checkDb: async () => {
-        await sql`SELECT 1`.execute(probeDb);
-      },
-      lifecycle: { shuttingDown: false },
-    });
+    const app = await buildApp(
+      testDeps({
+        checkDb: async () => {
+          await sql`SELECT 1`.execute(probeDb);
+        },
+      }),
+    );
     expect((await app.inject({ method: 'GET', url: '/api/v1/readyz' })).statusCode).toBe(200);
 
     await boss.stop({ graceful: false });

@@ -4,26 +4,31 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
 import { buildApp } from '../src/app.js';
+import { testDeps } from './helpers.js';
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe('tắt êm', () => {
   it('request đang chạy (2 s) vẫn trả 200; request đến sau khi đóng bị từ chối', async () => {
     const lifecycle = { shuttingDown: false };
-    const app = await buildApp({
-      checkDb: () => Promise.resolve(),
-      lifecycle,
-      registerRoutes: (api) => {
-        api.get(
-          '/__slow',
-          { schema: { response: { 200: z.object({ done: z.boolean() }) } } },
-          async () => {
-            await sleep(2000);
-            return { done: true };
-          },
-        );
-      },
-    });
+    const app = await buildApp(
+      testDeps({
+        lifecycle,
+        registerRoutes: (api) => {
+          api.get(
+            '/__slow',
+            {
+              config: { public: true },
+              schema: { response: { 200: z.object({ done: z.boolean() }) } },
+            },
+            async () => {
+              await sleep(2000);
+              return { done: true };
+            },
+          );
+        },
+      }),
+    );
     await app.listen({ host: '127.0.0.1', port: 0 });
     const { port } = app.server.address() as AddressInfo;
     const base = `http://127.0.0.1:${String(port)}/api/v1`;

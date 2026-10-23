@@ -1,9 +1,12 @@
 import { sql, type Kysely } from 'kysely';
 import type pg from 'pg';
 import type { PgBoss } from 'pg-boss';
+import type { Logger } from 'pino';
 
 import type { Config } from './config.js';
-import { createDb, createPool, type Database } from './platform/db/kysely.js';
+import { FakeClock, SystemClock, type ClockPort } from './platform/clock/clock.js';
+import { APP_SESSION_OPTIONS, createDb, createPool, type Database } from './platform/db/kysely.js';
+import { createLogger } from './platform/logging/logger.js';
 import type { JobQueuePort } from './platform/queue/job-queue.port.js';
 import { createBoss, PgBossJobQueue, type BossRole } from './platform/queue/pg-boss.adapter.js';
 
@@ -12,6 +15,8 @@ export interface Runtime {
   db: Kysely<Database>;
   boss: PgBoss;
   jobQueue: JobQueuePort;
+  clock: ClockPort;
+  logger: Logger;
   checkDb: () => Promise<void>;
   /** Dừng pg-boss (chờ job đang chạy) rồi đóng pool DB. */
   close: () => Promise<void>;
@@ -25,11 +30,19 @@ export async function createRuntime(
   const url = role === 'api' ? config.DATABASE_URL : config.WORKER_DATABASE_URL;
   const max = role === 'api' ? config.DB_POOL_MAX : config.WORKER_DB_POOL_MAX;
 
-  const pool = createPool(url, max);
+  const logger = createLogger({
+    level: config.LOG_LEVEL,
+    pretty: config.NODE_ENV === 'development',
+  }).child(role === 'worker' ? { role, job: null } : { role });
+  const clock: ClockPort = config.NODE_ENV === 'test' ? new FakeClock() : new SystemClock();
+
+  const pool = createPool(url, max, APP_SESSION_OPTIONS, (error) => {
+    logger.warn({ err: error }, 'idle db client closed');
+  });
   const db = createDb(pool);
   const boss = createBoss(url, role, 2);
   boss.on('error', (error: unknown) => {
-    process.stderr.write(`[pg-boss] ${String(error)}\n`);
+    logger.error({ err: error }, 'pg-boss error');
   });
   await boss.start();
 
@@ -38,6 +51,8 @@ export async function createRuntime(
     db,
     boss,
     jobQueue: new PgBossJobQueue(boss),
+    clock,
+    logger,
     checkDb: async () => {
       await sql`SELECT 1`.execute(db);
     },

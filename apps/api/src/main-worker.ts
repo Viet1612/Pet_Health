@@ -8,9 +8,9 @@ const runtime = await createRuntime(config, 'worker');
 // Handler job đăng ký ở các mô-đun: email (S1-02), ảnh (S2-02), dọn dẹp (S6-06).
 
 const stopHeartbeat = startHeartbeat(config.HEARTBEAT_FILE, (error) => {
-  process.stderr.write(`[worker] heartbeat lỗi: ${String(error)}\n`);
+  runtime.logger.warn({ err: error }, 'heartbeat write failed');
 });
-process.stdout.write('[worker] started\n');
+runtime.logger.info('worker started');
 
 let stopping = false;
 async function shutdown(): Promise<void> {

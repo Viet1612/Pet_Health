@@ -6,7 +6,10 @@ import { buildApp } from '../src/app.js';
 
 const target = fileURLToPath(new URL('../../../openapi.yaml', import.meta.url));
 
+// nodeEnv production: route chỉ dùng cho test (/__test/*) không vào contract.
 const app = await buildApp({
+  appOrigin: 'https://app.pethealth.example',
+  nodeEnv: 'production',
   checkDb: () => Promise.resolve(),
   lifecycle: { shuttingDown: false },
 });

@@ -1,9 +1,10 @@
 import type { FastifyInstance } from 'fastify';
-import { parse } from 'yaml';
 import { afterEach, describe, expect, it } from 'vitest';
+import { parse } from 'yaml';
 import { z } from 'zod';
 
 import { buildApp, type AppDeps } from '../src/app.js';
+import { testDeps } from './helpers.js';
 
 let app: FastifyInstance | undefined;
 afterEach(async () => {
@@ -12,24 +13,25 @@ afterEach(async () => {
 });
 
 async function makeApp(overrides: Partial<AppDeps> = {}): Promise<FastifyInstance> {
-  app = await buildApp({
-    checkDb: () => Promise.resolve(),
-    lifecycle: { shuttingDown: false },
-    registerRoutes: (api) => {
-      // Route chỉ dùng trong test để kiểm body JSON.
-      api.post(
-        '/__echo',
-        {
-          schema: {
-            body: z.object({ a: z.string() }),
-            response: { 200: z.object({ n: z.number() }) },
+  app = await buildApp(
+    testDeps({
+      registerRoutes: (api) => {
+        // Route chỉ dùng trong test để kiểm body JSON.
+        api.post(
+          '/__echo',
+          {
+            config: { public: true },
+            schema: {
+              body: z.object({ a: z.string() }),
+              response: { 200: z.object({ n: z.number() }) },
+            },
           },
-        },
-        (req) => ({ n: (req.body as { a: string }).a.length }),
-      );
-    },
-    ...overrides,
-  });
+          (req) => ({ n: (req.body as { a: string }).a.length }),
+        );
+      },
+      ...overrides,
+    }),
+  );
   return app;
 }
 
@@ -90,9 +92,8 @@ describe('HTTP chung', () => {
   });
 
   it('body không phải JSON → 415', async () => {
-    const res = await (
-      await makeApp()
-    ).inject({
+    const a = await makeApp();
+    const res = await a.inject({
       method: 'POST',
       url: '/api/v1/__echo',
       headers: { 'content-type': 'text/plain' },
@@ -103,12 +104,9 @@ describe('HTTP chung', () => {
 });
 
 describe('OpenAPI', () => {
-  it('OpenAPI 3.1, servers /api/v1, có /healthz và /readyz, ổn định giữa hai lần sinh', async () => {
+  it('OpenAPI 3.1, servers /api/v1, chỉ có /healthz và /readyz, ổn định giữa hai lần sinh', async () => {
     const gen = async (): Promise<string> => {
-      const a = await buildApp({
-        checkDb: () => Promise.resolve(),
-        lifecycle: { shuttingDown: false },
-      });
+      const a = await buildApp(testDeps({ nodeEnv: 'production' }));
       await a.ready();
       const yaml = a.swagger({ yaml: true });
       await a.close();

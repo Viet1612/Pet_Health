@@ -104,5 +104,24 @@ export default tseslint.config(
     rules: { 'no-console': 'error' },
   },
 
+  // Mô-đun nghiệp vụ lấy thời gian qua ClockPort (SAD P7), để test được bằng FakeClock
+  {
+    files: ['apps/api/src/modules/**/*.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        noSqlRaw,
+        {
+          selector: "NewExpression[callee.name='Date'][arguments.length=0]",
+          message: 'Dùng clock.now() (ClockPort), không gọi new Date() trong mô-đun (SAD P7).',
+        },
+        {
+          selector: "CallExpression[callee.object.name='Date'][callee.property.name='now']",
+          message: 'Dùng clock.now() (ClockPort), không gọi Date.now() trong mô-đun (SAD P7).',
+        },
+      ],
+    },
+  },
+
   prettier,
 );

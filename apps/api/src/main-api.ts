@@ -9,9 +9,12 @@ const runtime = await createRuntime(config, 'api');
 const lifecycle = { shuttingDown: false };
 
 const app = await buildApp({
+  appOrigin: config.APP_ORIGIN,
+  nodeEnv: config.NODE_ENV,
+  clock: runtime.clock,
   checkDb: runtime.checkDb,
   lifecycle,
-  logger: { level: config.LOG_LEVEL },
+  logger: runtime.logger,
 });
 
 await app.listen({ host: '0.0.0.0', port: config.PORT });
