@@ -52,3 +52,4 @@
   - Cột trái rộng 45%: họa tiết chân thú, khẩu hiệu cỡ lớn, 3 tính năng chính.
   - Cột phải: form nằm trong thẻ trắng 440 px có bóng nhẹ, trên nền `primary-soft`.
 - **Chỉ dùng giao diện sáng:** bỏ bộ token dark mode trong `tokens.css`; `index.html` khai báo `color-scheme: light`.
+- **Màn rộng (≥ 1536 px):** cột trái không còn giới hạn 720 px (tối đa 1100 px), chữ và icon to hơn. Thẻ form rộng dần 440 → 500 → 560 → 620 px (≥ 1920 px), padding và tiêu đề lớn hơn.

@@ -26,7 +26,7 @@ const FEATURE_ICONS = [TrendingUp, CalendarCheck, NotebookPen];
 /** Cột giới thiệu (desktop): nền primary, logo, khẩu hiệu, 3 tính năng chính. */
 function IntroPanel() {
   return (
-    <aside className="bg-primary text-on-primary relative hidden w-[45%] max-w-[720px] shrink-0 overflow-hidden lg:flex">
+    <aside className="bg-primary text-on-primary relative hidden w-[45%] max-w-[1100px] shrink-0 overflow-hidden lg:flex">
       {/* Họa tiết chân thú mờ phía sau, chỉ để trang trí. */}
       <PawPrint
         aria-hidden
@@ -38,11 +38,13 @@ function IntroPanel() {
         size={140}
         className="pointer-events-none absolute top-16 right-20 rotate-[15deg] opacity-10"
       />
-      <div className="relative flex w-full flex-col justify-between px-12 py-12 xl:px-16">
+      <div className="relative flex w-full flex-col justify-between px-12 py-12 xl:px-16 2xl:px-24 2xl:py-16">
         <Logo inverted />
-        <div className="flex max-w-lg flex-col gap-6">
-          <p className="text-[40px] leading-[48px] font-bold">{vi.auth.tagline}</p>
-          <p className="text-body opacity-90">{vi.auth.intro}</p>
+        <div className="flex max-w-lg flex-col gap-6 2xl:max-w-2xl 2xl:gap-8">
+          <p className="text-[40px] leading-[48px] font-bold 2xl:text-[56px] 2xl:leading-[66px]">
+            {vi.auth.tagline}
+          </p>
+          <p className="text-body opacity-90 2xl:text-[20px] 2xl:leading-[30px]">{vi.auth.intro}</p>
           <ul className="mt-4 flex flex-col gap-5">
             {vi.auth.features.map((f, i) => {
               const Icon = FEATURE_ICONS[i] ?? PawPrint;
@@ -50,13 +52,15 @@ function IntroPanel() {
                 <li key={f.title} className="flex items-start gap-4">
                   <span
                     aria-hidden
-                    className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-white/15"
+                    className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-white/15 2xl:size-14"
                   >
                     <Icon size={22} />
                   </span>
                   <span>
-                    <span className="text-body block font-semibold">{f.title}</span>
-                    <span className="text-small block opacity-85">{f.body}</span>
+                    <span className="text-body block font-semibold 2xl:text-[18px] 2xl:leading-[28px]">
+                      {f.title}
+                    </span>
+                    <span className="text-small 2xl:text-body block opacity-85">{f.body}</span>
                   </span>
                 </li>
               );
@@ -71,7 +75,8 @@ function IntroPanel() {
 
 /**
  * Khung màn hình khách (UXD-009): phone 1 cột lề 24 px; tablet thẻ form 440 px trên nền
- * primary-soft; desktop (≥ 1024) chia đôi: trái cột giới thiệu nền primary, phải thẻ form 440 px.
+ * primary-soft; desktop (≥ 1024) chia đôi: trái cột giới thiệu nền primary (45%), phải thẻ form
+ * 440 px, nới dần tới 620 px trên màn rộng.
  */
 export function AuthLayout() {
   return (
@@ -81,7 +86,14 @@ export function AuthLayout() {
         id="main"
         className="flex min-h-dvh flex-1 flex-col justify-center px-6 py-8 md:items-center md:px-8 lg:py-12"
       >
-        <div className="bg-surface w-full md:max-w-[440px] md:rounded-xl md:p-10 md:shadow-[0_8px_32px_rgb(194_24_91/0.10)]">
+        <div
+          className={cx(
+            'bg-surface w-full md:max-w-[440px] md:rounded-xl md:p-10 md:shadow-[0_8px_32px_rgb(194_24_91/0.10)]',
+            // Màn rộng: thẻ form lớn dần để cân với cột giới thiệu; tiêu đề trang to theo.
+            'min-[1920px]:max-w-[620px] xl:max-w-[500px] 2xl:max-w-[560px] 2xl:rounded-2xl 2xl:p-14',
+            '2xl:[&_h1]:text-[30px] 2xl:[&_h1]:leading-[38px]',
+          )}
+        >
           <div className="mb-8 lg:hidden">
             <Logo />
           </div>
