@@ -13,7 +13,15 @@ const noSqlRaw = {
 
 export default tseslint.config(
   {
-    ignores: ['**/node_modules/', '**/dist/', '**/coverage/', 'docs/', 'infra/'],
+    ignores: [
+      '**/node_modules/',
+      '**/dist/',
+      '**/coverage/',
+      'docs/',
+      'infra/',
+      // Sinh tự động bằng kysely-codegen
+      'apps/api/src/platform/db/database.types.ts',
+    ],
   },
 
   // Mọi package

@@ -5,7 +5,7 @@
 | Task | [S0-02](../tasks/S0-02-dev-environment.md) |
 | Trạng thái | Xong |
 | Ngày hoàn thành | 2026-10-23 |
-| Commit | xem [README](README.md) |
+| Commit | `5eae5a9` |
 
 ## Kết quả
 

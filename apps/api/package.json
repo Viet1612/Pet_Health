@@ -3,11 +3,32 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
   "scripts": {
+    "dev": "pnpm run --parallel \"/^dev:/\"",
+    "dev:api": "tsx watch --env-file=.env src/main-api.ts",
+    "dev:worker": "tsx watch --env-file=.env src/main-worker.ts",
+    "migrate": "tsx --env-file=.env src/main-migrate.ts",
+    "openapi:gen": "tsx scripts/gen-openapi.ts",
+    "db:types": "kysely-codegen --env-file .env --url \"env(MIGRATION_DATABASE_URL)\" --dialect postgres --date-parser string --exclude-pattern \"pgboss.*\" --out-file src/platform/db/database.types.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@ph/email-templates": "workspace:*"
+    "@fastify/swagger": "^9.9.2",
+    "@ph/email-templates": "workspace:*",
+    "fastify": "^5.12.7",
+    "fastify-type-provider-zod": "^7.0.0",
+    "kysely": "^0.29.7",
+    "pg": "^8.23.1",
+    "pg-boss": "^12.38.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "^12.2.1",
+    "@types/pg": "^8.23.1",
+    "kysely-codegen": "^0.20.0",
+    "openapi-types": "^12.1.3",
+    "testcontainers": "^12.2.1",
+    "tsx": "^4.23.15",
+    "yaml": "^2.9.1"
   }
 }
