@@ -34,16 +34,19 @@ export function ErrorState(props: ErrorStateProps) {
           <code className="bg-surface-2 text-body rounded-sm px-2 py-1 font-semibold select-all">
             {props.refCode}
           </code>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              void navigator.clipboard.writeText(props.refCode ?? '').then(() => {
-                setCopied(true);
-              });
-            }}
-          >
-            {copied ? vi.error.copied : vi.error.copy}
-          </Button>
+          {/* Clipboard API chỉ có ở HTTPS/localhost; mở dev bằng IP LAN thì chọn mã để chép tay. */}
+          {window.isSecureContext && (
+            <Button
+              variant="ghost"
+              onClick={() => {
+                void navigator.clipboard.writeText(props.refCode ?? '').then(() => {
+                  setCopied(true);
+                });
+              }}
+            >
+              {copied ? vi.error.copied : vi.error.copy}
+            </Button>
+          )}
         </div>
       )}
 
