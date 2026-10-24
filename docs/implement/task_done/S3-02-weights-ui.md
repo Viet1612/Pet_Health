@@ -5,7 +5,7 @@
 | Task | [S3-02](../tasks/S3-02-weights-ui.md) |
 | Trạng thái | Xong (code), chưa bấm thử trên trình duyệt |
 | Ngày hoàn thành | 2026-10-24 |
-| Commit | xem [README](README.md) |
+| Commit | `6f52199` |
 
 ## Kết quả
 

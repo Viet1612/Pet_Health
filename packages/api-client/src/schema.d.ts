@@ -1048,6 +1048,261 @@ export interface paths {
     };
     trace?: never;
   };
+  '/pets/{petId}/visits': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Danh sách bản ghi khám (mới nhất trước, phân trang keyset) */
+    get: {
+      parameters: {
+        query?: {
+          limit?: number;
+          cursor?: string;
+        };
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: date */
+                visitedOn: string;
+                diagnosis: string | null;
+                symptoms: string | null;
+                photoCount: number;
+              }[];
+              nextCursor: string | null;
+              totalCount: number;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Thêm bản ghi khám */
+    post: {
+      parameters: {
+        query?: never;
+        header?: {
+          'idempotency-key'?: string;
+        };
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description YYYY-MM-DD, mặc định hôm nay, không sau hôm nay */
+            visitedOn?: string;
+            /** @description ≤ 2000 ký tự; null hoặc "" để xóa */
+            symptoms?: string | null;
+            /** @description ≤ 2000 ký tự; null hoặc "" để xóa */
+            diagnosis?: string | null;
+            /** @description ≤ 2000 ký tự; null hoặc "" để xóa */
+            prescription?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** Format: uuid */
+              petId: string;
+              /** Format: date */
+              visitedOn: string;
+              symptoms: string | null;
+              diagnosis: string | null;
+              prescription: string | null;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+              photos: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                status: 'PROCESSING' | 'READY';
+                thumbUrl: string | null;
+                url: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/visits/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Chi tiết bản ghi khám */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** Format: uuid */
+              petId: string;
+              /** Format: date */
+              visitedOn: string;
+              symptoms: string | null;
+              diagnosis: string | null;
+              prescription: string | null;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+              photos: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                status: 'PROCESSING' | 'READY';
+                thumbUrl: string | null;
+                url: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    /** Xóa bản ghi khám và mọi ảnh đính kèm */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    /** Sửa bản ghi khám */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description YYYY-MM-DD, mặc định hôm nay, không sau hôm nay */
+            visitedOn?: string;
+            /** @description ≤ 2000 ký tự; null hoặc "" để xóa */
+            symptoms?: string | null;
+            /** @description ≤ 2000 ký tự; null hoặc "" để xóa */
+            diagnosis?: string | null;
+            /** @description ≤ 2000 ký tự; null hoặc "" để xóa */
+            prescription?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** Format: uuid */
+              petId: string;
+              /** Format: date */
+              visitedOn: string;
+              symptoms: string | null;
+              diagnosis: string | null;
+              prescription: string | null;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+              photos: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                status: 'PROCESSING' | 'READY';
+                thumbUrl: string | null;
+                url: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {

@@ -102,6 +102,30 @@ export interface Users {
   timezone: Generated<string>;
 }
 
+export interface VisitPhotos {
+  created_at: Generated<Timestamp>;
+  fail_reason: string | null;
+  id: string;
+  owner_id: string;
+  size_bytes: Generated<number>;
+  status: Generated<string>;
+  storage_key: string;
+  thumb_key: string;
+  visit_id: string;
+}
+
+export interface Visits {
+  created_at: Generated<Timestamp>;
+  diagnosis: string | null;
+  id: string;
+  owner_id: string;
+  pet_id: string;
+  prescription: string | null;
+  symptoms: string | null;
+  updated_at: Generated<Timestamp>;
+  visited_on: string;
+}
+
 export interface WeightEntries {
   created_at: Generated<Timestamp>;
   id: string;
@@ -119,5 +143,7 @@ export interface DB {
   sessions: Sessions;
   uploads: Uploads;
   users: Users;
+  visit_photos: VisitPhotos;
+  visits: Visits;
   weight_entries: WeightEntries;
 }

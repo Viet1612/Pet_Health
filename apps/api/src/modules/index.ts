@@ -23,7 +23,7 @@ export async function registerModules(api: FastifyInstance, deps: ModuleDeps): P
   await registerIdentityRoutes(api, deps.identity);
   await registerPetsRoutes(api, deps.pets, deps.media);
   await registerMediaApiRoutes(api);
-  await registerHealthRecordsRoutes(api, deps.healthRecords);
+  await registerHealthRecordsRoutes(api, deps.healthRecords, deps.media);
 }
 
 /** Nơi lưu và gắn ảnh theo loại mục tiêu; mô-đun sở hữu mục tiêu thêm vào (AVATAR ở S2-03). */
