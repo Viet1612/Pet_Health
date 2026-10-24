@@ -29,9 +29,14 @@ const sendEmail = createSendTransactionalEmail({
   appOrigin: config.APP_ORIGIN,
   dailyLimit: config.SMTP_DAILY_LIMIT,
 });
-await runtime.boss.work(EMAIL_QUEUE, { batchSize: 1 }, async (jobs) => {
-  for (const job of jobs) await sendEmail(job.data);
-});
+// Hỏi job mỗi 0,5 s (mức thấp nhất của pg-boss): vẫn gửi tuần tự, chỉ bớt thời gian chờ giữa các email.
+await runtime.boss.work(
+  EMAIL_QUEUE,
+  { batchSize: 1, pollingIntervalSeconds: 0.5 },
+  async (jobs) => {
+    for (const job of jobs) await sendEmail(job.data);
+  },
+);
 
 // Ảnh (S2-02): HEIC cần libvips có libheif + libde265 (image ph-app, S0-10). Production thiếu thì
 // dừng; máy dev (sharp prebuilt) chỉ cảnh báo.

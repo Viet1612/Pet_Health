@@ -252,8 +252,17 @@ describe('POST /api/v1/__test/clock', () => {
       headers: json,
       payload: { now: '2026-11-08T00:00:00Z', frozen: true },
     });
-    expect(res.statusCode).toBe(204);
+    expect(res.statusCode).toBe(200);
     expect(clock.now().toISOString()).toBe('2026-11-08T00:00:00.000Z');
+
+    // Giờ có múi giờ, tua thêm 16 s.
+    const adv = await a.inject({
+      method: 'POST',
+      url: '/api/v1/__test/clock',
+      headers: json,
+      payload: { now: '2026-11-08T00:01:00+07:00', frozen: true, advanceMs: 16_000 },
+    });
+    expect(adv.json()).toEqual({ now: '2026-11-07T17:01:16.000Z' });
 
     await a.inject({
       method: 'POST',

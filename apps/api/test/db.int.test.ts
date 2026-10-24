@@ -38,8 +38,14 @@ const jobCount = async (): Promise<number> => {
 beforeAll(async () => {
   container = await new PostgreSqlContainer('postgres:16').start();
   const url = container.getConnectionUri();
+  // Role ứng dụng (S1-01) phải có trước migration, giống infra/dev/roles.sql.
+  const admin = createDb(createPool(url, 1, undefined));
+  await sql`CREATE ROLE app_rw LOGIN NOBYPASSRLS PASSWORD 'app_rw_test'`.execute(admin);
+  await sql`CREATE ROLE app_worker LOGIN BYPASSRLS PASSWORD 'app_worker_test'`.execute(admin);
+  await admin.destroy();
   const first = await migrateAll(url);
-  expect(first.migrated).toEqual(['202610231700_init']);
+  expect(first.migrated[0]).toBe('202610231700_init');
+  expect(first.migrated.length).toBeGreaterThan(1);
   expect(first.queues).toEqual([...QUEUES]);
 
   db = createDb(createPool(url, 2, undefined, () => undefined));
@@ -48,9 +54,19 @@ beforeAll(async () => {
 }, 180_000);
 
 afterAll(async () => {
-  await boss.stop({ graceful: false }).catch(() => undefined);
-  await db.destroy().catch(() => undefined);
-  await container.stop().catch(() => undefined);
+  // Setup lỗi giữa chừng thì các biến có thể chưa được gán: lỗi nào cũng bỏ qua.
+  const steps: (() => Promise<unknown>)[] = [
+    () => boss.stop({ graceful: false }),
+    () => db.destroy(),
+    () => container.stop(),
+  ];
+  for (const step of steps) {
+    try {
+      await step();
+    } catch {
+      // bỏ qua
+    }
+  }
 }, 60_000);
 
 describe('migration', () => {

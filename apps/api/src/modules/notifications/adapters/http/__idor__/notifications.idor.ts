@@ -4,7 +4,7 @@ import { sql } from 'kysely';
 import { expect } from 'vitest';
 
 import { authHeaders } from '../../../../../../test/idor/accounts.js';
-import { registerIdorCustom } from '../../../../../../test/idor/registry.js';
+import { registerIdorBody, registerIdorCustom } from '../../../../../../test/idor/registry.js';
 import { newId } from '../../../../../platform/ids.js';
 
 registerIdorCustom('POST /notifications/read với ID của người khác', async ({ app, a, b, db }) => {
@@ -36,3 +36,7 @@ registerIdorCustom('POST /notifications/read với ID của người khác', asy
     SELECT read_at FROM notifications WHERE id = ${notificationId}`.execute(db);
   expect(rows[0]?.read_at).toBeNull();
 });
+
+// Body hợp lệ để deny-by-default kiểm 401 (không bị 422 trước bước kiểm phiên).
+registerIdorBody('POST', '/notifications/read', () => ({ ids: [newId()] }));
+registerIdorBody('POST', '/notifications/read-all', () => ({ upTo: '2026-11-08T00:00:00Z' }));

@@ -127,5 +127,19 @@ export default tseslint.config(
     },
   },
 
+  // E2E (S4-06): đọc JSON thô từ HTTP rồi kiểm bằng expect; bỏ các rule "unsafe any" cho thư mục này.
+  {
+    files: ['e2e/**/*.ts'],
+    languageOptions: { globals: globals.node },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+    },
+  },
+
   prettier,
 );
