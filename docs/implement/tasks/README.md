@@ -2,7 +2,7 @@
 
 2026-10-23 · Việt
 
-[Implement_plan.md](../Implement_plan.md) được chia thành **51 task** trong 8 sprint. Mỗi task là một file trong thư mục này, gồm mục tiêu, phạm vi, chi tiết kỹ thuật, giao diện, tiêu chí chấp nhận và cách kiểm thử. Làm task theo thứ tự trong bảng; cột "Phụ thuộc" cho biết task nào phải xong trước.
+[Implement_plan.md](../Implement_plan.md) được chia thành **51 task** trong 8 sprint, cộng **3 task bổ sung** (S4-07 → S4-09, đa ngôn ngữ, thêm ngày 2026-10-25) — tổng **54 task**. Mỗi task là một file trong thư mục này, gồm mục tiêu, phạm vi, chi tiết kỹ thuật, giao diện, tiêu chí chấp nhận và cách kiểm thử. Làm task theo thứ tự trong bảng; cột "Phụ thuộc" cho biết task nào phải xong trước.
 
 Quy ước tên file: `S<sprint>-<số>-<tên-ngắn>.md`. Ước lượng tính theo ngày công (1 ngày ≈ 6–8 giờ tập trung).
 
@@ -65,6 +65,9 @@ Quy ước tên file: `S<sprint>-<số>-<tên-ngắn>.md`. Ước lượng tính
 | [S4-04](S4-04-milestones-ui.md) | Giao diện SCR-14, 15, sheet tạo/sửa/hủy, FLW-04, toast hoàn tác | US-040→048 | S4-02 | 2 |
 | [S4-05](S4-05-notifications-ui.md) | Giao diện SCR-17 và chuông trên TopBar | US-049 | S4-03 | 1 |
 | [S4-06](S4-06-e2e-core-flow.md) | E2E luồng cốt lõi với `FakeClock`, test song song | G-3, G-15, G-18 | S4-02, S4-03, S4-04, S4-05 | 1,5 |
+| [S4-07](S4-07-i18n-web.md) | Đa ngôn ngữ web: từ điển `en.ts`, định dạng ngày/số, chọn ngôn ngữ trong Cài đặt *(bổ sung 2026-10-25)* | FR-GEN-002, UXD-001 | S4-05 | 1,5 |
+| [S4-08](S4-08-i18n-api.md) | API trung lập ngôn ngữ: mã lỗi + tham số, `ageMonths`, `daysUntilDue` *(bổ sung)* | SAD §2.4.3 | S4-07 | 1 |
+| [S4-09](S4-09-user-locale-email.md) | Ngôn ngữ theo tài khoản (`users.locale`) và email 2 ngôn ngữ *(bổ sung)* | FR-AUTH-002, 010 | S4-07 | 0,5 |
 
 ## S5 · T11–12 — Việc hằng ngày và Dashboard
 
