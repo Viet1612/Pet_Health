@@ -5,7 +5,7 @@
 | Task | [S4-03](../tasks/S4-03-notifications-api.md) |
 | Trạng thái | Xong, đã gọi thử trên server dev |
 | Ngày hoàn thành | 2026-10-25 |
-| Commit | xem [README](README.md) |
+| Commit | `5da9019` |
 
 ## Kết quả
 

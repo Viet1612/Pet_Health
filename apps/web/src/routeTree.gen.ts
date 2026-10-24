@@ -18,6 +18,7 @@ import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
 import { Route as AuthVerifyEmailRouteImport } from './routes/_auth/verify-email'
+import { Route as AppMilestonesMilestoneIdRouteImport } from './routes/_app/milestones/$milestoneId'
 import { Route as AppPetsIndexRouteImport } from './routes/_app/pets/index'
 import { Route as AppPetsNewRouteImport } from './routes/_app/pets/new'
 import { Route as AppPetsPetIdIndexRouteImport } from './routes/_app/pets/$petId/index'
@@ -74,6 +75,12 @@ const AuthVerifyEmailRoute = AuthVerifyEmailRouteImport.update({
   path: '/verify-email',
   getParentRoute: () => AuthRoute,
 } as any)
+const AppMilestonesMilestoneIdRoute =
+  AppMilestonesMilestoneIdRouteImport.update({
+    id: '/milestones/$milestoneId',
+    path: '/milestones/$milestoneId',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppPetsIndexRoute = AppPetsIndexRouteImport.update({
   id: '/pets/',
   path: '/pets/',
@@ -145,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof AuthRegisterRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/verify-email': typeof AuthVerifyEmailRoute
+  '/milestones/$milestoneId': typeof AppMilestonesMilestoneIdRoute
   '/pets/new': typeof AppPetsNewRoute
   '/pets/': typeof AppPetsIndexRoute
   '/pets/$petId/edit': typeof AppPetsPetIdEditRoute
@@ -166,6 +174,7 @@ export interface FileRoutesByTo {
   '/register': typeof AuthRegisterRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/verify-email': typeof AuthVerifyEmailRoute
+  '/milestones/$milestoneId': typeof AppMilestonesMilestoneIdRoute
   '/pets/new': typeof AppPetsNewRoute
   '/pets': typeof AppPetsIndexRoute
   '/pets/$petId/edit': typeof AppPetsPetIdEditRoute
@@ -189,6 +198,7 @@ export interface FileRoutesById {
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_auth/verify-email': typeof AuthVerifyEmailRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/milestones/$milestoneId': typeof AppMilestonesMilestoneIdRoute
   '/_app/pets/new': typeof AppPetsNewRoute
   '/_app/pets/': typeof AppPetsIndexRoute
   '/_app/pets/$petId/edit': typeof AppPetsPetIdEditRoute
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/verify-email'
+    | '/milestones/$milestoneId'
     | '/pets/new'
     | '/pets/'
     | '/pets/$petId/edit'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/verify-email'
+    | '/milestones/$milestoneId'
     | '/pets/new'
     | '/pets'
     | '/pets/$petId/edit'
@@ -255,6 +267,7 @@ export interface FileRouteTypes {
     | '/_auth/reset-password'
     | '/_auth/verify-email'
     | '/_app/'
+    | '/_app/milestones/$milestoneId'
     | '/_app/pets/new'
     | '/_app/pets/'
     | '/_app/pets/$petId/edit'
@@ -338,6 +351,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/verify-email'
       preLoaderRoute: typeof AuthVerifyEmailRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/_app/milestones/$milestoneId': {
+      id: '/_app/milestones/$milestoneId'
+      path: '/milestones/$milestoneId'
+      fullPath: '/milestones/$milestoneId'
+      preLoaderRoute: typeof AppMilestonesMilestoneIdRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/pets/': {
       id: '/_app/pets/'
@@ -444,6 +464,7 @@ const AppPetsPetIdHealthRouteWithChildren =
 interface AppRouteChildren {
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppMilestonesMilestoneIdRoute: typeof AppMilestonesMilestoneIdRoute
   AppPetsNewRoute: typeof AppPetsNewRoute
   AppPetsIndexRoute: typeof AppPetsIndexRoute
   AppPetsPetIdEditRoute: typeof AppPetsPetIdEditRoute
@@ -458,6 +479,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppMilestonesMilestoneIdRoute: AppMilestonesMilestoneIdRoute,
   AppPetsNewRoute: AppPetsNewRoute,
   AppPetsIndexRoute: AppPetsIndexRoute,
   AppPetsPetIdEditRoute: AppPetsPetIdEditRoute,

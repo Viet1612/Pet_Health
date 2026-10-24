@@ -119,6 +119,13 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
       onBlur={() => {
         setHasFocus(false);
       }}
+      // Không tự ẩn khi đang rê chuột (đọc hoặc định bấm Hoàn tác).
+      onMouseEnter={() => {
+        setHasFocus(true);
+      }}
+      onMouseLeave={() => {
+        setHasFocus(false);
+      }}
       className={cx(
         'shadow-overlay pointer-events-auto relative flex w-full max-w-sm items-center gap-3 overflow-hidden rounded-lg py-2 pr-1 pl-4 md:w-96',
         tone,

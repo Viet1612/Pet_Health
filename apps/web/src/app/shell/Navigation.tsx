@@ -41,7 +41,7 @@ const ITEMS: NavItem[] = [
     label: vi.nav.calendar,
     icon: <CalendarDays size={24} />,
     to: () => petPath('/milestones'),
-    isActive: (p) => /^\/pets\/[^/]+\/milestones/.test(p),
+    isActive: (p) => /^\/pets\/[^/]+\/milestones/.test(p) || p.startsWith('/milestones/'),
   },
   {
     key: 'pets',

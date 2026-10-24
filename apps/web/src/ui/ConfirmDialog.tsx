@@ -11,6 +11,7 @@ export function ConfirmDialog({
   title,
   description,
   confirmLabel,
+  cancelLabel = vi.confirm.cancel,
   danger = true,
   loading = false,
   onConfirm,
@@ -20,6 +21,7 @@ export function ConfirmDialog({
   title: string;
   description?: string;
   confirmLabel: string;
+  cancelLabel?: string;
   danger?: boolean;
   loading?: boolean;
   onConfirm: () => void;
@@ -36,7 +38,7 @@ export function ConfirmDialog({
           disabled={loading}
           onClick={onClose}
         >
-          {vi.confirm.cancel}
+          {cancelLabel}
         </Button>
         <Button variant={danger ? 'danger' : 'primary'} loading={loading} onClick={onConfirm}>
           {confirmLabel}
