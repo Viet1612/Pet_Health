@@ -46,6 +46,39 @@ export interface IdempotencyKeys {
   status_code: number | null;
 }
 
+export interface Milestones {
+  completed_at: Timestamp | null;
+  created_at: Timestamp;
+  cycle_months: number | null;
+  done_on: string | null;
+  due_on: string;
+  due_set_on: string;
+  id: string;
+  note: string | null;
+  origin: string;
+  owner_id: string;
+  pet_id: string;
+  previous_id: string | null;
+  status: Generated<string>;
+  type: string;
+  updated_at: Timestamp;
+}
+
+export interface Notifications {
+  appear_on: string;
+  channel: Generated<string>;
+  created_at: Timestamp;
+  due_on_snapshot: string;
+  id: string;
+  level: string;
+  milestone_id: string;
+  owner_id: string;
+  read_at: Timestamp | null;
+  read_reason: string | null;
+  resolution: string | null;
+  resolved_at: Timestamp | null;
+}
+
 export interface Pets {
   avatar_key: string | null;
   birth_date: string;
@@ -138,6 +171,8 @@ export interface WeightEntries {
 export interface DB {
   auth_tokens: AuthTokens;
   idempotency_keys: IdempotencyKeys;
+  milestones: Milestones;
+  notifications: Notifications;
   pets: Pets;
   rate_limits: RateLimits;
   sessions: Sessions;

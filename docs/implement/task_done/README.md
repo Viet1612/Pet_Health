@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 28 / 51 task
+**Tiến độ:** 29 / 51 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -36,4 +36,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S3-02 | Giao diện cân nặng: tóm tắt, biểu đồ uPlot, lịch sử, sheet thêm/sửa, mục tiêu, Thêm nhanh | Xong (code), chưa bấm thử trên trình duyệt | 2026-10-24 | `6f52199` | [S3-02](S3-02-weights-ui.md) |
 | S3-03 | API bản ghi khám (phân trang keyset, xóa kèm ảnh) | Xong, đã gọi thử trên server dev | 2026-10-25 | `c696fbf` | [S3-03](S3-03-visits-api.md) |
 | S3-04 | API ảnh bản ghi khám (tối đa 5 ảnh, xử lý nền, xóa từng ảnh) | Xong, đã chạy đầu-cuối trên server dev (chưa thử HEIC) | 2026-10-25 | `c0d825b` | [S3-04](S3-04-visit-photos-api.md) |
-| S3-05 | Giao diện sổ y tế: danh sách cuộn, chi tiết, thêm/sửa, tải ảnh có tiến trình, lightbox | Xong (code), chưa bấm thử trên trình duyệt | 2026-10-25 | — | [S3-05](S3-05-visits-ui.md) |
+| S3-05 | Giao diện sổ y tế: danh sách cuộn, chi tiết, thêm/sửa, tải ảnh có tiến trình, lightbox | Xong (code), anh đã bấm thử | 2026-10-25 | `2cb543e` | [S3-05](S3-05-visits-ui.md) |
+| S4-01 | Schema `milestones`, `notifications`; API tạo, xem, sửa, hủy mốc | Xong, đã gọi thử trên server dev | 2026-10-25 | — | [S4-01](S4-01-milestones-api.md) |

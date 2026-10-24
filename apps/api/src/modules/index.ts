@@ -13,7 +13,14 @@ import {
   type MediaDeps,
   type TargetResolvers,
 } from './media/index.js';
+import { notificationQuery, onMilestoneEvent } from './notifications/index.js';
 import { petAvatarTargetResolver, registerPetsRoutes, type PetsDeps } from './pets/index.js';
+import {
+  registerSchedulingRoutes,
+  type MilestoneEvent,
+  type SchedulingDeps,
+} from './scheduling/index.js';
+import { SyncEventBus } from '../platform/events/sync-event-bus.js';
 import type { ClockPort } from '../platform/clock/clock.js';
 
 export interface ModuleDeps {
@@ -21,6 +28,7 @@ export interface ModuleDeps {
   pets: PetsDeps;
   media: MediaDeps;
   healthRecords: HealthRecordsDeps;
+  scheduling: SchedulingDeps;
 }
 
 /** Đăng ký route của mọi mô-đun nghiệp vụ. Dùng chung cho main-api và sinh OpenAPI. */
@@ -29,6 +37,14 @@ export async function registerModules(api: FastifyInstance, deps: ModuleDeps): P
   await registerPetsRoutes(api, deps.pets, deps.media);
   await registerMediaApiRoutes(api, { VISIT_PHOTO: visitPhotoPresenter(deps.media) });
   await registerHealthRecordsRoutes(api, deps.healthRecords, deps.media);
+
+  // Sự kiện mốc → notifications, cùng transaction (scheduling không import notifications).
+  const milestoneEvents = new SyncEventBus<MilestoneEvent>();
+  milestoneEvents.subscribe(onMilestoneEvent);
+  await registerSchedulingRoutes(api, deps.scheduling, {
+    events: milestoneEvents,
+    notifications: notificationQuery,
+  });
 }
 
 /** Nơi lưu và gắn ảnh theo loại mục tiêu; mô-đun sở hữu mục tiêu thêm vào (AVATAR ở S2-03). */

@@ -54,7 +54,13 @@ const PUBLIC_ALLOWLIST = new Set([
 ]);
 
 // Chỉ để liệt kê route khi thu thập ca test; handler không chạy nên deps để trống.
-const stubDeps = { identity: {}, pets: {}, media: {}, healthRecords: {} } as unknown as ModuleDeps;
+const stubDeps = {
+  identity: {},
+  pets: {},
+  media: {},
+  healthRecords: {},
+  scheduling: {},
+} as unknown as ModuleDeps;
 
 async function collectRoutes(
   nodeEnv: 'test' | 'production',
@@ -110,6 +116,7 @@ beforeAll(async () => {
     identity,
     pets: { clock },
     healthRecords: { clock },
+    scheduling: { clock },
     media: {
       storage: new LocalDiskStorage(mediaRoot),
       jobQueue: fakeJobQueue,

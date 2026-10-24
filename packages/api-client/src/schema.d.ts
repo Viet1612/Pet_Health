@@ -1396,6 +1396,402 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/pets/{petId}/milestones': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Mốc của thú cưng theo nhóm (sắp tới, quá hạn, đã thực hiện, đã hủy) */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: date */
+              today: string;
+              upcoming: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                petId: string;
+                /** @enum {string} */
+                type: 'VACCINE' | 'FLEA' | 'DEWORM';
+                /** Format: date */
+                dueOn: string;
+                /** Format: date */
+                dueSetOn: string;
+                note: string | null;
+                cycleMonths: number | null;
+                /** @enum {string} */
+                status: 'PENDING' | 'DONE' | 'CANCELLED';
+                /** @enum {string} */
+                displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+                daysUntilDue: number | null;
+                doneOn: string | null;
+                /** @enum {string} */
+                origin: 'MANUAL' | 'AUTO';
+                previousId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              }[];
+              overdue: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                petId: string;
+                /** @enum {string} */
+                type: 'VACCINE' | 'FLEA' | 'DEWORM';
+                /** Format: date */
+                dueOn: string;
+                /** Format: date */
+                dueSetOn: string;
+                note: string | null;
+                cycleMonths: number | null;
+                /** @enum {string} */
+                status: 'PENDING' | 'DONE' | 'CANCELLED';
+                /** @enum {string} */
+                displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+                daysUntilDue: number | null;
+                doneOn: string | null;
+                /** @enum {string} */
+                origin: 'MANUAL' | 'AUTO';
+                previousId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              }[];
+              done: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                petId: string;
+                /** @enum {string} */
+                type: 'VACCINE' | 'FLEA' | 'DEWORM';
+                /** Format: date */
+                dueOn: string;
+                /** Format: date */
+                dueSetOn: string;
+                note: string | null;
+                cycleMonths: number | null;
+                /** @enum {string} */
+                status: 'PENDING' | 'DONE' | 'CANCELLED';
+                /** @enum {string} */
+                displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+                daysUntilDue: number | null;
+                doneOn: string | null;
+                /** @enum {string} */
+                origin: 'MANUAL' | 'AUTO';
+                previousId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              }[];
+              cancelled: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                petId: string;
+                /** @enum {string} */
+                type: 'VACCINE' | 'FLEA' | 'DEWORM';
+                /** Format: date */
+                dueOn: string;
+                /** Format: date */
+                dueSetOn: string;
+                note: string | null;
+                cycleMonths: number | null;
+                /** @enum {string} */
+                status: 'PENDING' | 'DONE' | 'CANCELLED';
+                /** @enum {string} */
+                displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+                daysUntilDue: number | null;
+                doneOn: string | null;
+                /** @enum {string} */
+                origin: 'MANUAL' | 'AUTO';
+                previousId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Tạo mốc */
+    post: {
+      parameters: {
+        query?: never;
+        header?: {
+          'idempotency-key'?: string;
+        };
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description VACCINE | FLEA | DEWORM */
+            type: string;
+            /** @description YYYY-MM-DD, cho phép quá khứ */
+            dueOn: string;
+            /** @description ≤ 500 ký tự */
+            note?: string | null;
+            /** @description FLEA/DEWORM: số tháng nguyên 1–60 */
+            cycleMonths?: number | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** Format: uuid */
+              petId: string;
+              /** @enum {string} */
+              type: 'VACCINE' | 'FLEA' | 'DEWORM';
+              /** Format: date */
+              dueOn: string;
+              /** Format: date */
+              dueSetOn: string;
+              note: string | null;
+              cycleMonths: number | null;
+              /** @enum {string} */
+              status: 'PENDING' | 'DONE' | 'CANCELLED';
+              /** @enum {string} */
+              displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+              daysUntilDue: number | null;
+              doneOn: string | null;
+              /** @enum {string} */
+              origin: 'MANUAL' | 'AUTO';
+              previousId: string | null;
+              /** Format: date-time */
+              createdAt: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/milestones/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Chi tiết mốc kèm trạng thái nhắc nhở */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: date */
+              today: string;
+              milestone: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                petId: string;
+                /** @enum {string} */
+                type: 'VACCINE' | 'FLEA' | 'DEWORM';
+                /** Format: date */
+                dueOn: string;
+                /** Format: date */
+                dueSetOn: string;
+                note: string | null;
+                cycleMonths: number | null;
+                /** @enum {string} */
+                status: 'PENDING' | 'DONE' | 'CANCELLED';
+                /** @enum {string} */
+                displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+                daysUntilDue: number | null;
+                doneOn: string | null;
+                /** @enum {string} */
+                origin: 'MANUAL' | 'AUTO';
+                previousId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              };
+              petName: string;
+              previousDoneOn: string | null;
+              reminders: {
+                /** @enum {string} */
+                level: 'D7' | 'D1' | 'OVERDUE';
+                /** Format: date */
+                appearOn: string;
+                /** @enum {string} */
+                state: 'PLANNED' | 'UNREAD' | 'READ' | 'RESOLVED';
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Sửa mốc (ngày hạn, ghi chú, chu kỳ) */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            type?: unknown;
+            dueOn?: string;
+            note?: string | null;
+            /** @description null = bỏ tự lặp */
+            cycleMonths?: number | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** Format: uuid */
+              petId: string;
+              /** @enum {string} */
+              type: 'VACCINE' | 'FLEA' | 'DEWORM';
+              /** Format: date */
+              dueOn: string;
+              /** Format: date */
+              dueSetOn: string;
+              note: string | null;
+              cycleMonths: number | null;
+              /** @enum {string} */
+              status: 'PENDING' | 'DONE' | 'CANCELLED';
+              /** @enum {string} */
+              displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+              daysUntilDue: number | null;
+              doneOn: string | null;
+              /** @enum {string} */
+              origin: 'MANUAL' | 'AUTO';
+              previousId: string | null;
+              /** Format: date-time */
+              createdAt: string;
+            };
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
+  '/milestones/{id}/cancel': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Hủy mốc */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** Format: uuid */
+              petId: string;
+              /** @enum {string} */
+              type: 'VACCINE' | 'FLEA' | 'DEWORM';
+              /** Format: date */
+              dueOn: string;
+              /** Format: date */
+              dueSetOn: string;
+              note: string | null;
+              cycleMonths: number | null;
+              /** @enum {string} */
+              status: 'PENDING' | 'DONE' | 'CANCELLED';
+              /** @enum {string} */
+              displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+              daysUntilDue: number | null;
+              doneOn: string | null;
+              /** @enum {string} */
+              origin: 'MANUAL' | 'AUTO';
+              previousId: string | null;
+              /** Format: date-time */
+              createdAt: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {

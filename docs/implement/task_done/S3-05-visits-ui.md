@@ -5,7 +5,7 @@
 | Task | [S3-05](../tasks/S3-05-visits-ui.md) |
 | Trạng thái | Xong (code), chưa bấm thử trên trình duyệt |
 | Ngày hoàn thành | 2026-10-25 |
-| Commit | xem [README](README.md) |
+| Commit | `2cb543e` |
 
 ## Kết quả
 
