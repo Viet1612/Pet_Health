@@ -24,8 +24,12 @@ import { Route as AppPetsPetIdIndexRouteImport } from './routes/_app/pets/$petId
 import { Route as AppPetsPetIdEditRouteImport } from './routes/_app/pets/$petId/edit'
 import { Route as AppPetsPetIdHealthRouteImport } from './routes/_app/pets/$petId/health'
 import { Route as AppPetsPetIdMilestonesRouteImport } from './routes/_app/pets/$petId/milestones'
+import { Route as AppVisitsVisitIdIndexRouteImport } from './routes/_app/visits/$visitId/index'
+import { Route as AppVisitsVisitIdEditRouteImport } from './routes/_app/visits/$visitId/edit'
 import { Route as AppPetsPetIdHealthIndexRouteImport } from './routes/_app/pets/$petId/health/index'
+import { Route as AppPetsPetIdHealthVisitsRouteImport } from './routes/_app/pets/$petId/health/visits'
 import { Route as AppPetsPetIdHealthWeightRouteImport } from './routes/_app/pets/$petId/health/weight'
+import { Route as AppPetsPetIdVisitsNewRouteImport } from './routes/_app/pets/$petId/visits/new'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -100,17 +104,38 @@ const AppPetsPetIdMilestonesRoute = AppPetsPetIdMilestonesRouteImport.update({
   path: '/pets/$petId/milestones',
   getParentRoute: () => AppRoute,
 } as any)
+const AppVisitsVisitIdIndexRoute = AppVisitsVisitIdIndexRouteImport.update({
+  id: '/visits/$visitId/',
+  path: '/visits/$visitId/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppVisitsVisitIdEditRoute = AppVisitsVisitIdEditRouteImport.update({
+  id: '/visits/$visitId/edit',
+  path: '/visits/$visitId/edit',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPetsPetIdHealthIndexRoute = AppPetsPetIdHealthIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppPetsPetIdHealthRoute,
 } as any)
+const AppPetsPetIdHealthVisitsRoute =
+  AppPetsPetIdHealthVisitsRouteImport.update({
+    id: '/visits',
+    path: '/visits',
+    getParentRoute: () => AppPetsPetIdHealthRoute,
+  } as any)
 const AppPetsPetIdHealthWeightRoute =
   AppPetsPetIdHealthWeightRouteImport.update({
     id: '/weight',
     path: '/weight',
     getParentRoute: () => AppPetsPetIdHealthRoute,
   } as any)
+const AppPetsPetIdVisitsNewRoute = AppPetsPetIdVisitsNewRouteImport.update({
+  id: '/pets/$petId/visits/new',
+  path: '/pets/$petId/visits/new',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -125,8 +150,12 @@ export interface FileRoutesByFullPath {
   '/pets/$petId/edit': typeof AppPetsPetIdEditRoute
   '/pets/$petId/health': typeof AppPetsPetIdHealthRouteWithChildren
   '/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
+  '/visits/$visitId/edit': typeof AppVisitsVisitIdEditRoute
   '/pets/$petId/': typeof AppPetsPetIdIndexRoute
+  '/visits/$visitId/': typeof AppVisitsVisitIdIndexRoute
+  '/pets/$petId/health/visits': typeof AppPetsPetIdHealthVisitsRoute
   '/pets/$petId/health/weight': typeof AppPetsPetIdHealthWeightRoute
+  '/pets/$petId/visits/new': typeof AppPetsPetIdVisitsNewRoute
   '/pets/$petId/health/': typeof AppPetsPetIdHealthIndexRoute
 }
 export interface FileRoutesByTo {
@@ -141,8 +170,12 @@ export interface FileRoutesByTo {
   '/pets': typeof AppPetsIndexRoute
   '/pets/$petId/edit': typeof AppPetsPetIdEditRoute
   '/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
+  '/visits/$visitId/edit': typeof AppVisitsVisitIdEditRoute
   '/pets/$petId': typeof AppPetsPetIdIndexRoute
+  '/visits/$visitId': typeof AppVisitsVisitIdIndexRoute
+  '/pets/$petId/health/visits': typeof AppPetsPetIdHealthVisitsRoute
   '/pets/$petId/health/weight': typeof AppPetsPetIdHealthWeightRoute
+  '/pets/$petId/visits/new': typeof AppPetsPetIdVisitsNewRoute
   '/pets/$petId/health': typeof AppPetsPetIdHealthIndexRoute
 }
 export interface FileRoutesById {
@@ -161,8 +194,12 @@ export interface FileRoutesById {
   '/_app/pets/$petId/edit': typeof AppPetsPetIdEditRoute
   '/_app/pets/$petId/health': typeof AppPetsPetIdHealthRouteWithChildren
   '/_app/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
+  '/_app/visits/$visitId/edit': typeof AppVisitsVisitIdEditRoute
   '/_app/pets/$petId/': typeof AppPetsPetIdIndexRoute
+  '/_app/visits/$visitId/': typeof AppVisitsVisitIdIndexRoute
+  '/_app/pets/$petId/health/visits': typeof AppPetsPetIdHealthVisitsRoute
   '/_app/pets/$petId/health/weight': typeof AppPetsPetIdHealthWeightRoute
+  '/_app/pets/$petId/visits/new': typeof AppPetsPetIdVisitsNewRoute
   '/_app/pets/$petId/health/': typeof AppPetsPetIdHealthIndexRoute
 }
 export interface FileRouteTypes {
@@ -180,8 +217,12 @@ export interface FileRouteTypes {
     | '/pets/$petId/edit'
     | '/pets/$petId/health'
     | '/pets/$petId/milestones'
+    | '/visits/$visitId/edit'
     | '/pets/$petId/'
+    | '/visits/$visitId/'
+    | '/pets/$petId/health/visits'
     | '/pets/$petId/health/weight'
+    | '/pets/$petId/visits/new'
     | '/pets/$petId/health/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -196,8 +237,12 @@ export interface FileRouteTypes {
     | '/pets'
     | '/pets/$petId/edit'
     | '/pets/$petId/milestones'
+    | '/visits/$visitId/edit'
     | '/pets/$petId'
+    | '/visits/$visitId'
+    | '/pets/$petId/health/visits'
     | '/pets/$petId/health/weight'
+    | '/pets/$petId/visits/new'
     | '/pets/$petId/health'
   id:
     | '__root__'
@@ -215,8 +260,12 @@ export interface FileRouteTypes {
     | '/_app/pets/$petId/edit'
     | '/_app/pets/$petId/health'
     | '/_app/pets/$petId/milestones'
+    | '/_app/visits/$visitId/edit'
     | '/_app/pets/$petId/'
+    | '/_app/visits/$visitId/'
+    | '/_app/pets/$petId/health/visits'
     | '/_app/pets/$petId/health/weight'
+    | '/_app/pets/$petId/visits/new'
     | '/_app/pets/$petId/health/'
   fileRoutesById: FileRoutesById
 }
@@ -332,11 +381,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPetsPetIdMilestonesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/visits/$visitId/': {
+      id: '/_app/visits/$visitId/'
+      path: '/visits/$visitId'
+      fullPath: '/visits/$visitId/'
+      preLoaderRoute: typeof AppVisitsVisitIdIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/visits/$visitId/edit': {
+      id: '/_app/visits/$visitId/edit'
+      path: '/visits/$visitId/edit'
+      fullPath: '/visits/$visitId/edit'
+      preLoaderRoute: typeof AppVisitsVisitIdEditRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/pets/$petId/health/': {
       id: '/_app/pets/$petId/health/'
       path: '/'
       fullPath: '/pets/$petId/health/'
       preLoaderRoute: typeof AppPetsPetIdHealthIndexRouteImport
+      parentRoute: typeof AppPetsPetIdHealthRoute
+    }
+    '/_app/pets/$petId/health/visits': {
+      id: '/_app/pets/$petId/health/visits'
+      path: '/visits'
+      fullPath: '/pets/$petId/health/visits'
+      preLoaderRoute: typeof AppPetsPetIdHealthVisitsRouteImport
       parentRoute: typeof AppPetsPetIdHealthRoute
     }
     '/_app/pets/$petId/health/weight': {
@@ -346,15 +416,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPetsPetIdHealthWeightRouteImport
       parentRoute: typeof AppPetsPetIdHealthRoute
     }
+    '/_app/pets/$petId/visits/new': {
+      id: '/_app/pets/$petId/visits/new'
+      path: '/pets/$petId/visits/new'
+      fullPath: '/pets/$petId/visits/new'
+      preLoaderRoute: typeof AppPetsPetIdVisitsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppPetsPetIdHealthRouteChildren {
+  AppPetsPetIdHealthVisitsRoute: typeof AppPetsPetIdHealthVisitsRoute
   AppPetsPetIdHealthWeightRoute: typeof AppPetsPetIdHealthWeightRoute
   AppPetsPetIdHealthIndexRoute: typeof AppPetsPetIdHealthIndexRoute
 }
 
 const AppPetsPetIdHealthRouteChildren: AppPetsPetIdHealthRouteChildren = {
+  AppPetsPetIdHealthVisitsRoute: AppPetsPetIdHealthVisitsRoute,
   AppPetsPetIdHealthWeightRoute: AppPetsPetIdHealthWeightRoute,
   AppPetsPetIdHealthIndexRoute: AppPetsPetIdHealthIndexRoute,
 }
@@ -370,7 +449,10 @@ interface AppRouteChildren {
   AppPetsPetIdEditRoute: typeof AppPetsPetIdEditRoute
   AppPetsPetIdHealthRoute: typeof AppPetsPetIdHealthRouteWithChildren
   AppPetsPetIdMilestonesRoute: typeof AppPetsPetIdMilestonesRoute
+  AppVisitsVisitIdEditRoute: typeof AppVisitsVisitIdEditRoute
   AppPetsPetIdIndexRoute: typeof AppPetsPetIdIndexRoute
+  AppVisitsVisitIdIndexRoute: typeof AppVisitsVisitIdIndexRoute
+  AppPetsPetIdVisitsNewRoute: typeof AppPetsPetIdVisitsNewRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -381,7 +463,10 @@ const AppRouteChildren: AppRouteChildren = {
   AppPetsPetIdEditRoute: AppPetsPetIdEditRoute,
   AppPetsPetIdHealthRoute: AppPetsPetIdHealthRouteWithChildren,
   AppPetsPetIdMilestonesRoute: AppPetsPetIdMilestonesRoute,
+  AppVisitsVisitIdEditRoute: AppVisitsVisitIdEditRoute,
   AppPetsPetIdIndexRoute: AppPetsPetIdIndexRoute,
+  AppVisitsVisitIdIndexRoute: AppVisitsVisitIdIndexRoute,
+  AppPetsPetIdVisitsNewRoute: AppPetsPetIdVisitsNewRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

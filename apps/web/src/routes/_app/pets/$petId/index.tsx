@@ -127,7 +127,11 @@ function PetProfilePage() {
               label={t.shortcuts.weight}
               to={`/pets/${petId}/health/weight`}
             />
-            <Shortcut icon={<NotebookPen size={22} />} label={t.shortcuts.visits} />
+            <Shortcut
+              icon={<NotebookPen size={22} />}
+              label={t.shortcuts.visits}
+              to={`/pets/${petId}/health/visits`}
+            />
             <Shortcut
               icon={<CalendarClock size={22} />}
               label={t.shortcuts.milestones}

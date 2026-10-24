@@ -5,7 +5,7 @@
 | Task | [S3-04](../tasks/S3-04-visit-photos-api.md) |
 | Trạng thái | Xong, đã chạy đầu-cuối trên server dev (chưa thử HEIC) |
 | Ngày hoàn thành | 2026-10-25 |
-| Commit | xem [README](README.md) |
+| Commit | `c0d825b` |
 
 ## Kết quả
 

@@ -8,7 +8,7 @@ import { cx } from '../../../../ui/cx';
 
 const t = vi.health;
 
-/** Màn Sức khỏe: segmented "Cân nặng | Sổ y tế" (Sổ y tế làm ở S3-05). */
+/** Màn Sức khỏe: segmented "Cân nặng | Sổ y tế". */
 function HealthLayout() {
   const { petId } = Route.useParams();
   const { data: pet } = useSuspenseQuery(petQuery(petId));
@@ -37,10 +37,17 @@ function HealthLayout() {
           >
             {t.tabs.weight}
           </Link>
-          <span aria-disabled="true" className={cx(tab, 'text-text-muted gap-1')}>
+          <Link
+            to="/pets/$petId/health/visits"
+            params={{ petId }}
+            className={tab}
+            activeProps={{
+              className: cx(tab, 'bg-primary text-on-primary'),
+              'aria-current': 'page',
+            }}
+          >
             {t.tabs.visits}
-            <span className="text-caption">({t.tabs.soon})</span>
-          </span>
+          </Link>
         </nav>
       </div>
       <Outlet />
