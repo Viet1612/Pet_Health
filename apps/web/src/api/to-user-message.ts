@@ -1,4 +1,4 @@
-import { ApiError, NetworkError, TimeoutError } from '@ph/api-client';
+import { ApiError, NetworkError, TimeoutError, type Problem } from '@ph/api-client';
 
 import { m } from '../i18n';
 
@@ -7,6 +7,14 @@ export type UserMessage =
   | { kind: 'server'; message: string; ref?: string }
   | { kind: 'fields'; fields: Record<string, string> }
   | { kind: 'message'; message: string };
+
+/** Câu của lỗi theo ngôn ngữ đang dùng; mã chưa có trong từ điển → `title` của server. */
+export const problemText = (problem: Problem): string =>
+  m.apiErrors.problem[problem.code] ?? problem.title;
+
+/** Câu của một lỗi trường; chưa dịch được → `message` của server. */
+export const fieldErrorText = (e: NonNullable<Problem['errors']>[number]): string =>
+  m.apiErrors.field(e.code, e.field, e.params) ?? e.message;
 
 /** Chuyển lỗi gọi API thành nội dung hiển thị thống nhất (FR-GEN-004, FR-GEN-011). */
 export function toUserMessage(error: unknown): UserMessage {
@@ -25,10 +33,10 @@ export function toUserMessage(error: unknown): UserMessage {
     if (problem.status === 422 && problem.errors?.length) {
       return {
         kind: 'fields',
-        fields: Object.fromEntries(problem.errors.map((e) => [e.field, e.message])),
+        fields: Object.fromEntries(problem.errors.map((e) => [e.field, fieldErrorText(e)])),
       };
     }
-    return { kind: 'message', message: problem.title };
+    return { kind: 'message', message: problemText(problem) };
   }
   return { kind: 'server', message: m.error.serverToast };
 }

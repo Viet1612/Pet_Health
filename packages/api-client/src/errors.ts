@@ -4,10 +4,14 @@ export interface Problem {
   title: string;
   status: number;
   code: string;
-  errors?: { field: string; code: string; message: string }[];
+  /** `message` tiếng Việt là dự phòng; client dịch theo `code` + `params` (S4-08). */
+  errors?: { field: string; code: string; message: string; params?: ProblemParams }[];
   ref?: string;
   retryAfter?: number;
+  params?: ProblemParams;
 }
+
+export type ProblemParams = Record<string, string | number>;
 
 /** Phản hồi không 2xx. */
 export class ApiError extends Error {

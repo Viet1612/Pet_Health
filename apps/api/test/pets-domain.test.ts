@@ -50,6 +50,8 @@ describe('validatePetInput', () => {
     expect(codesOf({ ...valid, name: '' })).toEqual(['name:REQUIRED']);
     expect(codesOf({ ...valid, name: '   ' })).toEqual(['name:REQUIRED']);
     expect(codesOf({ ...valid, name: 'a'.repeat(51) })).toEqual(['name:TOO_LONG']);
+    const r = validatePetInput({ ...valid, name: 'a'.repeat(51) }, TODAY, 'create');
+    expect(r.ok ? null : r.errors[0]?.params).toEqual({ max: 50 });
   });
 
   it('sex và ngày sinh', () => {

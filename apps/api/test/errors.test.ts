@@ -102,13 +102,18 @@ describe('problem+json', () => {
     expect(body.errors).toEqual(
       expect.arrayContaining([
         { field: 'name', code: 'REQUIRED', message: 'Trường bắt buộc' },
-        { field: 'weightKg', code: 'OUT_OF_RANGE', message: 'Cân nặng phải từ 0,1 đến 150 kg' },
+        {
+          field: 'weightKg',
+          code: 'OUT_OF_RANGE',
+          message: 'Cân nặng phải từ 0,1 đến 150 kg',
+          params: { min: 0.1 },
+        },
         { field: 'birthDate', code: 'INVALID_FORMAT', message: 'Không đúng định dạng' },
       ]),
     );
   });
 
-  it('thiếu trường → REQUIRED; chuỗi quá dài → TOO_LONG', async () => {
+  it('thiếu trường → REQUIRED; chuỗi quá dài → TOO_LONG kèm params { max }', async () => {
     const res = await (
       await makeApp()
     ).inject({
@@ -120,7 +125,12 @@ describe('problem+json', () => {
     const body = expectProblem(res, 422, 'VALIDATION_FAILED');
     expect(body.errors).toEqual(
       expect.arrayContaining([
-        { field: 'name', code: 'TOO_LONG', message: 'Vượt quá độ dài cho phép' },
+        {
+          field: 'name',
+          code: 'TOO_LONG',
+          message: 'Vượt quá độ dài cho phép',
+          params: { max: 50 },
+        },
         { field: 'weightKg', code: 'REQUIRED', message: 'Trường bắt buộc' },
       ]),
     );

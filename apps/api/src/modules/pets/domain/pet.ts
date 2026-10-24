@@ -31,6 +31,7 @@ export interface PetFieldError {
   field: keyof PetInput;
   code: 'REQUIRED' | 'TOO_LONG' | 'INVALID_ENUM' | 'INVALID_DATE' | 'FUTURE_DATE';
   message: string;
+  params?: { max: number };
 }
 
 export type PetValidation<T> = { ok: true; value: T } | { ok: false; errors: PetFieldError[] };
@@ -67,8 +68,18 @@ export function validatePetInput(
 ): PetValidation<Partial<PetInput>> {
   const errors: PetFieldError[] = [];
   const value: Partial<PetInput> = {};
-  const fail = (field: PetFieldError['field'], code: PetFieldError['code'], message?: string) => {
-    errors.push({ field, code, message: message ?? MESSAGES[code] });
+  const fail = (
+    field: PetFieldError['field'],
+    code: PetFieldError['code'],
+    message?: string,
+    max?: number,
+  ) => {
+    errors.push({
+      field,
+      code,
+      message: message ?? MESSAGES[code],
+      ...(max === undefined ? {} : { params: { max } }),
+    });
   };
   const required = mode === 'create';
 
@@ -80,7 +91,7 @@ export function validatePetInput(
     }
     const trimmed = v.trim();
     if (trimmed === '') fail(field, 'REQUIRED');
-    else if (codePoints(trimmed) > NAME_MAX) fail(field, 'TOO_LONG');
+    else if (codePoints(trimmed) > NAME_MAX) fail(field, 'TOO_LONG', undefined, NAME_MAX);
     else value[field] = trimmed;
   }
 
@@ -107,7 +118,7 @@ export function validatePetInput(
   if (raw.description !== undefined) {
     const trimmed = raw.description?.trim() ?? '';
     if (codePoints(trimmed) > DESCRIPTION_MAX)
-      fail('description', 'TOO_LONG', 'Tối đa 2.000 ký tự');
+      fail('description', 'TOO_LONG', 'Tối đa 2.000 ký tự', DESCRIPTION_MAX);
     else value.description = trimmed === '' ? null : trimmed;
   } else if (required) {
     value.description = null;

@@ -4,7 +4,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
-import { toUserMessage } from '../../api/to-user-message';
+import { problemText, toUserMessage } from '../../api/to-user-message';
 import { registerSchema, useRegister, type RegisterValues } from '../../features/session';
 import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
@@ -59,7 +59,7 @@ function RegisterPage() {
         return;
       }
       if (err instanceof ApiError && err.code === 'EMAIL_TAKEN') {
-        form.setError('email', { message: err.problem.title }, { shouldFocus: true });
+        form.setError('email', { message: problemText(err.problem) }, { shouldFocus: true });
         return;
       }
       if ('message' in message) toast.show({ kind: 'error', message: message.message });

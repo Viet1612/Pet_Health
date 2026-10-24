@@ -28,7 +28,7 @@ export const matchesConfirmName = (input: string, petName: string): boolean =>
 
 /** "7 năm 7 tháng · Poodle · Cái" */
 export const petSubline = (pet: Pet): string =>
-  `${pet.ageText} · ${pet.breed} · ${sexLabel(pet.sex)}`;
+  `${m.pets.age(pet.ageMonths)} · ${pet.breed} · ${sexLabel(pet.sex)}`;
 
 export { formatDate as formatLocalDate } from '../../lib/format';
 

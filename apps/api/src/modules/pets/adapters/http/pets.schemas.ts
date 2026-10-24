@@ -12,6 +12,7 @@ export const zPet = z.object({
   breed: z.string(),
   sex: z.enum(PET_SEXES),
   birthDate: z.iso.date(),
+  ageMonths: z.number().int(),
   ageText: z.string(),
   description: z.string().nullable(),
   avatarUrl: z.string().nullable(),

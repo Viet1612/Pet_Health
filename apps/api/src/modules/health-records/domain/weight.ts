@@ -6,6 +6,7 @@ const MIN_TENTHS = 1;
 const MAX_TENTHS = 1500;
 
 export const WEIGHT_RANGE_MESSAGE = 'Cân nặng phải từ 0,1 đến 150 kg, tối đa 1 chữ số thập phân';
+export const WEIGHT_RANGE_PARAMS = { min: MIN_TENTHS / 10, max: MAX_TENTHS / 10 };
 
 /** `"9.2"` → 92; `null` khi sai định dạng hoặc ngoài 0,1–150 kg. */
 export function parseWeightKg(value: string): number | null {

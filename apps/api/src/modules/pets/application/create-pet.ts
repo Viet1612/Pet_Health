@@ -18,7 +18,9 @@ export async function createPet(
 ): Promise<PetView> {
   const today = await todayFor(deps, trx, ownerId, true);
   if ((await deps.pets.countByOwner(trx, ownerId)) >= PET_LIMIT) {
-    throw new ConflictError('PET_LIMIT_REACHED', `Đã đạt tối đa ${String(PET_LIMIT)} thú cưng`);
+    throw new ConflictError('PET_LIMIT_REACHED', `Đã đạt tối đa ${String(PET_LIMIT)} thú cưng`, {
+      params: { max: PET_LIMIT },
+    });
   }
   const result = validatePetInput(raw, today, 'create');
   if (!result.ok) throw new ValidationError(result.errors);

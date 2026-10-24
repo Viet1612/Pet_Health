@@ -42,7 +42,9 @@ export function NotificationItem({
         <span className={cx('text-body block truncate', n.unread && 'font-bold')}>{title}</span>
         <span className="text-small text-text-muted block truncate">
           {n.level === 'OVERDUE' ? t.dueOverdue(date) : t.due(date)}
-          {!resolved && n.label ? ` · ${n.label}` : ''}
+          {!resolved && n.daysUntilDue !== null
+            ? ` · ${m.notifications.label(n.daysUntilDue)}`
+            : ''}
         </span>
       </span>
       {resolved && n.resolution ? (

@@ -5,7 +5,12 @@ import {
   ValidationError,
   type FieldError,
 } from '../../../platform/errors/app-error.js';
-import { formatTenths, parseWeightKg, WEIGHT_RANGE_MESSAGE } from '../domain/weight.js';
+import {
+  formatTenths,
+  parseWeightKg,
+  WEIGHT_RANGE_MESSAGE,
+  WEIGHT_RANGE_PARAMS,
+} from '../domain/weight.js';
 import type { HealthRecordsAppDeps, Trx, WeightEntryRow } from './ports.js';
 
 export interface WeightEntryView {
@@ -47,7 +52,12 @@ export function validateWeightInput(
   if (input.weightKg !== undefined) {
     const tenths = parseWeightKg(input.weightKg);
     if (tenths === null) {
-      errors.push({ field: 'weightKg', code: 'OUT_OF_RANGE', message: WEIGHT_RANGE_MESSAGE });
+      errors.push({
+        field: 'weightKg',
+        code: 'OUT_OF_RANGE',
+        message: WEIGHT_RANGE_MESSAGE,
+        params: WEIGHT_RANGE_PARAMS,
+      });
     } else {
       out.weightKg = formatTenths(tenths);
     }

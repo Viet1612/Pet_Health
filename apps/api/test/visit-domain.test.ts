@@ -40,6 +40,10 @@ describe('văn bản bản ghi khám', () => {
       ),
     ).toEqual(['prescription:TOO_LONG']);
     expect(
+      validateVisitText({ symptoms: 'x'.repeat(2001), diagnosis: null, prescription: null })[0]
+        ?.params,
+    ).toEqual({ max: 2000 });
+    expect(
       validateVisitText({ symptoms: null, diagnosis: null, prescription: 'thuốc' }).map(
         (e) => e.field,
       ),

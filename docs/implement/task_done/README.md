@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 35 / 54 task
+**Tiến độ:** 36 / 54 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -43,4 +43,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S4-04 | Giao diện lịch mốc: SCR-14, 15, sheet tạo/sửa/hủy, FLW-04, toast hoàn tác | Xong (code), chưa bấm thử trên trình duyệt | 2026-10-25 | `e9fea90` | [S4-04](S4-04-milestones-ui.md) |
 | S4-05 | Giao diện Thông báo (SCR-17) và chuông trên TopBar | Xong (code), chưa bấm thử trên trình duyệt | 2026-10-25 | `d4183dd` | [S4-05](S4-05-notifications-ui.md) |
 | S4-06 | E2E luồng cốt lõi với `FakeClock`, test song song | Xong (bản chạy local), 17/17 Pass | 2026-10-25 | `ca9108c` | [S4-06](S4-06-e2e-core-flow.md) |
-| S4-07 | Hạ tầng đa ngôn ngữ web và bản tiếng Anh, chọn trong Cài đặt | Xong (code), chưa bấm thử bản tiếng Anh | 2026-10-25 | — | [S4-07](S4-07-i18n-web.md) |
+| S4-07 | Hạ tầng đa ngôn ngữ web và bản tiếng Anh, chọn trong Cài đặt | Xong (code), chưa bấm thử bản tiếng Anh | 2026-10-25 | `075f03f` | [S4-07](S4-07-i18n-web.md) |
+| S4-08 | API trung lập ngôn ngữ: mã lỗi có params, `ageMonths`, `daysUntilDue` | Xong (code), chưa bấm thử lỗi ở bản tiếng Anh | 2026-10-25 | — | [S4-08](S4-08-i18n-api.md) |

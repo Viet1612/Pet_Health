@@ -15,6 +15,7 @@ const zNotification = z.object({
   id: z.uuid(),
   level: z.enum(['D7', 'D1', 'OVERDUE']),
   label: z.string().nullable(),
+  daysUntilDue: z.number().int().nullable(),
   milestoneId: z.uuid(),
   petId: z.uuid(),
   petName: z.string(),

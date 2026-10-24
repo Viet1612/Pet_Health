@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { FakeClock } from '../src/platform/clock/clock.js';
 import { genReqId, REF_PATTERN } from '../src/platform/http/request-id.js';
-import { fieldErrorCode } from '../src/platform/http/zod-messages.vi.js';
+import { fieldErrorCode, fieldErrorParams } from '../src/platform/http/zod-messages.vi.js';
 import { newId } from '../src/platform/ids.js';
 
 describe('genReqId', () => {
@@ -63,6 +63,21 @@ describe('fieldErrorCode', () => {
     [{ code: 'invalid_format' }, 'INVALID_FORMAT'],
   ])('%o → %s', (issue, expected) => {
     expect(fieldErrorCode(issue)).toBe(expected);
+  });
+});
+
+describe('fieldErrorParams', () => {
+  it('giới hạn cho client ghép câu (S4-08)', () => {
+    expect(fieldErrorParams({ code: 'too_big', origin: 'string', maximum: 500 })).toEqual({
+      max: 500,
+    });
+    expect(fieldErrorParams({ code: 'too_big', origin: 'number', maximum: 60 })).toEqual({
+      max: 60,
+    });
+    expect(fieldErrorParams({ code: 'too_small', origin: 'number', minimum: 1 })).toEqual({
+      min: 1,
+    });
+    expect(fieldErrorParams({ code: 'invalid_type', input: undefined })).toBeUndefined();
   });
 });
 

@@ -485,6 +485,7 @@ export interface paths {
                 sex: 'MALE' | 'FEMALE';
                 /** Format: date */
                 birthDate: string;
+                ageMonths: number;
                 ageText: string;
                 description: string | null;
                 avatarUrl: string | null;
@@ -539,6 +540,7 @@ export interface paths {
               sex: 'MALE' | 'FEMALE';
               /** Format: date */
               birthDate: string;
+              ageMonths: number;
               ageText: string;
               description: string | null;
               avatarUrl: string | null;
@@ -592,6 +594,7 @@ export interface paths {
               sex: 'MALE' | 'FEMALE';
               /** Format: date */
               birthDate: string;
+              ageMonths: number;
               ageText: string;
               description: string | null;
               avatarUrl: string | null;
@@ -675,6 +678,7 @@ export interface paths {
               sex: 'MALE' | 'FEMALE';
               /** Format: date */
               birthDate: string;
+              ageMonths: number;
               ageText: string;
               description: string | null;
               avatarUrl: string | null;
@@ -1993,6 +1997,7 @@ export interface paths {
                   /** @enum {string} */
                   level: 'D7' | 'D1' | 'OVERDUE';
                   label: string | null;
+                  daysUntilDue: number | null;
                   /** Format: uuid */
                   milestoneId: string;
                   /** Format: uuid */
@@ -2063,6 +2068,7 @@ export interface paths {
                 /** @enum {string} */
                 level: 'D7' | 'D1' | 'OVERDUE';
                 label: string | null;
+                daysUntilDue: number | null;
                 /** Format: uuid */
                 milestoneId: string;
                 /** Format: uuid */

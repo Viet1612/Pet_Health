@@ -36,8 +36,11 @@ describe('từ điển', () => {
         : [`${prefix}${k}`],
     );
 
+  // `apiErrors.problem` là bảng tra theo mã: bản vi để trống (dùng thông điệp server).
+  const fixed = (o: object) => keys(o).filter((k) => !k.startsWith('apiErrors.problem.'));
+
   it('en có đúng bộ key của vi', () => {
-    expect(keys(en).sort()).toEqual(keys(vi).sort());
+    expect(fixed(en).sort()).toEqual(fixed(vi).sort());
   });
 
   it('tiếng Anh dùng số ít/số nhiều', () => {

@@ -1,9 +1,14 @@
 export type FieldErrorCode = 'REQUIRED' | 'INVALID_FORMAT' | 'OUT_OF_RANGE' | 'TOO_LONG';
 
+/** Tham số cho client tự ghép câu theo ngôn ngữ (S4-08), ví dụ `{ max: 2000 }`. */
+export type ErrorParams = Record<string, string | number>;
+
 export interface FieldError {
   field: string;
   code: FieldErrorCode | (string & {});
+  /** Thông điệp tiếng Việt, dự phòng cho client chưa dịch theo `code`. */
   message: string;
+  params?: ErrorParams;
 }
 
 export interface AppErrorOptions {
@@ -11,6 +16,7 @@ export interface AppErrorOptions {
   /** Giây; đặt header `Retry-After` và trường `retryAfter`. */
   retryAfter?: number;
   headers?: Record<string, string>;
+  params?: ErrorParams;
 }
 
 /** Lỗi nghiệp vụ trả về client dạng problem+json (SAD §2.4.3). */

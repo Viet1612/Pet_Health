@@ -16,6 +16,7 @@ export interface IssueLike {
   input?: unknown;
   origin?: string;
   minimum?: number | bigint;
+  maximum?: number | bigint;
 }
 
 /** Ánh xạ issue Zod v4 → mã lỗi trường ổn định cho client. */
@@ -33,6 +34,17 @@ export function fieldErrorCode(issue: IssueLike): FieldErrorCode {
     default:
       return 'INVALID_FORMAT';
   }
+}
+
+/** Giới hạn của issue cho client ghép câu: `TOO_LONG { max }`, `OUT_OF_RANGE { min | max }`. */
+export function fieldErrorParams(issue: IssueLike): Record<string, number> | undefined {
+  const code = fieldErrorCode(issue);
+  if (code === 'TOO_LONG' && issue.maximum !== undefined) return { max: Number(issue.maximum) };
+  if (code === 'OUT_OF_RANGE') {
+    if (issue.maximum !== undefined) return { max: Number(issue.maximum) };
+    if (issue.minimum !== undefined) return { min: Number(issue.minimum) };
+  }
+  return undefined;
 }
 
 let installed = false;

@@ -1,3 +1,5 @@
+import type { ProblemParams } from '@ph/api-client';
+
 /** Chuỗi giao diện tiếng Việt, khớp Figma Components (UI Blueprint). */
 export const vi = {
   appName: 'Pet Health',
@@ -289,6 +291,15 @@ export const vi = {
     unread: 'Chưa xem',
     due: (date: string) => `Đến hạn ${date}`,
     dueOverdue: (date: string) => `Hạn ${date}`,
+    /** Nhãn nhắc theo số ngày tới hạn (âm = quá hạn), khớp `levelLabel` của API. */
+    label: (days: number) =>
+      days >= 2
+        ? `còn ${String(days)} ngày`
+        : days === 1
+          ? 'ngày mai'
+          : days === 0
+            ? 'hôm nay'
+            : `quá hạn ${String(-days)} ngày`,
     resolution: { DONE: 'Đã thực hiện', CANCELLED: 'Đã hủy', RESCHEDULED: 'Đã đổi lịch' },
     footer: 'Nhắc nhở được giữ 90 ngày. Chạm vào nhắc để mở mốc và đánh dấu đã xem.',
     emptyTitle: 'Chưa có nhắc nhở nào.',
@@ -296,6 +307,18 @@ export const vi = {
     loadMore: 'Tải thêm',
   },
   confirm: { cancel: 'Hủy' },
+  /**
+   * Lỗi API theo mã (S4-08). Thông điệp của server đã là tiếng Việt nên bản vi dùng thẳng nó:
+   * không có mục nào ở đây, `field` luôn trả `null`.
+   */
+  apiErrors: {
+    problem: {} as Readonly<Record<string, string>>,
+    field: ((): string | null => null) as (
+      code: string,
+      field: string,
+      params?: ProblemParams,
+    ) => string | null,
+  },
   password: { show: 'Hiện', hide: 'Ẩn' },
   settings: {
     title: 'Cài đặt',
@@ -313,6 +336,12 @@ export const vi = {
     male: 'Đực',
     female: 'Cái',
     born: (date: string) => `Sinh ${date}`,
+    /** Khớp `formatAge` của API: "5 tháng", "7 năm 7 tháng". */
+    age: (months: number) => {
+      const years = Math.floor(months / 12);
+      const rest = months % 12;
+      return years === 0 ? `${String(rest)} tháng` : `${String(years)} năm ${String(rest)} tháng`;
+    },
     avatarAlt: (name: string) => `Ảnh đại diện của ${name}`,
     profileTitle: 'Hồ sơ thú cưng',
     back: 'Quay lại',

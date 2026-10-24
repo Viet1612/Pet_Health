@@ -133,7 +133,7 @@ export function PetSwitcher() {
                 <span className="min-w-0 flex-1">
                   <span className="text-body block truncate font-semibold">{pet.name}</span>
                   <span className="text-small text-text-muted block truncate">
-                    {pet.ageText} · {pet.breed}
+                    {m.pets.age(pet.ageMonths)} · {pet.breed}
                   </span>
                 </span>
                 {isSelected && <Check size={20} aria-hidden className="text-primary shrink-0" />}

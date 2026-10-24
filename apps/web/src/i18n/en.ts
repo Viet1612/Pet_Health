@@ -1,3 +1,5 @@
+import type { ProblemParams } from '@ph/api-client';
+
 import type { Messages } from './vi';
 
 const plural = (n: number, one: string, many: string) => `${String(n)} ${n === 1 ? one : many}`;
@@ -296,6 +298,14 @@ export const en: Messages = {
     unread: 'Unread',
     due: (date: string) => `Due ${date}`,
     dueOverdue: (date: string) => `Due ${date}`,
+    label: (days: number) =>
+      days >= 2
+        ? `in ${String(days)} days`
+        : days === 1
+          ? 'tomorrow'
+          : days === 0
+            ? 'today'
+            : `${plural(-days, 'day', 'days')} overdue`,
     resolution: { DONE: 'Done', CANCELLED: 'Cancelled', RESCHEDULED: 'Rescheduled' },
     footer: 'Reminders are kept for 90 days. Tap a reminder to open it and mark it as read.',
     emptyTitle: 'No reminders yet.',
@@ -303,6 +313,83 @@ export const en: Messages = {
     loadMore: 'Load more',
   },
   confirm: { cancel: 'Cancel' },
+  apiErrors: {
+    problem: {
+      NOT_FOUND: 'Not found',
+      UNAUTHENTICATED: 'You need to log in',
+      VALIDATION_FAILED: 'Some fields are invalid',
+      RATE_LIMITED: 'Too many attempts. Please try again later.',
+      CSRF_INVALID: 'Invalid request. Reload the page and try again.',
+      INVALID_CREDENTIALS: 'Incorrect email or password',
+      ACCOUNT_LOCKED: 'Account temporarily locked after too many failed logins',
+      EMAIL_TAKEN: 'This email is already in use',
+      TOKEN_INVALID: 'This link is invalid',
+      TOKEN_EXPIRED: 'This link has expired',
+      TOKEN_USED: 'This link has already been used',
+      PET_LIMIT_REACHED: 'You have reached the limit of 10 pets',
+      CONFIRM_NAME_MISMATCH: "Name doesn't match",
+      TYPE_IMMUTABLE: "The milestone type can't be changed after creation",
+      MILESTONE_NOT_PENDING: 'This milestone is already done or cancelled',
+      UNDO_WINDOW_EXPIRED: 'Too late to undo',
+      FILE_REQUIRED: 'No photo selected',
+      FILE_TOO_LARGE: 'Photo is larger than 5 MB',
+      UNSUPPORTED_FORMAT: 'Unsupported format (JPG, PNG, HEIC only)',
+      INVALID_UPLOAD: 'Invalid upload',
+      MEDIA_URL_INVALID: 'Photo link is invalid or has expired',
+      PAYLOAD_TOO_LARGE: 'The data sent is too large',
+      UNSUPPORTED_MEDIA_TYPE: 'Unsupported data format',
+      MALFORMED_JSON: 'Invalid JSON data',
+      INVALID_CURSOR: 'Invalid page cursor',
+      IDEMPOTENCY_KEY_REQUIRED: 'Missing Idempotency-Key header',
+      IDEMPOTENCY_KEY_INVALID: 'Idempotency-Key must be a UUID',
+      INTERNAL_ERROR: 'Something went wrong. Please try again later.',
+    },
+    field: (code: string, field: string, params?: ProblemParams): string | null => {
+      const str = (v: string | number | undefined) =>
+        v === undefined ? undefined : typeof v === 'number' ? v.toLocaleString('en-US') : v;
+      const max = str(params?.max);
+      const min = str(params?.min);
+      switch (code) {
+        case 'REQUIRED':
+          return field === 'file' ? 'No photo selected' : 'Required';
+        case 'INVALID_FORMAT':
+          return 'Invalid format';
+        case 'INVALID_ENUM':
+          return 'Invalid choice';
+        case 'INVALID_DATE':
+          return 'Invalid date';
+        case 'INVALID_RANGE':
+          return 'Start date must be before end date';
+        case 'FUTURE_DATE':
+        case 'DATE_IN_FUTURE':
+          return field === 'birthDate'
+            ? 'Date of birth cannot be in the future'
+            : 'Date cannot be in the future';
+        case 'TOO_LONG':
+          return max === undefined ? 'Too long' : `At most ${max} characters`;
+        case 'OUT_OF_RANGE':
+          if (field === 'weightKg') return 'Weight must be 0.1 to 150 kg, at most 1 decimal place';
+          if (field === 'cycleMonths')
+            return 'Repeat must be a whole number of months from 1 to 60';
+          if (min !== undefined && max !== undefined) return `Must be from ${min} to ${max}`;
+          if (max !== undefined) return `At most ${max}`;
+          if (min !== undefined) return `At least ${min}`;
+          return 'Value out of range';
+        case 'SYMPTOMS_OR_DIAGNOSIS_REQUIRED':
+          return 'Enter at least symptoms or a diagnosis';
+        case 'NOT_ALLOWED_FOR_VACCINE':
+          return 'Vaccinations repeat every 12 months; no custom repeat';
+        case 'INVALID_TIMEZONE':
+          return 'Invalid time zone';
+        case 'EMAIL_TAKEN':
+          return 'This email is already in use';
+        case 'CONFIRM_NAME_MISMATCH':
+          return "Name doesn't match";
+        default:
+          return null;
+      }
+    },
+  },
   password: { show: 'Show', hide: 'Hide' },
   settings: {
     title: 'Settings',
@@ -320,6 +407,13 @@ export const en: Messages = {
     male: 'Male',
     female: 'Female',
     born: (date: string) => `Born ${date}`,
+    age: (months: number) => {
+      const years = Math.floor(months / 12);
+      const rest = months % 12;
+      if (years === 0) return plural(rest, 'month', 'months');
+      const y = plural(years, 'year', 'years');
+      return rest === 0 ? y : `${y} ${plural(rest, 'month', 'months')}`;
+    },
     avatarAlt: (name: string) => `${name}'s photo`,
     profileTitle: 'Pet profile',
     back: 'Back',

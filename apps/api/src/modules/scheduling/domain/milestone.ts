@@ -20,6 +20,7 @@ export interface MilestoneFieldError {
     | 'OUT_OF_RANGE'
     | 'NOT_ALLOWED_FOR_VACCINE';
   message: string;
+  params?: { min?: number; max: number };
 }
 
 const codePoints = (s: string): number => Array.from(s).length;
@@ -29,7 +30,12 @@ function checkNote(raw: string | null, errors: MilestoneFieldError[]): string | 
   const trimmed = raw?.normalize('NFC').trim() ?? '';
   if (trimmed === '') return null;
   if (codePoints(trimmed) > NOTE_MAX) {
-    errors.push({ field: 'note', code: 'TOO_LONG', message: 'Tối đa 500 ký tự' });
+    errors.push({
+      field: 'note',
+      code: 'TOO_LONG',
+      message: 'Tối đa 500 ký tự',
+      params: { max: NOTE_MAX },
+    });
   }
   return trimmed;
 }
@@ -54,6 +60,7 @@ function checkCycle(
       field: 'cycleMonths',
       code: 'OUT_OF_RANGE',
       message: 'Chu kỳ phải là số tháng nguyên từ 1 đến 60',
+      params: { min: CYCLE_MIN, max: CYCLE_MAX },
     });
     return null;
   }

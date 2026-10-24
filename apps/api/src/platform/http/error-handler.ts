@@ -2,7 +2,12 @@ import type { FastifyError, FastifyInstance, FastifyReply, FastifyRequest } from
 import { hasZodFastifySchemaValidationErrors } from 'fastify-type-provider-zod';
 
 import { AppError, NotFoundError, type FieldError } from '../errors/app-error.js';
-import { DEFAULT_FIELD_MESSAGES, fieldErrorCode, type IssueLike } from './zod-messages.vi.js';
+import {
+  DEFAULT_FIELD_MESSAGES,
+  fieldErrorCode,
+  fieldErrorParams,
+  type IssueLike,
+} from './zod-messages.vi.js';
 
 export const PROBLEM_CONTENT_TYPE = 'application/problem+json; charset=utf-8';
 
@@ -14,6 +19,7 @@ interface ProblemBody {
   ref: string;
   errors?: FieldError[];
   retryAfter?: number;
+  params?: Record<string, string | number>;
 }
 
 const kebab = (code: string): string => code.toLowerCase().replaceAll('_', '-');
@@ -41,10 +47,12 @@ function fromValidation(error: FastifyError): AppError | null {
   const errors = error.validation.map((v): FieldError => {
     const issue = { code: v.keyword, ...v.params } as IssueLike;
     const code = fieldErrorCode(issue);
+    const params = fieldErrorParams(issue);
     return {
       field: v.instancePath.replace(/^\//, '').replaceAll('/', '.'),
       code,
       message: v.message ?? DEFAULT_FIELD_MESSAGES[code],
+      ...(params ? { params } : {}),
     };
   });
   return new AppError(422, 'VALIDATION_FAILED', 'Dữ liệu không hợp lệ', { errors });
@@ -64,6 +72,7 @@ function send(
     ref: request.id,
   };
   if (error.options.errors) body.errors = error.options.errors;
+  if (error.options.params) body.params = error.options.params;
   if (error.options.retryAfter !== undefined) {
     body.retryAfter = error.options.retryAfter;
     void reply.header('retry-after', String(error.options.retryAfter));

@@ -3,6 +3,7 @@ import {
   formatTenths,
   parseWeightKg,
   WEIGHT_RANGE_MESSAGE,
+  WEIGHT_RANGE_PARAMS,
 } from '../../health-records/domain/weight.js';
 import type { PetsAppDeps } from './pets-deps.js';
 import type { Trx } from './ports.js';
@@ -18,7 +19,12 @@ export async function setWeightTarget(
   const tenths = parseWeightKg(weightKg);
   if (tenths === null) {
     throw new ValidationError([
-      { field: 'weightKg', code: 'OUT_OF_RANGE', message: WEIGHT_RANGE_MESSAGE },
+      {
+        field: 'weightKg',
+        code: 'OUT_OF_RANGE',
+        message: WEIGHT_RANGE_MESSAGE,
+        params: WEIGHT_RANGE_PARAMS,
+      },
     ]);
   }
   const value = formatTenths(tenths);

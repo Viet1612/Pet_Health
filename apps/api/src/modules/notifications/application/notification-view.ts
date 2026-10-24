@@ -1,4 +1,4 @@
-import type { LocalDate } from '../../../platform/calendar/local-date.js';
+import { diffDays, type LocalDate } from '../../../platform/calendar/local-date.js';
 import { levelLabel, type ReminderLevel } from '../../../platform/calendar/reminder-level.js';
 import type { NotificationRow } from '../adapters/persistence/notification.repository.js';
 import type { NotificationsAppDeps, Trx } from './ports.js';
@@ -8,6 +8,8 @@ export interface NotificationView {
   level: ReminderLevel;
   /** "còn N ngày" / "ngày mai" / "hôm nay" / "quá hạn N ngày", tính lúc đọc; `null` khi đã resolve. */
   label: string | null;
+  /** Số ngày tới hạn tính lúc đọc (âm = quá hạn); `null` khi đã resolve. Client ghép câu (S4-08). */
+  daysUntilDue: number | null;
   milestoneId: string;
   petId: string;
   petName: string;
@@ -46,6 +48,7 @@ export async function toNotificationViews(
         id: r.id,
         level: r.level as ReminderLevel,
         label: r.resolution ? null : levelLabel(r.level as ReminderLevel, dueOn, today),
+        daysUntilDue: r.resolution ? null : diffDays(dueOn, today),
         milestoneId: r.milestone_id,
         petId: m.petId,
         petName: names.get(m.petId) ?? '',

@@ -9,6 +9,7 @@ export interface VisitFieldError {
   field: VisitTextField;
   code: 'TOO_LONG' | 'SYMPTOMS_OR_DIAGNOSIS_REQUIRED';
   message: string;
+  params?: { max: number };
 }
 
 const codePoints = (s: string): number => Array.from(s).length;
@@ -31,7 +32,12 @@ export function validateVisitText(
   for (const field of VISIT_TEXT_FIELDS) {
     const value = fields[field];
     if (value !== null && codePoints(value) > VISIT_TEXT_MAX) {
-      errors.push({ field, code: 'TOO_LONG', message: 'Tối đa 2.000 ký tự' });
+      errors.push({
+        field,
+        code: 'TOO_LONG',
+        message: 'Tối đa 2.000 ký tự',
+        params: { max: VISIT_TEXT_MAX },
+      });
     }
   }
   if (fields.symptoms === null && fields.diagnosis === null) {
