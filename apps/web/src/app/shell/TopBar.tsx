@@ -1,17 +1,13 @@
 import { useRouterState } from '@tanstack/react-router';
-import { Bell, LogOut, Menu } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
+import { BellButton } from '../../features/notifications';
 import { PetSwitcher } from '../../features/pets';
 import { useLogoutAction } from '../../features/session';
 import { vi } from '../../i18n/vi';
 import { QuickAdd } from './QuickAdd';
 import { IconButton } from '../../ui/IconButton';
-
-/** CMP-07: chuông (S0 chỉ hiển thị; số chưa xem ở S4-05). */
-function BellButton() {
-  return <IconButton aria-label={vi.topBar.notifications} icon={<Bell size={24} />} />;
-}
 
 /** Menu phone: hiện mục Đăng xuất (các mục khác thêm ở task sau). */
 function PhoneMenu() {

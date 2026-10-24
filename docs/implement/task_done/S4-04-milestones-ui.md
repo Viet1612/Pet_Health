@@ -5,7 +5,7 @@
 | Task | [S4-04](../tasks/S4-04-milestones-ui.md) |
 | Trạng thái | Xong (code), chưa bấm thử trên trình duyệt |
 | Ngày hoàn thành | 2026-10-25 |
-| Commit | xem [README](README.md) |
+| Commit | `e9fea90` |
 
 ## Kết quả
 
