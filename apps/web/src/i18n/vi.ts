@@ -19,6 +19,7 @@ export const vi = {
     serverTitle: 'Có lỗi xảy ra',
     serverDescription: 'Vui lòng thử lại sau. Nếu vẫn lỗi, gửi mã bên dưới cho người hỗ trợ.',
     serverToast: 'Có lỗi xảy ra, vui lòng thử lại sau.',
+    serverToastRef: (ref: string) => `Có lỗi xảy ra, vui lòng thử lại sau. Mã: ${ref}`,
     refLabel: 'Mã',
     copy: 'Sao chép',
     copied: 'Đã sao chép',
@@ -295,6 +296,14 @@ export const vi = {
     loadMore: 'Tải thêm',
   },
   confirm: { cancel: 'Hủy' },
+  password: { show: 'Hiện', hide: 'Ẩn' },
+  settings: {
+    title: 'Cài đặt',
+    language: 'Ngôn ngữ / Language',
+    languageHint: 'Áp dụng cho giao diện trên thiết bị này.',
+    localeNames: { vi: 'Tiếng Việt', en: 'English' },
+    languageChanged: 'Đã đổi ngôn ngữ',
+  },
   quickAdd: { weight: 'Cân nặng', noPet: 'Thêm thú cưng trước' },
   pets: {
     title: 'Thú cưng',
@@ -445,3 +454,16 @@ export const vi = {
     logout: 'Đăng xuất',
   },
 } as const;
+
+/** Chuỗi literal → string, hàm giữ chữ ký: từ điển khác phải đủ key nhưng được khác chữ. */
+type Widen<T> = T extends string
+  ? string
+  : T extends (...args: infer A) => infer R
+    ? (...args: A) => Widen<R>
+    : T extends readonly (infer U)[]
+      ? readonly Widen<U>[]
+      : T extends object
+        ? { readonly [K in keyof T]: Widen<T[K]> }
+        : T;
+
+export type Messages = Widen<typeof vi>;

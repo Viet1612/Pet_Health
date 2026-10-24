@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { ConfirmDialog } from '../../ui/ConfirmDialog';
 import { ResponsiveDialog } from '../../ui/ResponsiveDialog';
@@ -10,7 +10,7 @@ import { useToast } from '../../ui/toast';
 import { parseKgInput } from './format';
 import { useSetWeightTarget } from './queries';
 
-const t = vi.weights.targetDialog;
+const t = m.weights.targetDialog;
 
 /**
  * Sheet Cân nặng mục tiêu (10:817). Lưu ô trống khi đã có mục tiêu = xóa mục tiêu. Trang gọi chỉ
@@ -46,7 +46,7 @@ export function WeightTargetDialog({
       }
       toast.show({
         kind: 'error',
-        message: 'message' in message ? message.message : vi.error.serverToast,
+        message: 'message' in message ? message.message : m.error.serverToast,
         ...(message.kind === 'retryable'
           ? { onRetry: () => void submit(weightKg, successMessage) }
           : {}),
@@ -64,7 +64,7 @@ export function WeightTargetDialog({
       setError(parsed.error);
       return;
     }
-    void submit(parsed.value, vi.toast.saved);
+    void submit(parsed.value, m.toast.saved);
   };
 
   if (confirmClear) {

@@ -1,7 +1,7 @@
 import { Outlet } from '@tanstack/react-router';
 import { CalendarCheck, NotebookPen, PawPrint, TrendingUp } from 'lucide-react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { cx } from '../../ui/cx';
 
 function Logo({ inverted = false }: { inverted?: boolean }) {
@@ -16,7 +16,7 @@ function Logo({ inverted = false }: { inverted?: boolean }) {
       >
         <PawPrint size={28} />
       </span>
-      <span className="text-h2">{vi.appName}</span>
+      <span className="text-h2">{m.appName}</span>
     </div>
   );
 }
@@ -42,11 +42,11 @@ function IntroPanel() {
         <Logo inverted />
         <div className="flex max-w-lg flex-col gap-6 2xl:max-w-2xl 2xl:gap-8">
           <p className="text-[40px] leading-[48px] font-bold 2xl:text-[56px] 2xl:leading-[66px]">
-            {vi.auth.tagline}
+            {m.auth.tagline}
           </p>
-          <p className="text-body opacity-90 2xl:text-[20px] 2xl:leading-[30px]">{vi.auth.intro}</p>
+          <p className="text-body opacity-90 2xl:text-[20px] 2xl:leading-[30px]">{m.auth.intro}</p>
           <ul className="mt-4 flex flex-col gap-5">
-            {vi.auth.features.map((f, i) => {
+            {m.auth.features.map((f, i) => {
               const Icon = FEATURE_ICONS[i] ?? PawPrint;
               return (
                 <li key={f.title} className="flex items-start gap-4">
@@ -67,7 +67,7 @@ function IntroPanel() {
             })}
           </ul>
         </div>
-        <p className="text-small opacity-75">© {vi.appName}</p>
+        <p className="text-small opacity-75">© {m.appName}</p>
       </div>
     </aside>
   );

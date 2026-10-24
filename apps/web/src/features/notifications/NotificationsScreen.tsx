@@ -3,7 +3,7 @@ import { useRouter } from '@tanstack/react-router';
 import { ArrowLeft, BellOff } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
 import { ErrorState } from '../../ui/ErrorState';
@@ -14,7 +14,7 @@ import { groupByDay } from './group-by-day';
 import { NotificationItem } from './NotificationItem';
 import { listQuery, useMarkRead, type AppNotification } from './queries';
 
-const t = vi.notifications;
+const t = m.notifications;
 
 /** SCR-17 · Thông báo (8:364): nhóm theo ngày, mới nhất trước, cuộn tải thêm. */
 export function NotificationsScreen() {
@@ -46,7 +46,7 @@ export function NotificationsScreen() {
   const hasUnread = items.some((n) => n.unread);
 
   const fail = () => {
-    toast.show({ kind: 'error', message: vi.toast.saveFailed });
+    toast.show({ kind: 'error', message: m.toast.saveFailed });
   };
   const open = (n: AppNotification) => {
     // Điều hướng vẫn diễn ra; lỗi thì hoàn lại trạng thái chưa xem.

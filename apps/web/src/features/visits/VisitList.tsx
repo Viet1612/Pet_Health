@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { ChevronRight, Image as ImageIcon, NotebookPen } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button, buttonClassName } from '../../ui/Button';
 import { cx } from '../../ui/cx';
 import { EmptyState } from '../../ui/EmptyState';
@@ -11,7 +11,7 @@ import { Skeleton } from '../../ui/Skeleton';
 import { dateParts } from './format';
 import { visitsQuery, type VisitSummary } from './queries';
 
-const t = vi.visits;
+const t = m.visits;
 
 function VisitListItem({ visit, selected }: { visit: VisitSummary; selected: boolean }) {
   const { day, monthYear } = dateParts(visit.visitedOn);

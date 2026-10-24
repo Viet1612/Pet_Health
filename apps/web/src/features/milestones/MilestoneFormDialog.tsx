@@ -4,7 +4,7 @@ import { useId, useState } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
 import { useIdempotencyKey } from '../../api/use-idempotency-key';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Alert } from '../../ui/Alert';
 import { Button } from '../../ui/Button';
 import { cx } from '../../ui/cx';
@@ -20,7 +20,7 @@ import {
   type MilestoneType,
 } from './queries';
 
-const t = vi.milestones.form;
+const t = m.milestones.form;
 const TYPES: MilestoneType[] = ['VACCINE', 'FLEA', 'DEWORM'];
 const CYCLE_CHIPS = [1, 3, 6];
 const NOTE_MAX = 500;
@@ -99,21 +99,21 @@ export function MilestoneFormDialog({
         });
         idempotency.reset();
       }
-      toast.show({ kind: 'success', message: vi.toast.saved });
+      toast.show({ kind: 'success', message: m.toast.saved });
       onClose();
     } catch (err) {
       if (err instanceof ApiError && err.code === 'MILESTONE_NOT_PENDING') {
-        toast.show({ kind: 'error', message: vi.milestones.notPending });
+        toast.show({ kind: 'error', message: m.milestones.notPending });
         onClose();
         return;
       }
-      const m = toUserMessage(err);
-      if (m.kind === 'fields') {
-        setErrors(m.fields);
-      } else if (m.kind === 'retryable') {
-        toast.show({ kind: 'error', message: m.message, onRetry: () => void save() });
+      const msg = toUserMessage(err);
+      if (msg.kind === 'fields') {
+        setErrors(msg.fields);
+      } else if (msg.kind === 'retryable') {
+        toast.show({ kind: 'error', message: msg.message, onRetry: () => void save() });
       } else {
-        toast.show({ kind: 'error', message: m.message });
+        toast.show({ kind: 'error', message: msg.message });
       }
     }
   };

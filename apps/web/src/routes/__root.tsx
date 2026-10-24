@@ -3,7 +3,7 @@ import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router
 
 import { useRouteTitleAndFocus } from '../app/route-meta';
 import { useSessionExpiredRedirect } from '../features/session';
-import { vi } from '../i18n/vi';
+import { m } from '../i18n';
 import { buttonClassName } from '../ui/Button';
 import { ErrorState } from '../ui/ErrorState';
 
@@ -24,7 +24,7 @@ function NotFound() {
         kind="not-found"
         action={
           <Link to="/" className={buttonClassName()}>
-            {vi.error.backHome}
+            {m.error.backHome}
           </Link>
         }
       />
@@ -46,5 +46,5 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootLayout,
   notFoundComponent: NotFound,
   errorComponent: RootError,
-  staticData: { title: vi.appName },
+  staticData: { title: m.appName },
 });

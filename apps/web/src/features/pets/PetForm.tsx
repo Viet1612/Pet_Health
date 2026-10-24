@@ -6,7 +6,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 import { toUserMessage } from '../../api/to-user-message';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { cx } from '../../ui/cx';
 import { TextField } from '../../ui/TextField';
@@ -14,7 +14,7 @@ import { useToast } from '../../ui/toast';
 import { deviceToday } from './format';
 import type { Pet, PetSex, PetValues } from './queries';
 
-const t = vi.pets.form;
+const t = m.pets.form;
 const codePoints = (s: string): number => Array.from(s).length;
 const DESCRIPTION_MAX = 2000;
 
@@ -51,8 +51,8 @@ function SexSegmented({
 }) {
   const id = useId();
   const options: { value: PetSex; label: string }[] = [
-    { value: 'MALE', label: vi.pets.male },
-    { value: 'FEMALE', label: vi.pets.female },
+    { value: 'MALE', label: m.pets.male },
+    { value: 'FEMALE', label: m.pets.female },
   ];
   return (
     <fieldset className="flex flex-col gap-1" aria-describedby={error ? `${id}-error` : undefined}>
@@ -160,10 +160,10 @@ export function PetForm({
       }
       const text =
         err instanceof ApiError && err.code === 'PET_LIMIT_REACHED'
-          ? vi.pets.limitReached
+          ? m.pets.limitReached
           : 'message' in message
             ? message.message
-            : vi.error.serverToast;
+            : m.error.serverToast;
       toast.show({ kind: 'error', message: text });
     }
   });

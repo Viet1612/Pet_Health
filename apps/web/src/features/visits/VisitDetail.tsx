@@ -4,7 +4,7 @@ import { ArrowLeft, MoreVertical } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { buttonClassName } from '../../ui/Button';
 import { ConfirmDialog } from '../../ui/ConfirmDialog';
 import { IconButton } from '../../ui/IconButton';
@@ -13,7 +13,7 @@ import { PhotoGrid } from '../photos';
 import { formatDateTime, formatVisitDate } from './format';
 import { useDeleteVisit, visitKey, type Visit } from './queries';
 
-const t = vi.visits;
+const t = m.visits;
 
 function TextBlock({ title, text }: { title: string; text: string | null }) {
   if (!text) return null;
@@ -104,10 +104,10 @@ export function DeleteVisitDialog({ visit, onClose }: { visit: Visit; onClose: (
             });
           },
           onError: (err) => {
-            const m = toUserMessage(err);
+            const msg = toUserMessage(err);
             toast.show({
               kind: 'error',
-              message: 'message' in m ? m.message : vi.error.serverToast,
+              message: 'message' in msg ? msg.message : m.error.serverToast,
             });
           },
         });

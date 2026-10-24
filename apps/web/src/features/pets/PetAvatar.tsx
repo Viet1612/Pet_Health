@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { cx } from '../../ui/cx';
 import { initialOf } from './format';
 import { PETS_KEY } from './queries';
@@ -38,7 +38,7 @@ export function PetAvatar({
     return (
       <img
         src={src}
-        alt={vi.pets.avatarAlt(pet.name)}
+        alt={m.pets.avatarAlt(pet.name)}
         className={cx('shrink-0 rounded-full object-cover', SIZE[size], className)}
         onError={() => {
           if (refetched.current) {

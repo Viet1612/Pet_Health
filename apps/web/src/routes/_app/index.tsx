@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { PawPrint } from 'lucide-react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { buttonClassName } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
 
@@ -9,14 +9,14 @@ import { EmptyState } from '../../ui/EmptyState';
 function Home() {
   return (
     <>
-      <h1 className="sr-only">{vi.nav.home}</h1>
+      <h1 className="sr-only">{m.nav.home}</h1>
       <EmptyState
         icon={<PawPrint size={32} />}
-        title={vi.empty.firstPetTitle}
-        description={vi.empty.firstPetDescription}
+        title={m.empty.firstPetTitle}
+        description={m.empty.firstPetDescription}
         action={
           <Link to="/pets" className={buttonClassName()}>
-            {vi.empty.firstPetAction}
+            {m.empty.firstPetAction}
           </Link>
         }
       />
@@ -25,6 +25,6 @@ function Home() {
 }
 
 export const Route = createFileRoute('/_app/')({
-  staticData: { title: vi.nav.home },
+  staticData: { title: m.nav.home },
   component: Home,
 });

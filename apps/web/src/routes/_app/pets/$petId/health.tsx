@@ -3,10 +3,10 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link, notFound, Outlet } from '@tanstack/react-router';
 
 import { petQuery } from '../../../../features/pets';
-import { vi } from '../../../../i18n/vi';
+import { m } from '../../../../i18n';
 import { cx } from '../../../../ui/cx';
 
-const t = vi.health;
+const t = m.health;
 
 /** Màn Sức khỏe: segmented "Cân nặng | Sổ y tế". */
 function HealthLayout() {

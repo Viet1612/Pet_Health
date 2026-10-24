@@ -1,7 +1,7 @@
 import { AlertTriangle, SearchX } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 
-import { vi } from '../i18n/vi';
+import { m } from '../i18n';
 import { Button } from './Button';
 
 export type ErrorStateProps =
@@ -22,15 +22,15 @@ export function ErrorState(props: ErrorStateProps) {
         {notFound ? <SearchX size={32} /> : <AlertTriangle size={32} />}
       </div>
       <h1 tabIndex={-1} className="text-h1 outline-none">
-        {notFound ? vi.error.notFoundTitle : vi.error.serverTitle}
+        {notFound ? m.error.notFoundTitle : m.error.serverTitle}
       </h1>
       <p className="text-body text-text-muted max-w-md">
-        {notFound ? vi.error.notFoundDescription : vi.error.serverDescription}
+        {notFound ? m.error.notFoundDescription : m.error.serverDescription}
       </p>
 
       {props.kind === 'server' && props.refCode && (
         <div className="flex items-center gap-2">
-          <span className="text-small text-text-muted">{vi.error.refLabel}:</span>
+          <span className="text-small text-text-muted">{m.error.refLabel}:</span>
           <code className="bg-surface-2 text-body rounded-sm px-2 py-1 font-semibold select-all">
             {props.refCode}
           </code>
@@ -44,7 +44,7 @@ export function ErrorState(props: ErrorStateProps) {
                 });
               }}
             >
-              {copied ? vi.error.copied : vi.error.copy}
+              {copied ? m.error.copied : m.error.copy}
             </Button>
           )}
         </div>
@@ -52,7 +52,7 @@ export function ErrorState(props: ErrorStateProps) {
 
       <div className="mt-2">
         {props.kind === 'server'
-          ? props.onRetry && <Button onClick={props.onRetry}>{vi.error.retry}</Button>
+          ? props.onRetry && <Button onClick={props.onRetry}>{m.error.retry}</Button>
           : props.action}
       </div>
     </div>

@@ -1,15 +1,15 @@
-import { useRouterState } from '@tanstack/react-router';
-import { LogOut, Menu } from 'lucide-react';
+import { Link, useRouterState } from '@tanstack/react-router';
+import { LogOut, Menu, Settings } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { BellButton } from '../../features/notifications';
 import { PetSwitcher } from '../../features/pets';
 import { useLogoutAction } from '../../features/session';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { QuickAdd } from './QuickAdd';
 import { IconButton } from '../../ui/IconButton';
 
-/** Menu phone: hiện mục Đăng xuất (các mục khác thêm ở task sau). */
+/** Menu phone: Cài đặt, Đăng xuất. */
 function PhoneMenu() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -35,7 +35,7 @@ function PhoneMenu() {
   return (
     <div ref={ref} className="relative md:hidden">
       <IconButton
-        aria-label={vi.topBar.menu}
+        aria-label={m.topBar.menu}
         aria-haspopup="menu"
         aria-expanded={open}
         icon={<Menu size={24} />}
@@ -48,6 +48,17 @@ function PhoneMenu() {
           role="menu"
           className="border-divider bg-surface absolute top-12 right-0 z-50 min-w-48 rounded-md border py-1 shadow-lg"
         >
+          <Link
+            to="/settings"
+            role="menuitem"
+            className="text-body hover:bg-surface-2 flex min-h-11 w-full items-center gap-3 px-4"
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            <Settings size={20} aria-hidden />
+            {m.nav.settings}
+          </Link>
           <button
             type="button"
             role="menuitem"
@@ -56,7 +67,7 @@ function PhoneMenu() {
             onClick={() => void logout.run()}
           >
             <LogOut size={20} aria-hidden />
-            {vi.auth.logout}
+            {m.auth.logout}
           </button>
         </div>
       )}

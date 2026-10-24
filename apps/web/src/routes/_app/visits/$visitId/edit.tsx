@@ -15,10 +15,10 @@ import {
   visitQuery,
 } from '../../../../features/visits';
 import { todayIn } from '../../../../features/weights';
-import { vi } from '../../../../i18n/vi';
+import { m } from '../../../../i18n';
 import { useToast } from '../../../../ui/toast';
 
-const t = vi.visits.form;
+const t = m.visits.form;
 
 /** SCR-13 · Sửa lần khám (23:3061). Ảnh tải/xóa ngay, độc lập với "Lưu thay đổi". */
 function EditVisitPage() {
@@ -54,7 +54,7 @@ function EditVisitPage() {
         mode="edit"
         initial={visit}
         today={todayIn(session?.user.timezone)}
-        photosHeader={vi.photos.header(visit.photos.length + active)}
+        photosHeader={m.photos.header(visit.photos.length + active)}
         photos={
           <PhotoUploader
             visitId={visitId}
@@ -70,13 +70,13 @@ function EditVisitPage() {
               setDeleting(true);
             }}
           >
-            {vi.visits.delete}
+            {m.visits.delete}
           </button>
         }
         onCancel={() => void backToDetail()}
         onSubmit={async (values) => {
           await update.mutateAsync(values);
-          toast.show({ kind: 'success', message: vi.toast.saved });
+          toast.show({ kind: 'success', message: m.toast.saved });
           await backToDetail();
         }}
       />
@@ -101,6 +101,6 @@ export const Route = createFileRoute('/_app/visits/$visitId/edit')({
       throw error;
     }
   },
-  staticData: { title: vi.visits.form.addTitle },
+  staticData: { title: m.visits.form.addTitle },
   component: EditVisitPage,
 });

@@ -15,12 +15,12 @@ import {
   linkProblemOf,
   type LinkProblemKind,
 } from '../../features/session/LinkProblem';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Alert } from '../../ui/Alert';
 import { Button, buttonClassName } from '../../ui/Button';
 import { Skeleton } from '../../ui/Skeleton';
 
-const t = vi.auth.verify;
+const t = m.auth.verify;
 
 type VerifyState =
   | { kind: 'verifying' }
@@ -80,7 +80,7 @@ function VerifyEmailPage() {
         err instanceof ApiError && err.status === 429
           ? minutesFrom(err.problem.retryAfter ?? 3600)
           : null;
-      setResendResult({ ok: false, text: minutes ? t.tooMany(minutes) : vi.error.serverToast });
+      setResendResult({ ok: false, text: minutes ? t.tooMany(minutes) : m.error.serverToast });
     }
   };
 

@@ -1,12 +1,12 @@
 import { MoreVertical } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { IconButton } from '../../ui/IconButton';
 import { formatDate, formatKg, formatSignedTenths, tenthsOf } from './format';
 import type { WeightEntry } from './queries';
 
-const t = vi.weights;
+const t = m.weights;
 
 function RowMenu({
   label,

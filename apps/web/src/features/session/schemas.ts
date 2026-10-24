@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 
-const t = vi.auth;
+const t = m.auth;
 const codePoints = (s: string): number => Array.from(s).length;
 
 export const zEmailField = z

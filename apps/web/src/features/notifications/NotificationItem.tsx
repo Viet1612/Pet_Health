@@ -1,13 +1,13 @@
 import { Link } from '@tanstack/react-router';
 import { CheckCircle2 } from 'lucide-react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { cx } from '../../ui/cx';
 import { MilestoneTypeIcon, typeLabel } from '../milestones';
 import { formatDate } from './group-by-day';
 import type { AppNotification } from './queries';
 
-const t = vi.notifications;
+const t = m.notifications;
 
 /**
  * Một nhắc: cả dòng là liên kết tới chi tiết mốc. Chưa xem → nền primary-soft, chữ đậm, chấm màu.

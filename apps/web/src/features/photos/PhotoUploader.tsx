@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { ConfirmDialog } from '../../ui/ConfirmDialog';
 import { useToast } from '../../ui/toast';
 import { useVisitUploads } from './hooks';
@@ -14,7 +14,7 @@ import {
   retryUpload,
 } from './upload-store';
 
-const t = vi.photos;
+const t = m.photos;
 
 /**
  * Ô ảnh ở form sửa lần khám: chọn là tải ngay (tối đa 2 ảnh song song, % riêng từng ảnh); ảnh cũ có
@@ -87,10 +87,10 @@ export function PhotoUploader({
                 setConfirm(null);
               })
               .catch((err: unknown) => {
-                const m = toUserMessage(err);
+                const msg = toUserMessage(err);
                 toast.show({
                   kind: 'error',
-                  message: 'message' in m ? m.message : vi.error.serverToast,
+                  message: 'message' in msg ? msg.message : m.error.serverToast,
                 });
               })
               .finally(() => {

@@ -2,7 +2,7 @@ import { Link, useRouter, useRouterState } from '@tanstack/react-router';
 import { Check, ChevronDown, Plus } from 'lucide-react';
 import { useRef, useState, type KeyboardEvent } from 'react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { buttonClassName } from '../../ui/Button';
 import { cx } from '../../ui/cx';
 import { ResponsiveDialog } from '../../ui/ResponsiveDialog';
@@ -10,7 +10,7 @@ import { PetAvatar } from './PetAvatar';
 import { PET_LIMIT } from './queries';
 import { useSelectedPet } from './use-selected-pet';
 
-const t = vi.pets;
+const t = m.pets;
 
 /**
  * CMP-04 PetSwitcher (21:2115): nút trong TopBar mở sheet chọn thú cưng. Đổi thú cưng trên route

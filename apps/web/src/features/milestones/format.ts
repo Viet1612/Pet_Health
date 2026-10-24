@@ -1,7 +1,8 @@
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
+import { formatDate, formatDayMonth } from '../../lib/format';
 import type { Milestone, MilestoneType } from './queries';
 
-const t = vi.milestones;
+const t = m.milestones;
 
 export const typeLabel = (type: MilestoneType): string => t.types[type];
 
@@ -9,17 +10,7 @@ export const typeLabel = (type: MilestoneType): string => t.types[type];
 export const milestoneTitle = (m: { type: MilestoneType; note: string | null }): string =>
   m.note ? `${typeLabel(m.type)} · ${m.note}` : typeLabel(m.type);
 
-/** `2026-11-17` → `17/11/2026` */
-export function formatDate(isoDate: string): string {
-  const [y = '', m = '', d = ''] = isoDate.split('-');
-  return `${d}/${m}/${y}`;
-}
-
-/** `2026-11-17` → `17/11` */
-export function formatDayMonth(isoDate: string): string {
-  const [, m = '', d = ''] = isoDate.split('-');
-  return `${d}/${m}`;
-}
+export { formatDate, formatDayMonth } from '../../lib/format';
 
 /** Dòng phụ: "Hạn 17/11/2026 · tự lặp 12 tháng" / "· chu kỳ 3 tháng" / không gì. */
 export function dueLine(m: Milestone): string {

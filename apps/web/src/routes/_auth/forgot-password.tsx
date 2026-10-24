@@ -12,12 +12,12 @@ import {
   useForgotPassword,
   type ForgotValues,
 } from '../../features/session';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Alert } from '../../ui/Alert';
 import { Button } from '../../ui/Button';
 import { TextField } from '../../ui/TextField';
 
-const t = vi.auth.forgot;
+const t = m.auth.forgot;
 
 /** SCR-03 · Quên mật khẩu (14:1854). Phản hồi luôn như nhau dù email có tài khoản hay không. */
 function ForgotPasswordPage() {
@@ -48,7 +48,7 @@ function ForgotPasswordPage() {
       const message = toUserMessage(err);
       setState({
         kind: 'error',
-        message: 'message' in message ? message.message : vi.error.serverToast,
+        message: 'message' in message ? message.message : m.error.serverToast,
       });
     }
   });
@@ -84,7 +84,7 @@ function ForgotPasswordPage() {
         {state?.kind === 'error' && <Alert tone="danger">{state.message}</Alert>}
 
         <TextField
-          label={vi.auth.email}
+          label={m.auth.email}
           type="email"
           autoComplete="email"
           error={form.formState.errors.email?.message}

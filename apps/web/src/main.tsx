@@ -6,8 +6,11 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { createQueryClient } from './app/query-client';
+import { locale } from './i18n';
 import { routeTree } from './routeTree.gen';
 import { ToastProvider } from './ui/toast';
+
+document.documentElement.lang = locale;
 
 const queryClient = createQueryClient();
 

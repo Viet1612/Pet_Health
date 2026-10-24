@@ -4,9 +4,10 @@ import 'uplot/dist/uPlot.min.css';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import uPlot from 'uplot';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { monthSplits, yRange, type ChartData } from './chart-data';
-import { formatDate, formatKg, formatSignedTenths } from './format';
+import { formatMonthShort } from '../../lib/format';
+import { formatDate, formatDecimal1, formatKg, formatSignedTenths } from './format';
 
 const DAY = 86_400;
 
@@ -40,7 +41,7 @@ export default function WeightChartImpl({ data, target, caption }: WeightChartIm
     const series: uPlot.Series[] = [
       {},
       {
-        label: vi.weights.tableWeight,
+        label: m.weights.tableWeight,
         stroke: primary,
         width: 2,
         points: { show: true, size: 8, fill: primary, stroke: primary },
@@ -69,15 +70,14 @@ export default function WeightChartImpl({ data, target, caption }: WeightChartIm
             grid: { stroke: divider },
             ticks: { show: false },
             splits: () => monthSplits(data.start, data.end),
-            values: (_u, splits) =>
-              splits.map((s) => `T${String(new Date(s * 1000).getUTCMonth() + 1)}`),
+            values: (_u, splits) => splits.map((s) => formatMonthShort(s)),
           },
           {
             stroke: muted,
             grid: { stroke: divider },
             ticks: { show: false },
             size: 44,
-            values: (_u, splits) => splits.map((s) => s.toFixed(1).replace('.', ',')),
+            values: (_u, splits) => splits.map((s) => formatDecimal1(s)),
           },
         ],
         series,
@@ -138,7 +138,7 @@ export default function WeightChartImpl({ data, target, caption }: WeightChartIm
       <figcaption className="sr-only">{caption}</figcaption>
       <p aria-live="polite" className="text-small text-text-muted min-h-5">
         {activePoint &&
-          vi.weights.tooltip(
+          m.weights.tooltip(
             formatDate(activePoint.measuredOn),
             formatKg(activePoint.weightKg),
             vsTarget(activePoint.y),
@@ -149,9 +149,9 @@ export default function WeightChartImpl({ data, target, caption }: WeightChartIm
         <caption>{caption}</caption>
         <thead>
           <tr>
-            <th scope="col">{vi.weights.tableDate}</th>
-            <th scope="col">{vi.weights.tableWeight}</th>
-            {target !== null && <th scope="col">{vi.weights.tableVsTarget}</th>}
+            <th scope="col">{m.weights.tableDate}</th>
+            <th scope="col">{m.weights.tableWeight}</th>
+            {target !== null && <th scope="col">{m.weights.tableVsTarget}</th>}
           </tr>
         </thead>
         <tbody>

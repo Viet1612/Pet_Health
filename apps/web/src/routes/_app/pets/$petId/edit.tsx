@@ -4,10 +4,10 @@ import { createFileRoute, Link, notFound, useNavigate } from '@tanstack/react-ro
 import { X } from 'lucide-react';
 
 import { AvatarEditor, PetForm, petQuery, useUpdatePet } from '../../../../features/pets';
-import { vi } from '../../../../i18n/vi';
+import { m } from '../../../../i18n';
 import { useToast } from '../../../../ui/toast';
 
-const t = vi.pets.form;
+const t = m.pets.form;
 
 /** SCR-09 · Sửa thú cưng (12:1791). Ảnh đổi/gỡ ngay, độc lập với "Lưu thay đổi". */
 function EditPetPage() {
@@ -40,7 +40,7 @@ function EditPetPage() {
         onCancel={() => void close()}
         onSubmit={async (values) => {
           await update.mutateAsync(values);
-          toast.show({ kind: 'success', message: vi.toast.saved });
+          toast.show({ kind: 'success', message: m.toast.saved });
           await close();
         }}
       />

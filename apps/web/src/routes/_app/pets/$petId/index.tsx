@@ -20,12 +20,12 @@ import {
   useSelectedPet,
   type Pet,
 } from '../../../../features/pets';
-import { vi } from '../../../../i18n/vi';
+import { m } from '../../../../i18n';
 import { cx } from '../../../../ui/cx';
 import { Skeleton } from '../../../../ui/Skeleton';
 import { useDialogParam } from '../../../../ui/use-dialog-param';
 
-const t = vi.pets;
+const t = m.pets;
 
 function Shortcut({ icon, label, to }: { icon: ReactNode; label: string; to?: string }) {
   const body = (

@@ -1,7 +1,7 @@
 import { MailWarning } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 
 export type LinkProblemKind = 'expired' | 'used' | 'invalid';
 
@@ -29,7 +29,7 @@ export function LinkProblem({
       >
         <MailWarning size={32} />
       </div>
-      <h1 className="text-h1">{vi.auth.link[kind]}</h1>
+      <h1 className="text-h1">{m.auth.link[kind]}</h1>
       {description && <p className="text-body text-text-muted">{description}</p>}
       <div className="mt-2 flex w-full flex-col items-center gap-3">{action}</div>
     </div>

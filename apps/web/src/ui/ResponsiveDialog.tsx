@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 
-import { vi } from '../i18n/vi';
+import { m } from '../i18n';
 import { cx } from './cx';
 import { IconButton } from './IconButton';
 
@@ -75,7 +75,7 @@ export function ResponsiveDialog({
           <h2 id={titleId} className="text-h2">
             {title}
           </h2>
-          <IconButton aria-label={vi.dialog.close} icon={<X size={24} />} onClick={onClose} />
+          <IconButton aria-label={m.dialog.close} icon={<X size={24} />} onClick={onClose} />
         </header>
         <div className="overflow-y-auto px-4 pb-4">{children}</div>
         {footer && (

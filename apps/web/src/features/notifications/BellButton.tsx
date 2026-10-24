@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { Bell } from 'lucide-react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { summaryQuery } from './queries';
 
 /** CMP-07: chuông 44 × 44 kèm badge số chưa xem (ẩn khi 0, "9+" khi > 9); bấm → Thông báo. */
@@ -12,7 +12,7 @@ export function BellButton() {
   return (
     <Link
       to="/notifications"
-      aria-label={n > 0 ? vi.notifications.bellUnread(n) : vi.notifications.bell}
+      aria-label={n > 0 ? m.notifications.bellUnread(n) : m.notifications.bell}
       className="text-text hover:bg-surface-2 duration-fast relative inline-flex size-11 items-center justify-center rounded-full transition-colors"
     >
       <Bell size={24} aria-hidden />

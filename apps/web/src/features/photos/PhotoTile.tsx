@@ -1,11 +1,11 @@
 import { AlertCircle, ImageIcon, Loader2, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { cx } from '../../ui/cx';
 import type { UploadItem } from './upload-store';
 
-const t = vi.photos;
+const t = m.photos;
 const TILE = 'relative size-[76px] shrink-0 overflow-hidden rounded-md xl:size-[96px]';
 
 function RemoveButton({ label, onClick }: { label: string; onClick: () => void }) {

@@ -1,4 +1,4 @@
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import type { Pet } from './queries';
 
 /** Ký tự đầu (grapheme, giữ dấu tiếng Việt và emoji) viết hoa: "mochi" → "M", "ếch" → "Ế". */
@@ -14,8 +14,7 @@ export function initialOf(name: string): string {
   return (first ?? '?').toLocaleUpperCase('vi');
 }
 
-export const sexLabel = (sex: Pet['sex']): string =>
-  sex === 'MALE' ? vi.pets.male : vi.pets.female;
+export const sexLabel = (sex: Pet['sex']): string => (sex === 'MALE' ? m.pets.male : m.pets.female);
 
 /**
  * So khớp tên khi xác nhận xóa (SD-009), bản sao y hệt `pets/domain/confirm-name.ts` của API:
@@ -31,11 +30,7 @@ export const matchesConfirmName = (input: string, petName: string): boolean =>
 export const petSubline = (pet: Pet): string =>
   `${pet.ageText} · ${pet.breed} · ${sexLabel(pet.sex)}`;
 
-/** `2019-03-15` → `15/03/2019` */
-export function formatLocalDate(isoDate: string): string {
-  const [y, m, d] = isoDate.split('-');
-  return `${d ?? ''}/${m ?? ''}/${y ?? ''}`;
-}
+export { formatDate as formatLocalDate } from '../../lib/format';
 
 /** Ngày hôm nay theo đồng hồ thiết bị, dạng `YYYY-MM-DD`. */
 export function deviceToday(): string {

@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Alert } from '../../ui/Alert';
 import { Button } from '../../ui/Button';
 import { ResponsiveDialog } from '../../ui/ResponsiveDialog';
@@ -19,7 +19,7 @@ import {
   type MilestoneGroups,
 } from './queries';
 
-const t = vi.milestones.complete;
+const t = m.milestones.complete;
 
 /**
  * FLW-04 (8:506): đánh dấu đã thực hiện. Cập nhật lạc quan (ẩn mốc khỏi nhóm), rồi toast
@@ -78,8 +78,8 @@ export function useCompleteMilestone(petId: string) {
 }
 
 function toMessage(err: unknown): string {
-  const m = toUserMessage(err);
-  return 'message' in m ? m.message : vi.error.serverToast;
+  const msg = toUserMessage(err);
+  return 'message' in msg ? msg.message : m.error.serverToast;
 }
 
 /** Sheet "Đánh dấu đã thực hiện": ngày mặc định hôm nay, `max` hôm nay, xem trước mốc kế tiếp. */
@@ -108,7 +108,7 @@ export function CompleteMilestoneDialog({
 
   const confirm = async () => {
     if (!doneOn) {
-      setError(vi.milestones.form.required);
+      setError(m.milestones.form.required);
       return;
     }
     if (doneOn > today) {
@@ -121,16 +121,19 @@ export function CompleteMilestoneDialog({
       onClose();
       onDone?.();
     } catch (err) {
-      const m = toUserMessage(err);
-      if (m.kind === 'fields' && m.fields.doneOn) {
-        setError(m.fields.doneOn);
+      const msg = toUserMessage(err);
+      if (msg.kind === 'fields' && msg.fields.doneOn) {
+        setError(msg.fields.doneOn);
       } else if (err instanceof ApiError && err.code === 'MILESTONE_NOT_PENDING') {
-        toast.show({ kind: 'error', message: vi.milestones.notPending });
+        toast.show({ kind: 'error', message: m.milestones.notPending });
         onClose();
-      } else if (m.kind === 'retryable') {
-        toast.show({ kind: 'error', message: m.message, onRetry: () => void confirm() });
+      } else if (msg.kind === 'retryable') {
+        toast.show({ kind: 'error', message: msg.message, onRetry: () => void confirm() });
       } else {
-        toast.show({ kind: 'error', message: 'message' in m ? m.message : vi.error.serverToast });
+        toast.show({
+          kind: 'error',
+          message: 'message' in msg ? msg.message : m.error.serverToast,
+        });
       }
     } finally {
       setPending(false);

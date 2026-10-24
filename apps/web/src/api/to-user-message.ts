@@ -1,6 +1,6 @@
 import { ApiError, NetworkError, TimeoutError } from '@ph/api-client';
 
-import { vi } from '../i18n/vi';
+import { m } from '../i18n';
 
 export type UserMessage =
   | { kind: 'retryable'; message: string }
@@ -11,14 +11,14 @@ export type UserMessage =
 /** Chuyển lỗi gọi API thành nội dung hiển thị thống nhất (FR-GEN-004, FR-GEN-011). */
 export function toUserMessage(error: unknown): UserMessage {
   if (error instanceof TimeoutError || error instanceof NetworkError) {
-    return { kind: 'retryable', message: vi.toast.saveFailed };
+    return { kind: 'retryable', message: m.toast.saveFailed };
   }
   if (error instanceof ApiError) {
     const { problem } = error;
     if (problem.status >= 500 || problem.code === 'UNEXPECTED_RESPONSE') {
       return {
         kind: 'server',
-        message: problem.ref ? `${vi.error.serverToast} Mã: ${problem.ref}` : vi.error.serverToast,
+        message: problem.ref ? m.error.serverToastRef(problem.ref) : m.error.serverToast,
         ...(problem.ref ? { ref: problem.ref } : {}),
       };
     }
@@ -30,5 +30,5 @@ export function toUserMessage(error: unknown): UserMessage {
     }
     return { kind: 'message', message: problem.title };
   }
-  return { kind: 'server', message: vi.error.serverToast };
+  return { kind: 'server', message: m.error.serverToast };
 }

@@ -7,12 +7,12 @@ import { enqueuePhotos, PhotoPicker, type PickedPhoto } from '../../../../../fea
 import { useSession } from '../../../../../features/session';
 import { useCreateVisit, VisitForm } from '../../../../../features/visits';
 import { todayIn } from '../../../../../features/weights';
-import { vi } from '../../../../../i18n/vi';
+import { m } from '../../../../../i18n';
 import { ConfirmDialog } from '../../../../../ui/ConfirmDialog';
 import { IconButton } from '../../../../../ui/IconButton';
 import { useToast } from '../../../../../ui/toast';
 
-const t = vi.visits.form;
+const t = m.visits.form;
 
 /**
  * SCR-13 · Thêm lần khám (10:1206). Lưu xong chuyển ngay sang chi tiết; ảnh đã chọn được đưa vào
@@ -46,7 +46,7 @@ function NewVisitPage() {
       <VisitForm
         mode="create"
         today={today}
-        photosHeader={vi.photos.header(validCount)}
+        photosHeader={m.photos.header(validCount)}
         photos={<PhotoPicker value={photos} onChange={setPhotos} />}
         onDirtyChange={setDirty}
         onCancel={close}
@@ -55,7 +55,7 @@ function NewVisitPage() {
           idempotency.reset();
           const files = photos.filter((p) => !p.error).map((p) => p.file);
           if (files.length) enqueuePhotos(visit.id, files, 0);
-          toast.show({ kind: 'success', message: vi.toast.saved });
+          toast.show({ kind: 'success', message: m.toast.saved });
           await navigate({ to: '/visits/$visitId', params: { visitId: visit.id } });
         }}
       />

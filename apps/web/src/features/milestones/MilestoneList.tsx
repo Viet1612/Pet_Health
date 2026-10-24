@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { CalendarCheck } from 'lucide-react';
 import { useState } from 'react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { cx } from '../../ui/cx';
 import { EmptyState } from '../../ui/EmptyState';
@@ -12,7 +12,7 @@ import { MilestoneItem } from './components';
 import { MilestoneFormDialog } from './MilestoneFormDialog';
 import { milestonesQuery, type Milestone } from './queries';
 
-const t = vi.milestones;
+const t = m.milestones;
 
 export type MilestoneTab = 'upcoming' | 'overdue' | 'done' | 'cancelled';
 export const MILESTONE_TABS: MilestoneTab[] = ['upcoming', 'overdue', 'done', 'cancelled'];

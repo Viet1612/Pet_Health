@@ -1,7 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { TextAreaCounter } from '../../ui/TextAreaCounter';
 import { TextField } from '../../ui/TextField';
@@ -9,14 +9,14 @@ import { useToast } from '../../ui/toast';
 import { countChars, VISIT_TEXT_MAX } from './format';
 import type { VisitValues } from './queries';
 
-const t = vi.visits.form;
+const t = m.visits.form;
 const TEXT_FIELDS = ['symptoms', 'diagnosis', 'prescription'] as const;
 type Field = 'visitedOn' | (typeof TEXT_FIELDS)[number];
 
 const LABELS: Record<(typeof TEXT_FIELDS)[number], string> = {
-  symptoms: vi.visits.symptoms,
-  diagnosis: vi.visits.diagnosis,
-  prescription: vi.visits.prescription,
+  symptoms: m.visits.symptoms,
+  diagnosis: m.visits.diagnosis,
+  prescription: m.visits.prescription,
 };
 
 /**
@@ -95,18 +95,18 @@ export function VisitForm({
         prescription: text(values.prescription),
       });
     } catch (err) {
-      const m = toUserMessage(err);
-      if (m.kind === 'fields') {
+      const msg = toUserMessage(err);
+      if (msg.kind === 'fields') {
         const fieldErrors: Partial<Record<Field, string>> = {};
         for (const f of ['visitedOn', ...TEXT_FIELDS] as Field[]) {
-          if (m.fields[f]) fieldErrors[f] = m.fields[f];
+          if (msg.fields[f]) fieldErrors[f] = msg.fields[f];
         }
         setErrors(fieldErrors);
         focusFirst(fieldErrors);
-      } else if (m.kind === 'retryable') {
-        toast.show({ kind: 'error', message: m.message, onRetry: () => void submit() });
+      } else if (msg.kind === 'retryable') {
+        toast.show({ kind: 'error', message: msg.message, onRetry: () => void submit() });
       } else {
-        toast.show({ kind: 'error', message: m.message });
+        toast.show({ kind: 'error', message: msg.message });
       }
     } finally {
       setPending(false);
@@ -159,7 +159,7 @@ export function VisitForm({
 
       <section>
         <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-small font-semibold">{vi.visits.photos}</h2>
+          <h2 className="text-small font-semibold">{m.visits.photos}</h2>
           <span className="text-small text-text-muted">{photosHeader}</span>
         </div>
         {photos}

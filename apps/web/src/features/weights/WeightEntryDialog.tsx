@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
 import { useIdempotencyKey } from '../../api/use-idempotency-key';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { ResponsiveDialog } from '../../ui/ResponsiveDialog';
 import { TextField } from '../../ui/TextField';
@@ -10,7 +10,7 @@ import { useToast } from '../../ui/toast';
 import { formatKg, parseKgInput } from './format';
 import { useAddWeight, useUpdateWeight, type WeightEntry } from './queries';
 
-const t = vi.weights.entry;
+const t = m.weights.entry;
 
 /**
  * Sheet Thêm/Sửa cân nặng (10:719). Trang gọi chỉ render khi mở, nên mỗi lần mở là trạng thái mới
@@ -46,7 +46,7 @@ export function WeightEntryDialog({
     const parsed = parseKgInput(kg);
     const next: typeof errors = {};
     if (!parsed.ok) next.weightKg = parsed.error;
-    if (date > today) next.measuredOn = vi.weights.errors.futureDate;
+    if (date > today) next.measuredOn = m.weights.errors.futureDate;
     setErrors(next);
     if (!parsed.ok || next.measuredOn) return;
 
@@ -57,7 +57,7 @@ export function WeightEntryDialog({
         await add.mutateAsync({ weightKg: parsed.value, measuredOn: date, key: idempotency.key });
         idempotency.reset();
       }
-      toast.show({ kind: 'success', message: vi.toast.saved });
+      toast.show({ kind: 'success', message: m.toast.saved });
       onClose();
     } catch (err) {
       const message = toUserMessage(err);
@@ -74,7 +74,7 @@ export function WeightEntryDialog({
       }
       toast.show({
         kind: 'error',
-        message: 'message' in message ? message.message : vi.error.serverToast,
+        message: 'message' in message ? message.message : m.error.serverToast,
       });
     }
   };

@@ -9,7 +9,7 @@ import {
   type MilestoneTab,
 } from '../../../../features/milestones';
 import { petQuery } from '../../../../features/pets';
-import { vi } from '../../../../i18n/vi';
+import { m } from '../../../../i18n';
 
 /** SCR-14 · Lịch mốc y tế. ≥ 768 px: danh sách + khung "Chọn một mốc để xem chi tiết". */
 function MilestonesPage() {
@@ -28,7 +28,7 @@ function MilestonesPage() {
         }
       />
       <div className="border-divider text-text-muted hidden min-h-64 items-center justify-center rounded-xl border border-dashed p-6 text-center md:flex">
-        {vi.milestones.pickHint}
+        {m.milestones.pickHint}
       </div>
     </div>
   );
@@ -45,6 +45,6 @@ export const Route = createFileRoute('/_app/pets/$petId/milestones')({
       throw error;
     }
   },
-  staticData: { title: vi.milestones.title },
+  staticData: { title: m.milestones.title },
   component: MilestonesPage,
 });

@@ -9,7 +9,7 @@ import {
   milestoneQuery,
   type MilestoneTab,
 } from '../../../features/milestones';
-import { vi } from '../../../i18n/vi';
+import { m } from '../../../i18n';
 import { Skeleton } from '../../../ui/Skeleton';
 
 /**
@@ -60,7 +60,7 @@ export const Route = createFileRoute('/_app/milestones/$milestoneId')({
       throw error;
     }
   },
-  staticData: { title: vi.milestones.detail.title },
+  staticData: { title: m.milestones.detail.title },
   pendingComponent: MilestonePending,
   component: MilestonePage,
 });

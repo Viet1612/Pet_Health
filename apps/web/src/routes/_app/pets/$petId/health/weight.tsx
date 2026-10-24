@@ -4,7 +4,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { petQuery } from '../../../../../features/pets';
 import { useSession } from '../../../../../features/session';
 import { todayIn, weightsQuery, WeightScreen } from '../../../../../features/weights';
-import { vi } from '../../../../../i18n/vi';
+import { m } from '../../../../../i18n';
 import { Skeleton } from '../../../../../ui/Skeleton';
 
 /** SCR-10 · Sức khỏe / Cân nặng. */
@@ -29,7 +29,7 @@ function WeightPending() {
 
 export const Route = createFileRoute('/_app/pets/$petId/health/weight')({
   loader: ({ context, params }) => context.queryClient.query(weightsQuery(params.petId)),
-  staticData: { title: vi.health.title },
+  staticData: { title: m.health.title },
   pendingComponent: WeightPending,
   component: WeightPage,
 });

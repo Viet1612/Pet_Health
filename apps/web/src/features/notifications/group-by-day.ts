@@ -1,4 +1,5 @@
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
+import { formatDate } from '../../lib/format';
 
 /** `YYYY-MM-DD` − 1 ngày (lịch, UTC). */
 function previousDay(isoDate: string): string {
@@ -7,11 +8,7 @@ function previousDay(isoDate: string): string {
   return d.toISOString().slice(0, 10);
 }
 
-/** `2026-11-10` → `10/11/2026` */
-export function formatDate(isoDate: string): string {
-  const [y = '', m = '', d = ''] = isoDate.split('-');
-  return `${d}/${m}/${y}`;
-}
+export { formatDate } from '../../lib/format';
 
 /**
  * Nhóm theo `appearOn` so với `today` của API (client không tự tính "hôm nay"): HÔM NAY, HÔM QUA,
@@ -31,9 +28,9 @@ export function groupByDay<T extends { appearOn: string }>(
     }
     const label =
       item.appearOn === today
-        ? vi.notifications.today
+        ? m.notifications.today
         : item.appearOn === yesterday
-          ? vi.notifications.yesterday
+          ? m.notifications.yesterday
           : formatDate(item.appearOn);
     groups.push({ key: item.appearOn, label, items: [item] });
   }

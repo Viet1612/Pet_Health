@@ -1,11 +1,11 @@
 import { Target } from 'lucide-react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { formatDate, formatDelta, formatKg } from './format';
 import type { WeightsView } from './queries';
 
-const t = vi.weights;
+const t = m.weights;
 
 /** Thẻ tóm tắt SCR-10: số đo gần nhất, chênh lệch, mục tiêu, nút thêm. */
 export function WeightSummaryCard({

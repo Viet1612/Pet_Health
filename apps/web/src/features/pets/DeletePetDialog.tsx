@@ -5,7 +5,7 @@ import { useId, useRef, useState } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
 import { getSelectedPetId, setSelectedPetId } from '../../lib/selected-pet';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { ResponsiveDialog } from '../../ui/ResponsiveDialog';
 import { TextField } from '../../ui/TextField';
@@ -13,7 +13,7 @@ import { useToast } from '../../ui/toast';
 import { matchesConfirmName } from './format';
 import { useDeletePet, type Pet } from './queries';
 
-const t = vi.pets.deleteDialog;
+const t = m.pets.deleteDialog;
 
 /**
  * CMP-14 TypeToConfirmDialog cho SCR-08 (12:1851): nhập lại đúng tên mới bật "Xóa vĩnh viễn".
@@ -72,7 +72,7 @@ export function DeletePetDialog({
       }
       toast.show({
         kind: 'error',
-        message: 'message' in message ? message.message : vi.error.serverToast,
+        message: 'message' in message ? message.message : m.error.serverToast,
       });
     }
   };

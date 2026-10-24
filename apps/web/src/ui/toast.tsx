@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 
-import { vi } from '../i18n/vi';
+import { m } from '../i18n';
 import { cx } from './cx';
 import { IconButton } from './IconButton';
 
@@ -141,7 +141,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
             toast.onRetry?.();
           }}
         >
-          {vi.toast.retry}
+          {m.toast.retry}
         </button>
       )}
       {toast.kind === 'undo' && (
@@ -153,11 +153,11 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
             toast.onUndo();
           }}
         >
-          {vi.toast.undo}
+          {m.toast.undo}
         </button>
       )}
       <IconButton
-        aria-label={vi.toast.close}
+        aria-label={m.toast.close}
         icon={<X size={18} />}
         onClick={() => {
           onDismiss(toast.id);

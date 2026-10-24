@@ -3,13 +3,13 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { PawPrint, Plus } from 'lucide-react';
 
 import { PET_LIMIT, PetCard, petsQuery } from '../../../features/pets';
-import { vi } from '../../../i18n/vi';
+import { m } from '../../../i18n';
 import { buttonClassName } from '../../../ui/Button';
 import { cx } from '../../../ui/cx';
 import { EmptyState } from '../../../ui/EmptyState';
 import { Skeleton } from '../../../ui/Skeleton';
 
-const t = vi.pets;
+const t = m.pets;
 
 /** SCR-07 · Danh sách thú cưng (12:1553). */
 function PetsPage() {
@@ -22,8 +22,8 @@ function PetsPage() {
         <h1 className="text-h1 md:sr-only">{t.title}</h1>
         <EmptyState
           icon={<PawPrint size={32} />}
-          title={vi.empty.firstPetTitle}
-          description={vi.empty.firstPetDescription}
+          title={m.empty.firstPetTitle}
+          description={m.empty.firstPetDescription}
           action={
             <Link to="/pets/new" className={buttonClassName()}>
               {t.add}

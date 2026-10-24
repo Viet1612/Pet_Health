@@ -1,4 +1,4 @@
-import { vi } from '../i18n/vi';
+import { m } from '../i18n';
 import { Button } from './Button';
 import { ResponsiveDialog } from './ResponsiveDialog';
 
@@ -11,7 +11,7 @@ export function ConfirmDialog({
   title,
   description,
   confirmLabel,
-  cancelLabel = vi.confirm.cancel,
+  cancelLabel = m.confirm.cancel,
   danger = true,
   loading = false,
   onConfirm,

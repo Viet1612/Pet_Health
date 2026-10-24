@@ -16,12 +16,12 @@ import {
   linkProblemOf,
   type LinkProblemKind,
 } from '../../features/session/LinkProblem';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { buttonClassName, Button } from '../../ui/Button';
 import { PasswordField } from '../../ui/PasswordField';
 import { useToast } from '../../ui/toast';
 
-const t = vi.auth.reset;
+const t = m.auth.reset;
 
 /** SCR-04 · Đặt lại mật khẩu (14:1883), mở từ liên kết `/reset-password#token=...`. */
 function ResetPasswordPage() {
@@ -81,7 +81,7 @@ function ResetPasswordPage() {
       <h1 className="text-h1 mb-6">{t.title}</h1>
       <form noValidate onSubmit={(e) => void onSubmit(e)} className="flex flex-col gap-4">
         <PasswordField
-          label={vi.auth.newPassword}
+          label={m.auth.newPassword}
           autoComplete="new-password"
           hint={t.hint}
           error={form.formState.errors.newPassword?.message}

@@ -1,13 +1,12 @@
-// Định dạng cân nặng và ngày cho giao diện (FR-GEN-002): kg dấu phẩy, ngày dd/MM/yyyy. API dùng
-// chuỗi thập phân dấu chấm ("9.2") và ngày YYYY-MM-DD.
+// Cân nặng cho giao diện; định dạng theo ngôn ngữ ở `lib/format.ts`. API dùng chuỗi thập phân dấu
+// chấm ("9.2") và ngày YYYY-MM-DD.
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
+import { formatSignedTenths } from '../../lib/format';
 
 const KG_PATTERN = /^\d{1,3}(\.\d)?$/;
-const MINUS = '−';
 
-/** `"9.3"` → `"9,3 kg"` */
-export const formatKg = (kg: string): string => `${kg.replace('.', ',')} kg`;
+export { formatDate, formatDecimal1, formatKg, formatSignedTenths } from '../../lib/format';
 
 /** Phần mười kg của chuỗi API: `"9.3"` → 93. */
 export function tenthsOf(kg: string): number {
@@ -16,23 +15,8 @@ export function tenthsOf(kg: string): number {
   return sign * (Math.abs(Number(whole)) * 10 + Number(decimal.slice(0, 1) || '0'));
 }
 
-/** Chênh lệch theo phần mười → `"+0,3"`, `"−0,1"` (U+2212), `"0,0"`. */
-export function formatSignedTenths(tenths: number): string {
-  const abs = Math.abs(tenths);
-  const body = `${String(Math.floor(abs / 10))},${String(abs % 10)}`;
-  if (tenths > 0) return `+${body}`;
-  if (tenths < 0) return `${MINUS}${body}`;
-  return body;
-}
-
 /** Chênh lệch dạng API (`"0.3"`, `"-0.1"`) → `"+0,3"`, `"−0,1"`. */
 export const formatDelta = (delta: string): string => formatSignedTenths(tenthsOf(delta));
-
-/** `2026-11-01` → `01/11/2026` */
-export function formatDate(isoDate: string): string {
-  const [y, m, d] = isoDate.split('-');
-  return `${d ?? ''}/${m ?? ''}/${y ?? ''}`;
-}
 
 /**
  * Chuẩn hóa ô nhập kg: trim, `,` → `.`. Trả chuỗi gửi API hoặc thông điệp lỗi (cùng thông điệp
@@ -42,10 +26,10 @@ export function parseKgInput(
   raw: string,
 ): { ok: true; value: string } | { ok: false; error: string } {
   const value = raw.trim().replace(',', '.');
-  if (value === '') return { ok: false, error: vi.weights.errors.required };
-  if (!KG_PATTERN.test(value)) return { ok: false, error: vi.weights.errors.range };
+  if (value === '') return { ok: false, error: m.weights.errors.required };
+  if (!KG_PATTERN.test(value)) return { ok: false, error: m.weights.errors.range };
   const tenths = tenthsOf(value);
-  if (tenths < 1 || tenths > 1500) return { ok: false, error: vi.weights.errors.range };
+  if (tenths < 1 || tenths > 1500) return { ok: false, error: m.weights.errors.range };
   return { ok: true, value };
 }
 

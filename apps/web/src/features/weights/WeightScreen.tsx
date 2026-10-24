@@ -3,7 +3,7 @@ import { Scale } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { ConfirmDialog } from '../../ui/ConfirmDialog';
 import { EmptyState } from '../../ui/EmptyState';
@@ -17,7 +17,7 @@ import { WeightHistoryList } from './WeightHistoryList';
 import { WeightSummaryCard } from './WeightSummaryCard';
 import { WeightTargetDialog } from './WeightTargetDialog';
 
-const t = vi.weights;
+const t = m.weights;
 
 type Dialog =
   | { kind: 'add' }
@@ -78,10 +78,10 @@ export function WeightScreen({
                 toast.show({ kind: 'success', message: t.deleted });
               },
               onError: (err) => {
-                const m = toUserMessage(err);
+                const msg = toUserMessage(err);
                 toast.show({
                   kind: 'error',
-                  message: 'message' in m ? m.message : vi.error.serverToast,
+                  message: 'message' in msg ? msg.message : m.error.serverToast,
                 });
               },
             });

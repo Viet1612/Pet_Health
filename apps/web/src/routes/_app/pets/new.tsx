@@ -13,10 +13,10 @@ import {
   useCreatePet,
   useSelectedPet,
 } from '../../../features/pets';
-import { vi } from '../../../i18n/vi';
+import { m } from '../../../i18n';
 import { useToast } from '../../../ui/toast';
 
-const t = vi.pets.form;
+const t = m.pets.form;
 
 /**
  * SCR-09 · Thêm thú cưng (12:1728). Lưu xong mới tải ảnh; ảnh lỗi thì thú cưng vẫn được tạo và

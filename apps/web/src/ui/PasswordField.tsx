@@ -1,5 +1,7 @@
 import { forwardRef, useState } from 'react';
 
+import { m } from '../i18n';
+
 import { TextField, type TextFieldProps } from './TextField';
 
 /** Ô mật khẩu có nút chữ "Hiện"/"Ẩn" bên phải (aria-pressed). */
@@ -21,7 +23,7 @@ export const PasswordField = forwardRef<
           }}
           className="text-small text-text-muted min-h-11 px-3 font-semibold"
         >
-          {visible ? 'Ẩn' : 'Hiện'}
+          {visible ? m.password.hide : m.password.show}
         </button>
       }
       {...props}

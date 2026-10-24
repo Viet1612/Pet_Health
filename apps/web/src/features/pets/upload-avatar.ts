@@ -1,6 +1,6 @@
 import { api, unwrap } from '../../api/client';
 import { uploadFile } from '../../api/upload-file';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 
 export const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
 const ACCEPTED_TYPES = new Set(['image/jpeg', 'image/png', 'image/heic', 'image/heif']);
@@ -12,9 +12,9 @@ const POLL_LIMIT_MS = 20_000;
 
 /** Kiểm ở client trước khi gửi (server vẫn kiểm lại bằng nội dung tệp). */
 export function avatarFileError(file: File): string | null {
-  if (file.size > MAX_AVATAR_BYTES) return vi.pets.avatar.tooLarge;
+  if (file.size > MAX_AVATAR_BYTES) return m.pets.avatar.tooLarge;
   if (!ACCEPTED_TYPES.has(file.type) && !ACCEPTED_EXT.test(file.name)) {
-    return vi.pets.avatar.unsupported;
+    return m.pets.avatar.unsupported;
   }
   return null;
 }
@@ -25,7 +25,7 @@ export const isPreviewable = (file: File): boolean =>
 
 export class AvatarUploadError extends Error {
   constructor() {
-    super(vi.pets.avatar.failed);
+    super(m.pets.avatar.failed);
     this.name = 'AvatarUploadError';
   }
 }

@@ -10,7 +10,7 @@ import {
   XCircle,
 } from 'lucide-react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { cx } from '../../ui/cx';
 import { dueLine, milestoneTitle, statusChip, type ChipTone } from './format';
 import type { Milestone, MilestoneType } from './queries';
@@ -101,7 +101,7 @@ export function MilestoneItem({
       {milestone.status === 'PENDING' && (
         <button
           type="button"
-          aria-label={vi.milestones.markDone(title)}
+          aria-label={m.milestones.markDone(title)}
           onClick={() => {
             onComplete(milestone);
           }}

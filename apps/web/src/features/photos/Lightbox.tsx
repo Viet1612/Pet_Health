@@ -1,9 +1,9 @@
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 
-const t = vi.photos.lightbox;
+const t = m.photos.lightbox;
 const SWIPE_PX = 50;
 
 /**

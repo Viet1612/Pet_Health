@@ -3,7 +3,7 @@ import { AlertCircle, ImagePlus, Loader2 } from 'lucide-react';
 import { useEffect, useId, useMemo, useState } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { useToast } from '../../ui/toast';
 import { PetAvatar } from './PetAvatar';
@@ -22,7 +22,7 @@ type UploadState =
   | { kind: 'processing' }
   | { kind: 'error'; message: string };
 
-const t = vi.pets.avatar;
+const t = m.pets.avatar;
 
 /** Xem trước tệp vừa chọn (JPG/PNG); thu hồi object URL khi đổi tệp. */
 function usePreview(file: File | null): string | null {
@@ -205,8 +205,8 @@ export function AvatarEditor({ pet, initialFailed }: { pet: Pet; initialFailed?:
               remove.mutate(undefined, {
                 onSuccess: () => toast.show({ kind: 'success', message: t.removed }),
                 onError: (err) => {
-                  const m = toUserMessage(err);
-                  toast.show({ kind: 'error', message: 'message' in m ? m.message : t.failed });
+                  const msg = toUserMessage(err);
+                  toast.show({ kind: 'error', message: 'message' in msg ? msg.message : t.failed });
                 },
               });
             }}

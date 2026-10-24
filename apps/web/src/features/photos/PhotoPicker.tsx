@@ -1,10 +1,10 @@
 import { useEffect, useId, useMemo } from 'react';
 
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { AddPhotoTile, UploadTile } from './PhotoTile';
 import { MAX_PHOTOS, PHOTO_ACCEPT, photoFileError, type UploadItem } from './upload-store';
 
-const t = vi.photos;
+const t = m.photos;
 
 export interface PickedPhoto {
   id: string;

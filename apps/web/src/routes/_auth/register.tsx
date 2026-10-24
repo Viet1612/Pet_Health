@@ -6,14 +6,14 @@ import { useForm, useWatch } from 'react-hook-form';
 
 import { toUserMessage } from '../../api/to-user-message';
 import { registerSchema, useRegister, type RegisterValues } from '../../features/session';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { cx } from '../../ui/cx';
 import { PasswordField } from '../../ui/PasswordField';
 import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
 
-const t = vi.auth.register;
+const t = m.auth.register;
 const DEFAULT_TZ = 'Asia/Ho_Chi_Minh';
 
 function timezoneLabel(tz: string): string {
@@ -73,7 +73,7 @@ function RegisterPage() {
 
       <form noValidate onSubmit={(e) => void onSubmit(e)} className="flex flex-col gap-4">
         <TextField
-          label={vi.auth.email}
+          label={m.auth.email}
           type="email"
           autoComplete="email"
           error={form.formState.errors.email?.message}
@@ -81,7 +81,7 @@ function RegisterPage() {
         />
         <div className="flex flex-col gap-2">
           <PasswordField
-            label={vi.auth.password}
+            label={m.auth.password}
             autoComplete="new-password"
             hint={t.passwordHint}
             error={form.formState.errors.password?.message}
@@ -100,7 +100,7 @@ function RegisterPage() {
 
         <div className="flex flex-col gap-1">
           <label htmlFor="register-timezone" className="text-small font-semibold">
-            {vi.auth.timezone}
+            {m.auth.timezone}
           </label>
           <select
             id="register-timezone"

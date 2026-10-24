@@ -2,7 +2,7 @@ import { ApiError, newIdempotencyKey } from '@ph/api-client';
 
 import { api, unwrap } from '../../api/client';
 import { uploadFile } from '../../api/upload-file';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 
 // Hàng đợi tải ảnh lần khám (FLW-07, ST-04): sống ngoài cây route nên ảnh vẫn tải tiếp khi người
 // dùng chuyển màn hình (tạo lần khám xong là sang chi tiết ngay, không đợi ảnh).
@@ -36,8 +36,8 @@ export interface UploadItem {
 
 /** Lỗi kiểm ở client (định dạng, dung lượng); `null` nếu tệp hợp lệ. */
 export function photoFileError(file: File): string | null {
-  if (!ACCEPTED_TYPES.has(file.type) && !ACCEPTED_EXT.test(file.name)) return vi.photos.unsupported;
-  if (file.size > MAX_PHOTO_BYTES) return vi.photos.tooLarge;
+  if (!ACCEPTED_TYPES.has(file.type) && !ACCEPTED_EXT.test(file.name)) return m.photos.unsupported;
+  if (file.size > MAX_PHOTO_BYTES) return m.photos.tooLarge;
   return null;
 }
 
@@ -93,7 +93,7 @@ export function enqueuePhotos(visitId: string, files: File[], existing: number):
   let slots = MAX_PHOTOS - existing - activeCount(visitId);
   for (const file of files) {
     let error = photoFileError(file);
-    if (!error && slots <= 0) error = vi.photos.limit;
+    if (!error && slots <= 0) error = m.photos.limit;
     if (!error) slots -= 1;
     items = [
       ...items,
@@ -195,17 +195,17 @@ async function run(item: UploadItem): Promise<void> {
       }
       if (status === 'FAILED') break;
     }
-    patch(item.localId, { state: 'error', error: vi.photos.failed, retryable: true });
+    patch(item.localId, { state: 'error', error: m.photos.failed, retryable: true });
   } catch (err) {
     const final = err instanceof ApiError && [409, 413, 415].includes(err.status);
     const message =
       err instanceof ApiError && err.status === 413
-        ? vi.photos.tooLarge
+        ? m.photos.tooLarge
         : err instanceof ApiError && err.status === 415
-          ? vi.photos.unsupported
+          ? m.photos.unsupported
           : err instanceof ApiError && err.status === 409
-            ? vi.photos.limit
-            : vi.photos.failed;
+            ? m.photos.limit
+            : m.photos.failed;
     patch(item.localId, { state: final ? 'rejected' : 'error', error: message, retryable: !final });
   } finally {
     pump();

@@ -3,7 +3,7 @@ import { CalendarDays, Heart, House, LogOut, PawPrint, Settings } from 'lucide-r
 import type { ReactNode } from 'react';
 
 import { useLogoutAction } from '../../features/session';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { getSelectedPetId } from '../../lib/selected-pet';
 import { cx } from '../../ui/cx';
 
@@ -24,28 +24,28 @@ const petPath = (suffix: string): string => {
 const ITEMS: NavItem[] = [
   {
     key: 'home',
-    label: vi.nav.home,
+    label: m.nav.home,
     icon: <House size={24} />,
     to: () => '/',
     isActive: (p) => p === '/',
   },
   {
     key: 'health',
-    label: vi.nav.health,
+    label: m.nav.health,
     icon: <Heart size={24} />,
     to: () => petPath('/health/weight'),
     isActive: (p) => /^\/pets\/[^/]+\/health/.test(p),
   },
   {
     key: 'calendar',
-    label: vi.nav.calendar,
+    label: m.nav.calendar,
     icon: <CalendarDays size={24} />,
     to: () => petPath('/milestones'),
     isActive: (p) => /^\/pets\/[^/]+\/milestones/.test(p) || p.startsWith('/milestones/'),
   },
   {
     key: 'pets',
-    label: vi.nav.pets,
+    label: m.nav.pets,
     icon: <PawPrint size={24} />,
     to: () => '/pets',
     isActive: (p) => p === '/pets' || /^\/pets\/[^/]+$/.test(p),
@@ -91,7 +91,7 @@ function RailLogout() {
       <span aria-hidden className="inline-flex items-center justify-center rounded-full px-4 py-1">
         <LogOut size={24} />
       </span>
-      {vi.auth.logout}
+      {m.auth.logout}
     </button>
   );
 }
@@ -103,7 +103,7 @@ export function Navigation() {
   return (
     <>
       <nav
-        aria-label={vi.nav.label}
+        aria-label={m.nav.label}
         className={cx(
           'border-divider bg-surface fixed inset-x-0 bottom-0 z-40 flex border-t',
           'h-[calc(64px+env(safe-area-inset-bottom))] pb-[env(safe-area-inset-bottom)] md:hidden',
@@ -115,7 +115,7 @@ export function Navigation() {
       </nav>
 
       <nav
-        aria-label={vi.nav.label}
+        aria-label={m.nav.label}
         className="border-divider bg-surface fixed inset-y-0 left-0 z-40 hidden w-22 flex-col items-center border-r pt-16 pb-4 md:flex"
       >
         <div className="flex w-full flex-1 flex-col items-center gap-2">
@@ -126,7 +126,7 @@ export function Navigation() {
         <NavLink
           item={{
             key: 'settings',
-            label: vi.nav.settings,
+            label: m.nav.settings,
             icon: <Settings size={24} />,
             to: () => '/settings',
             isActive: (p) => p.startsWith('/settings'),

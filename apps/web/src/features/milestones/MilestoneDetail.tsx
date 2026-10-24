@@ -3,7 +3,7 @@ import { ArrowLeft, MoreVertical } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { ConfirmDialog } from '../../ui/ConfirmDialog';
 import { cx } from '../../ui/cx';
@@ -15,7 +15,7 @@ import { formatDate, formatDayMonth, milestoneTitle } from './format';
 import { MilestoneFormDialog } from './MilestoneFormDialog';
 import { useCancelMilestone, type MilestoneDetail as Detail } from './queries';
 
-const t = vi.milestones.detail;
+const t = m.milestones.detail;
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -31,15 +31,15 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
  * nền 1 s (bỏ hiệu ứng khi giảm chuyển động).
  */
 export function MilestoneDetail({ detail, highlight }: { detail: Detail; highlight?: boolean }) {
-  const { milestone: m, petName, today } = detail;
+  const { milestone, petName, today } = detail;
   const toast = useToast();
-  const cancel = useCancelMilestone(m.petId, m.id);
+  const cancel = useCancelMilestone(milestone.petId, milestone.id);
   const [dialog, setDialog] = useState<'edit' | 'cancel' | 'complete' | null>(null);
   const [menu, setMenu] = useState(false);
   const [flash, setFlash] = useState(false);
   const actionsRef = useRef<HTMLDivElement>(null);
-  const pending = m.status === 'PENDING';
-  const title = milestoneTitle(m);
+  const pending = milestone.status === 'PENDING';
+  const title = milestoneTitle(milestone);
 
   useEffect(() => {
     if (!highlight || !pending) return;
@@ -59,13 +59,13 @@ export function MilestoneDetail({ detail, highlight }: { detail: Detail; highlig
   }, [highlight, pending]);
 
   const cycle =
-    m.type === 'VACCINE'
+    milestone.type === 'VACCINE'
       ? t.cycleVaccine
-      : m.cycleMonths
-        ? t.cycleEvery(m.cycleMonths)
+      : milestone.cycleMonths
+        ? t.cycleEvery(milestone.cycleMonths)
         : t.cycleNone;
   const origin =
-    m.origin === 'AUTO'
+    milestone.origin === 'AUTO'
       ? detail.previousDoneOn
         ? t.originAuto(formatDate(detail.previousDoneOn))
         : t.originAutoNoDate
@@ -76,7 +76,7 @@ export function MilestoneDetail({ detail, highlight }: { detail: Detail; highlig
       <div className="flex items-center gap-2">
         <Link
           to="/pets/$petId/milestones"
-          params={{ petId: m.petId }}
+          params={{ petId: milestone.petId }}
           aria-label={t.back}
           className="hover:bg-surface-2 inline-flex size-11 items-center justify-center rounded-full md:hidden"
         >
@@ -123,20 +123,20 @@ export function MilestoneDetail({ detail, highlight }: { detail: Detail; highlig
       </div>
 
       <header className="flex items-center gap-3">
-        <MilestoneTypeIcon type={m.type} size={48} />
+        <MilestoneTypeIcon type={milestone.type} size={48} />
         <div className="min-w-0">
           <h1 className="text-h1 break-words">{title}</h1>
-          <StatusChip milestone={m} />
+          <StatusChip milestone={milestone} />
         </div>
       </header>
 
       <dl className="bg-surface border-divider m-0 rounded-xl border px-4 py-2">
         <Row label={t.pet}>{petName}</Row>
-        <Row label={t.dueOn}>{formatDate(m.dueOn)}</Row>
-        {m.note && <Row label={t.note}>{m.note}</Row>}
+        <Row label={t.dueOn}>{formatDate(milestone.dueOn)}</Row>
+        {milestone.note && <Row label={t.note}>{milestone.note}</Row>}
         <Row label={t.cycle}>{cycle}</Row>
         <Row label={t.origin}>{origin}</Row>
-        {m.doneOn && <Row label={t.doneOn}>{formatDate(m.doneOn)}</Row>}
+        {milestone.doneOn && <Row label={t.doneOn}>{formatDate(milestone.doneOn)}</Row>}
         <Row label={t.reminders}>
           {detail.reminders.length === 0 ? (
             <span className="text-text-muted">{t.noReminders}</span>
@@ -193,10 +193,10 @@ export function MilestoneDetail({ detail, highlight }: { detail: Detail; highlig
 
       {dialog === 'edit' && (
         <MilestoneFormDialog
-          petId={m.petId}
+          petId={milestone.petId}
           petName={petName}
           today={today}
-          milestone={m}
+          milestone={milestone}
           onClose={() => {
             setDialog(null);
           }}
@@ -204,9 +204,9 @@ export function MilestoneDetail({ detail, highlight }: { detail: Detail; highlig
       )}
       {dialog === 'complete' && (
         <CompleteMilestoneDialog
-          petId={m.petId}
+          petId={milestone.petId}
           petName={petName}
-          milestone={m}
+          milestone={milestone}
           today={today}
           onClose={() => {
             setDialog(null);
@@ -216,10 +216,10 @@ export function MilestoneDetail({ detail, highlight }: { detail: Detail; highlig
       {dialog === 'cancel' && (
         <ConfirmDialog
           open
-          title={vi.milestones.cancelDialog.title}
-          description={vi.milestones.cancelDialog.body(`${title} · ${formatDate(m.dueOn)}`)}
-          confirmLabel={vi.milestones.cancelDialog.confirm}
-          cancelLabel={vi.milestones.cancelDialog.keep}
+          title={m.milestones.cancelDialog.title}
+          description={m.milestones.cancelDialog.body(`${title} · ${formatDate(milestone.dueOn)}`)}
+          confirmLabel={m.milestones.cancelDialog.confirm}
+          cancelLabel={m.milestones.cancelDialog.keep}
           loading={cancel.isPending}
           onClose={() => {
             setDialog(null);
@@ -228,14 +228,14 @@ export function MilestoneDetail({ detail, highlight }: { detail: Detail; highlig
             cancel.mutate(undefined, {
               onSuccess: () => {
                 setDialog(null);
-                toast.show({ kind: 'success', message: vi.milestones.cancelDialog.done });
+                toast.show({ kind: 'success', message: m.milestones.cancelDialog.done });
               },
               onError: (err) => {
                 setDialog(null);
                 const msg = toUserMessage(err);
                 toast.show({
                   kind: 'error',
-                  message: 'message' in msg ? msg.message : vi.milestones.notPending,
+                  message: 'message' in msg ? msg.message : m.milestones.notPending,
                 });
               },
             });

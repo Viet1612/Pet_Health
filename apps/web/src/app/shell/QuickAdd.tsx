@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelectedPet } from '../../features/pets';
 import { useSession } from '../../features/session';
 import { todayIn, WeightEntryDialog, weightsQuery } from '../../features/weights';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
 import { IconButton } from '../../ui/IconButton';
 
@@ -48,7 +48,7 @@ export function QuickAdd() {
   return (
     <div ref={ref} className="relative">
       <IconButton
-        aria-label={vi.topBar.quickAdd}
+        aria-label={m.topBar.quickAdd}
         aria-haspopup="menu"
         aria-expanded={menuOpen}
         icon={<Plus size={24} />}
@@ -62,7 +62,7 @@ export function QuickAdd() {
         className="hidden md:inline-flex"
         onClick={toggle}
       >
-        {vi.topBar.quickAddLabel.replace('+ ', '')}
+        {m.topBar.quickAddLabel.replace('+ ', '')}
       </Button>
       {menuOpen && (
         <div
@@ -80,7 +80,7 @@ export function QuickAdd() {
             }}
           >
             <Scale size={20} aria-hidden />
-            {selected ? vi.quickAdd.weight : vi.quickAdd.noPet}
+            {selected ? m.quickAdd.weight : m.quickAdd.noPet}
           </button>
         </div>
       )}

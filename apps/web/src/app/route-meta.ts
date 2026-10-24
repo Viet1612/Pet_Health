@@ -1,7 +1,7 @@
 import { useRouterState } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
-import { vi } from '../i18n/vi';
+import { m } from '../i18n';
 
 declare module '@tanstack/react-router' {
   interface StaticDataRouteOption {
@@ -20,7 +20,7 @@ export function useRouteTitleAndFocus(): void {
   });
 
   useEffect(() => {
-    document.title = title ? `${title} · ${vi.appName}` : vi.appName;
+    document.title = title ? `${title} · ${m.appName}` : m.appName;
   }, [title]);
 
   useEffect(() => {

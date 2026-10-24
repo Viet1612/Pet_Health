@@ -13,14 +13,14 @@ import {
   useLogin,
   type LoginValues,
 } from '../../features/session';
-import { vi } from '../../i18n/vi';
+import { m } from '../../i18n';
 import { Alert } from '../../ui/Alert';
 import { Button } from '../../ui/Button';
 import { PasswordField } from '../../ui/PasswordField';
 import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
 
-const t = vi.auth.login;
+const t = m.auth.login;
 
 interface LoginSearch {
   next?: string;
@@ -82,7 +82,7 @@ function LoginPage() {
   return (
     <>
       <h1 className="text-h1 mb-1">{t.title}</h1>
-      <p className="text-body text-text-muted mb-6">{vi.auth.tagline}</p>
+      <p className="text-body text-text-muted mb-6">{m.auth.tagline}</p>
 
       <form noValidate onSubmit={(e) => void onSubmit(e)} className="flex flex-col gap-4">
         {expired === 1 && !error && !locked && <Alert tone="info">{t.expired}</Alert>}
@@ -92,14 +92,14 @@ function LoginPage() {
         )}
 
         <TextField
-          label={vi.auth.email}
+          label={m.auth.email}
           type="email"
           autoComplete="email"
           error={form.formState.errors.email?.message}
           {...form.register('email')}
         />
         <PasswordField
-          label={vi.auth.password}
+          label={m.auth.password}
           autoComplete="current-password"
           error={form.formState.errors.password?.message ?? (error === 'invalid' ? ' ' : undefined)}
           {...form.register('password')}

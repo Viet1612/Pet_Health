@@ -5,7 +5,7 @@ import { createFileRoute, notFound } from '@tanstack/react-router';
 import { petQuery } from '../../../../features/pets';
 import { useSession } from '../../../../features/session';
 import { VisitDetail, VisitList, visitQuery } from '../../../../features/visits';
-import { vi } from '../../../../i18n/vi';
+import { m } from '../../../../i18n';
 import { Skeleton } from '../../../../ui/Skeleton';
 
 /**
@@ -48,7 +48,7 @@ export const Route = createFileRoute('/_app/visits/$visitId/')({
       throw error;
     }
   },
-  staticData: { title: vi.visits.detailTitle },
+  staticData: { title: m.visits.detailTitle },
   pendingComponent: VisitPending,
   component: VisitPage,
 });
