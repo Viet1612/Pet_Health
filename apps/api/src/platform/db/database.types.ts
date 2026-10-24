@@ -129,6 +129,7 @@ export interface Users {
   failed_login_count: Generated<number>;
   failed_login_window_start: Timestamp | null;
   id: string;
+  locale: Generated<string>;
   locked_until: Timestamp | null;
   notifications_synced_on: string | null;
   password_hash: string;

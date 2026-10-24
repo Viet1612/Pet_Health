@@ -22,11 +22,19 @@ export const zNewPassword = z
 /** Token trong liên kết email: base64url 43 ký tự. */
 export const zToken = z.string({ error: 'Liên kết không hợp lệ' });
 
+/** Ngôn ngữ giao diện và email (S4-09). */
+export const LOCALES = ['vi', 'en'] as const;
+export type Locale = (typeof LOCALES)[number];
+export const zLocale = z.enum(LOCALES);
+
+const toLocale = (v: string): Locale => (v === 'en' ? 'en' : 'vi');
+
 export const zUser = z.object({
   id: z.uuid(),
   email: z.string(),
   emailVerified: z.boolean(),
   timezone: z.string(),
+  locale: zLocale,
   createdAt: z.iso.datetime(),
 });
 export type UserDto = z.infer<typeof zUser>;
@@ -37,6 +45,7 @@ export function toUserDto(row: UserRow): UserDto {
     email: row.email,
     emailVerified: row.email_verified_at !== null,
     timezone: row.timezone,
+    locale: toLocale(row.locale),
     createdAt: row.created_at.toISOString(),
   };
 }

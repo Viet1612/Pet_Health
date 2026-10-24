@@ -78,6 +78,11 @@ paths:
                   type: string
                 timezone:
                   type: string
+                locale:
+                  type: string
+                  enum:
+                    - vi
+                    - en
               required:
                 - email
                 - password
@@ -102,6 +107,11 @@ paths:
                         type: boolean
                       timezone:
                         type: string
+                      locale:
+                        type: string
+                        enum:
+                          - vi
+                          - en
                       createdAt:
                         type: string
                         format: date-time
@@ -111,6 +121,7 @@ paths:
                       - email
                       - emailVerified
                       - timezone
+                      - locale
                       - createdAt
                     additionalProperties: false
                   csrfToken:
@@ -162,6 +173,11 @@ paths:
                         type: boolean
                       timezone:
                         type: string
+                      locale:
+                        type: string
+                        enum:
+                          - vi
+                          - en
                       createdAt:
                         type: string
                         format: date-time
@@ -171,6 +187,7 @@ paths:
                       - email
                       - emailVerified
                       - timezone
+                      - locale
                       - createdAt
                     additionalProperties: false
                   csrfToken:
@@ -213,6 +230,11 @@ paths:
                         type: boolean
                       timezone:
                         type: string
+                      locale:
+                        type: string
+                        enum:
+                          - vi
+                          - en
                       createdAt:
                         type: string
                         format: date-time
@@ -222,6 +244,7 @@ paths:
                       - email
                       - emailVerified
                       - timezone
+                      - locale
                       - createdAt
                     additionalProperties: false
                   csrfToken:
@@ -270,6 +293,11 @@ paths:
                         type: boolean
                       timezone:
                         type: string
+                      locale:
+                        type: string
+                        enum:
+                          - vi
+                          - en
                       createdAt:
                         type: string
                         format: date-time
@@ -279,6 +307,7 @@ paths:
                       - email
                       - emailVerified
                       - timezone
+                      - locale
                       - createdAt
                     additionalProperties: false
                 required:
@@ -334,6 +363,41 @@ paths:
       responses:
         "204":
           description: Default Response
+  /me/locale:
+    patch:
+      summary: Đổi ngôn ngữ của tài khoản
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                locale:
+                  type: string
+                  enum:
+                    - vi
+                    - en
+              required:
+                - locale
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  locale:
+                    type: string
+                    enum:
+                      - vi
+                      - en
+                required:
+                  - locale
+                additionalProperties: false
   /pets:
     get:
       summary: Danh sách thú cưng

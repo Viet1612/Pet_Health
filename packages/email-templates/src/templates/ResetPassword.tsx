@@ -1,16 +1,17 @@
+import { EMAIL_MESSAGES, type EmailLocale } from '../messages.js';
 import { ActionEmail } from './Layout.js';
 
-export const resetPasswordSubject = 'Đặt lại mật khẩu Pet Health';
-
-export function ResetPassword({ link }: { link: string }) {
+export function ResetPassword({ link, locale = 'vi' }: { link: string; locale?: EmailLocale }) {
+  const t = EMAIL_MESSAGES[locale].resetPassword;
   return (
     <ActionEmail
-      preview={resetPasswordSubject}
-      title="Đặt lại mật khẩu"
-      explanation="Bấm nút dưới đây để đặt mật khẩu mới cho tài khoản Pet Health."
-      buttonLabel="Đặt lại mật khẩu"
+      preview={t.subject}
+      title={t.title}
+      explanation={t.explanation}
+      buttonLabel={t.buttonLabel}
       link={link}
-      expiry="Liên kết hết hạn sau 60 phút."
+      expiry={t.expiry}
+      locale={locale}
     />
   );
 }

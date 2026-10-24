@@ -1,6 +1,7 @@
 export {
   sessionQuery,
   SESSION_KEY,
+  useChangeLocale,
   useForgotPassword,
   useLogin,
   useLogout,

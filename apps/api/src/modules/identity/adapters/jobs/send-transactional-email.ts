@@ -55,7 +55,7 @@ export function createSendTransactionalEmail(deps: SendEmailDeps) {
     }
 
     const link = `${deps.appOrigin}${EMAIL_LINK_PATH[job.template]}#token=${job.token}`;
-    const rendered = await renderEmail(job.template, link);
+    const rendered = await renderEmail(job.template, link, job.locale ?? 'vi');
 
     try {
       await deps.email.send({ to: job.to, ...rendered });

@@ -35,7 +35,14 @@ export const userRepository = {
 
   async insert(
     q: Q,
-    user: { id: string; email: string; passwordHash: string; timezone: string; createdAt: Date },
+    user: {
+      id: string;
+      email: string;
+      passwordHash: string;
+      timezone: string;
+      locale: string;
+      createdAt: Date;
+    },
   ): Promise<UserRow> {
     return q
       .insertInto('users')
@@ -44,10 +51,20 @@ export const userRepository = {
         email: user.email,
         password_hash: user.passwordHash,
         timezone: user.timezone,
+        locale: user.locale,
         created_at: user.createdAt,
       })
       .returningAll()
       .executeTakeFirstOrThrow();
+  },
+
+  async setLocale(q: Q, id: string, locale: string): Promise<UserRow | undefined> {
+    return q
+      .updateTable('users')
+      .set({ locale })
+      .where('id', '=', id)
+      .returningAll()
+      .executeTakeFirst();
   },
 
   async markEmailVerified(q: Q, id: string, at: Date): Promise<UserRow | undefined> {

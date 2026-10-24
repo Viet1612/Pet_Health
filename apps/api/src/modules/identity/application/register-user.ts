@@ -1,7 +1,7 @@
 import { isValidTimezone } from '../../../platform/calendar/today.js';
 import { ConflictError, ValidationError } from '../../../platform/errors/app-error.js';
 import { newId } from '../../../platform/ids.js';
-import { EMAIL_QUEUE } from '../../../platform/email/jobs.js';
+import { EMAIL_QUEUE, emailLocale } from '../../../platform/email/jobs.js';
 import { RATE_LIMITS } from '../../../platform/rate-limit/rate-limiter.js';
 import { authTokenRepository } from '../adapters/persistence/auth-token-repository.js';
 import {
@@ -21,6 +21,8 @@ export interface RegisterInput {
   email: string;
   password: string;
   timezone?: string | undefined;
+  /** Ngôn ngữ web đang dùng lúc đăng ký (S4-09); mặc định `vi`. */
+  locale?: 'vi' | 'en' | undefined;
   clientIp: string;
 }
 
@@ -53,6 +55,7 @@ export async function registerUser(
         email: input.email,
         passwordHash,
         timezone,
+        locale: input.locale ?? 'vi',
         createdAt: now,
       });
 
@@ -69,6 +72,7 @@ export async function registerUser(
         template: 'VERIFY_EMAIL',
         to: user.email,
         token,
+        locale: emailLocale(user.locale),
       });
 
       const session = await createSession(trx, user.id, now);

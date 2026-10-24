@@ -37,6 +37,21 @@ export function setLocale(l: Locale): void {
   location.reload();
 }
 
+/**
+ * Tài khoản thắng thiết bị (S4-09): ngôn ngữ của tài khoản khác ngôn ngữ đang dùng → ghi đè
+ * `localStorage` rồi tải lại. Chỉ tải lại khi ghi được, để không lặp vô hạn khi storage bị chặn.
+ */
+export function adoptAccountLocale(account: Locale, current: Locale): void {
+  if (account === current) return;
+  const store = storage('local');
+  try {
+    store?.setItem(KEY, account);
+  } catch {
+    return;
+  }
+  if (currentLocale(store) === account) location.reload();
+}
+
 /** Trả true một lần sau khi `setLocale` tải lại trang. */
 export function consumeLocaleChanged(): boolean {
   try {

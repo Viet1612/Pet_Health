@@ -12,6 +12,8 @@ import {
   Text,
 } from '@react-email/components';
 
+import { EMAIL_MESSAGES, type EmailLocale } from '../messages.js';
+
 const PRIMARY = '#C2185B';
 
 export interface ActionEmailProps {
@@ -21,6 +23,7 @@ export interface ActionEmailProps {
   buttonLabel: string;
   link: string;
   expiry: string;
+  locale: EmailLocale;
 }
 
 /**
@@ -34,9 +37,11 @@ export function ActionEmail({
   buttonLabel,
   link,
   expiry,
+  locale,
 }: ActionEmailProps) {
+  const t = EMAIL_MESSAGES[locale].layout;
   return (
-    <Html lang="vi">
+    <Html lang={locale}>
       <Head />
       <Preview>{preview}</Preview>
       <Body
@@ -73,15 +78,13 @@ export function ActionEmail({
           <Text style={{ fontSize: '14px', color: '#5F5D58' }}>{expiry}</Text>
           <Hr style={{ borderColor: '#F1DCE5' }} />
           <Text style={{ fontSize: '12px', color: '#5F5D58' }}>
-            Nút không bấm được? Sao chép liên kết sau vào trình duyệt:
+            {t.copyLink}
             <br />
             <Link href={link} style={{ color: PRIMARY, wordBreak: 'break-all' }}>
               {link}
             </Link>
           </Text>
-          <Text style={{ fontSize: '12px', color: '#5F5D58' }}>
-            Nếu bạn không yêu cầu, hãy bỏ qua email này.
-          </Text>
+          <Text style={{ fontSize: '12px', color: '#5F5D58' }}>{t.ignore}</Text>
         </Container>
       </Body>
     </Html>

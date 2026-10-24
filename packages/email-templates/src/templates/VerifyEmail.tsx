@@ -1,16 +1,17 @@
+import { EMAIL_MESSAGES, type EmailLocale } from '../messages.js';
 import { ActionEmail } from './Layout.js';
 
-export const verifyEmailSubject = 'Xác minh email Pet Health';
-
-export function VerifyEmail({ link }: { link: string }) {
+export function VerifyEmail({ link, locale = 'vi' }: { link: string; locale?: EmailLocale }) {
+  const t = EMAIL_MESSAGES[locale].verifyEmail;
   return (
     <ActionEmail
-      preview={verifyEmailSubject}
-      title="Xác minh email"
-      explanation="Bấm nút dưới đây để xác minh địa chỉ email của tài khoản Pet Health."
-      buttonLabel="Xác minh email"
+      preview={t.subject}
+      title={t.title}
+      explanation={t.explanation}
+      buttonLabel={t.buttonLabel}
       link={link}
-      expiry="Liên kết hết hạn sau 24 giờ."
+      expiry={t.expiry}
+      locale={locale}
     />
   );
 }

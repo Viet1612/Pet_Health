@@ -8,12 +8,15 @@ import {
 } from '@tanstack/react-query';
 
 import { api, setCsrfToken, unwrap } from '../../api/client';
+import { locale } from '../../i18n';
+import { adoptAccountLocale, setLocale, type Locale } from '../../i18n/locale';
 
 export interface SessionUser {
   id: string;
   email: string;
   emailVerified: boolean;
   timezone: string;
+  locale: Locale;
   createdAt: string;
 }
 
@@ -31,6 +34,7 @@ export const sessionQuery = queryOptions({
     try {
       const data = unwrap(await api.GET('/auth/session'));
       setCsrfToken(data.csrfToken);
+      adoptAccountLocale(data.user.locale, locale);
       return { user: data.user, csrfToken: data.csrfToken };
     } catch (error) {
       if (error instanceof ApiError && error.status === 401) {
@@ -52,6 +56,7 @@ export function useSession() {
 function storeSession(queryClient: QueryClient, session: Session): void {
   setCsrfToken(session.csrfToken);
   queryClient.setQueryData(SESSION_KEY, session);
+  adoptAccountLocale(session.user.locale, locale);
 }
 
 export function useLogin() {
@@ -68,10 +73,22 @@ export function useLogin() {
 export function useRegister() {
   const queryClient = useQueryClient();
   return useMutation({
+    // Gửi ngôn ngữ đang dùng để email xác minh đúng ngôn ngữ (S4-09).
     mutationFn: async (body: { email: string; password: string; timezone: string }) =>
-      unwrap(await api.POST('/auth/register', { body })),
+      unwrap(await api.POST('/auth/register', { body: { ...body, locale } })),
     onSuccess: (session) => {
       storeSession(queryClient, session);
+    },
+  });
+}
+
+/** Lưu ngôn ngữ vào tài khoản rồi áp dụng trên thiết bị này (tải lại trang). */
+export function useChangeLocale() {
+  return useMutation({
+    mutationFn: async (next: Locale) =>
+      unwrap(await api.PATCH('/me/locale', { body: { locale: next } })),
+    onSuccess: ({ locale: saved }) => {
+      setLocale(saved);
     },
   });
 }

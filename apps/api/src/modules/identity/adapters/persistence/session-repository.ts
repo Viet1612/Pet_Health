@@ -59,6 +59,7 @@ export const sessionRepository = {
         'u.password_hash',
         'u.email_verified_at',
         'u.timezone',
+        'u.locale',
         'u.notifications_synced_on',
         'u.failed_login_count',
         'u.failed_login_window_start',

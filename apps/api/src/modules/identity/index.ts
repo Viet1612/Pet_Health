@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
+import { meRoutes } from './adapters/http/me-routes.js';
 import { registerRoute } from './adapters/http/register-route.js';
 import { passwordResetRoutes } from './adapters/http/password-reset-routes.js';
 import { sessionRoutes } from './adapters/http/session-routes.js';
@@ -19,4 +20,5 @@ export async function registerIdentityRoutes(
   await api.register(sessionRoutes, deps);
   await api.register(verifyEmailRoutes, deps);
   await api.register(passwordResetRoutes, deps);
+  await api.register(meRoutes, deps);
 }

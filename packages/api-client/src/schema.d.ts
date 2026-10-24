@@ -117,6 +117,8 @@ export interface paths {
             email: string;
             password: string;
             timezone?: string;
+            /** @enum {string} */
+            locale?: 'vi' | 'en';
           };
         };
       };
@@ -134,6 +136,8 @@ export interface paths {
                 email: string;
                 emailVerified: boolean;
                 timezone: string;
+                /** @enum {string} */
+                locale: 'vi' | 'en';
                 /** Format: date-time */
                 createdAt: string;
               };
@@ -188,6 +192,8 @@ export interface paths {
                 email: string;
                 emailVerified: boolean;
                 timezone: string;
+                /** @enum {string} */
+                locale: 'vi' | 'en';
                 /** Format: date-time */
                 createdAt: string;
               };
@@ -267,6 +273,8 @@ export interface paths {
                 email: string;
                 emailVerified: boolean;
                 timezone: string;
+                /** @enum {string} */
+                locale: 'vi' | 'en';
                 /** Format: date-time */
                 createdAt: string;
               };
@@ -323,6 +331,8 @@ export interface paths {
                 email: string;
                 emailVerified: boolean;
                 timezone: string;
+                /** @enum {string} */
+                locale: 'vi' | 'en';
                 /** Format: date-time */
                 createdAt: string;
               };
@@ -450,6 +460,52 @@ export interface paths {
     options?: never;
     head?: never;
     patch?: never;
+    trace?: never;
+  };
+  '/me/locale': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Đổi ngôn ngữ của tài khoản */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            locale: 'vi' | 'en';
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {string} */
+              locale: 'vi' | 'en';
+            };
+          };
+        };
+      };
+    };
     trace?: never;
   };
   '/pets': {

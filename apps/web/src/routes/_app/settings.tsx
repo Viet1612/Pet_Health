@@ -1,8 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
+import { toUserMessage } from '../../api/to-user-message';
+import { useChangeLocale } from '../../features/session';
 import { locale, m } from '../../i18n';
-import { consumeLocaleChanged, setLocale, SUPPORTED } from '../../i18n/locale';
+import { consumeLocaleChanged, SUPPORTED, type Locale } from '../../i18n/locale';
 import { Card } from '../../ui/Card';
 import { useToast } from '../../ui/toast';
 
@@ -16,6 +18,24 @@ export const Route = createFileRoute('/_app/settings')({
 
 function SettingsScreen() {
   const toast = useToast();
+  const change = useChangeLocale();
+
+  const choose = (l: Locale) => {
+    if (l === locale || change.isPending) return;
+    // Lưu vào tài khoản (S4-09) rồi tải lại; lỗi thì giữ ngôn ngữ cũ.
+    change.mutate(l, {
+      onError: (err) => {
+        const msg = toUserMessage(err);
+        toast.show({
+          kind: 'error',
+          message: 'message' in msg ? msg.message : m.error.serverToast,
+          onRetry: () => {
+            choose(l);
+          },
+        });
+      },
+    });
+  };
 
   useEffect(() => {
     if (consumeLocaleChanged()) toast.show({ kind: 'success', message: t.languageChanged });
@@ -37,9 +57,10 @@ function SettingsScreen() {
                 type="radio"
                 name="locale"
                 value={l}
-                checked={locale === l}
+                checked={(change.isPending ? change.variables : locale) === l}
+                disabled={change.isPending}
                 onChange={() => {
-                  if (l !== locale) setLocale(l);
+                  choose(l);
                 }}
                 className="accent-primary size-5"
               />

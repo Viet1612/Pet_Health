@@ -1,5 +1,5 @@
 import { UnauthenticatedError } from '../../../platform/errors/app-error.js';
-import { EMAIL_QUEUE } from '../../../platform/email/jobs.js';
+import { EMAIL_QUEUE, emailLocale } from '../../../platform/email/jobs.js';
 import { newId } from '../../../platform/ids.js';
 import { RATE_LIMITS } from '../../../platform/rate-limit/rate-limiter.js';
 import { authTokenRepository } from '../adapters/persistence/auth-token-repository.js';
@@ -51,6 +51,7 @@ export async function resendVerification(deps: IdentityDeps, userId: string): Pr
       template: 'VERIFY_EMAIL',
       to: user.email,
       token,
+      locale: emailLocale(user.locale),
     });
   });
 }
