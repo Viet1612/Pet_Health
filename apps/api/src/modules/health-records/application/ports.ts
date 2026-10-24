@@ -1,4 +1,4 @@
-import type { Selectable, Transaction } from 'kysely';
+import type { Kysely, Selectable, Transaction } from 'kysely';
 
 import type { ClockPort } from '../../../platform/clock/clock.js';
 import type { VisitPhotos, Visits, WeightEntries } from '../../../platform/db/database.types.js';
@@ -58,6 +58,29 @@ export interface VisitRepository {
   delete(trx: Trx, ownerId: string, id: string): Promise<void>;
 }
 
+export type Q = Kysely<Database> | Trx;
+
+/**
+ * Bảng `visit_photos`. Route chạy trong transaction có `app.user_id`; worker ảnh dùng kết nối
+ * app_worker nên mọi hàm vẫn lọc `owner_id`.
+ */
+export interface VisitPhotoRepository {
+  /** Số ảnh chưa `FAILED` của lần khám (giới hạn 5). */
+  countActive(trx: Trx, ownerId: string, visitId: string): Promise<number>;
+  insert(
+    trx: Trx,
+    photo: { id: string; ownerId: string; visitId: string; storageKey: string; thumbKey: string },
+  ): Promise<void>;
+  /** Ảnh chưa `FAILED`, cũ nhất trước. */
+  listForVisit(trx: Trx, ownerId: string, visitId: string): Promise<VisitPhotoRow[]>;
+  findById(q: Q, ownerId: string, id: string): Promise<VisitPhotoRow | undefined>;
+  lock(trx: Trx, ownerId: string, id: string): Promise<VisitPhotoRow | undefined>;
+  delete(trx: Trx, ownerId: string, id: string): Promise<void>;
+  /** `false` nếu ảnh (hoặc lần khám) đã bị xóa. */
+  markReady(trx: Trx, ownerId: string, id: string, sizeBytes: number): Promise<boolean>;
+  markFailed(q: Q, ownerId: string, id: string, reason: string): Promise<void>;
+}
+
 /** Bảng `weight_entries`; mọi hàm lọc `owner_id` (RLS chặn thêm một lớp). */
 export interface WeightRepository {
   /** `measured_on DESC, created_at DESC`, lọc `from/to` (bao gồm 2 đầu) nếu có. */
@@ -95,5 +118,6 @@ export interface HealthRecordsAppDeps {
   pets: PetQueryPort;
   weights: WeightRepository;
   visits: VisitRepository;
+  visitPhotos: VisitPhotoRepository;
   media: MediaService;
 }

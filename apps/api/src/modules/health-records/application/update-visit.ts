@@ -31,5 +31,5 @@ export async function updateVisit(
   );
   const row = await deps.visits.update(trx, ownerId, id, fields, deps.clock.now());
   if (!row) throw new NotFoundError();
-  return toVisitView(row, await visitPhotoViews());
+  return toVisitView(row, await visitPhotoViews(deps, trx, ownerId, id));
 }

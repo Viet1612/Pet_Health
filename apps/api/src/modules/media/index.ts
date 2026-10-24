@@ -10,7 +10,7 @@ import { receiveUploadFile, type ReceivedUpload } from './adapters/http/receive-
 import { uploadsRoutes } from './adapters/http/uploads.routes.js';
 import { kyselyUploadRepository } from './adapters/persistence/kysely-upload-repository.js';
 import { acceptUpload } from './application/accept-upload.js';
-import type { TargetKind } from './application/ports.js';
+import type { TargetKind, UploadPresenters } from './application/ports.js';
 import { enqueuePurgePrefix } from './application/purge-prefix.js';
 import { signMediaUrl } from './domain/signed-url.js';
 
@@ -22,6 +22,8 @@ export type {
   TargetKind,
   TargetResolver,
   TargetResolvers,
+  UploadPresenter,
+  UploadPresenters,
   UploadRecord,
 } from './application/ports.js';
 export { avatarKey, petPrefix, thumbKeyOf, userPrefix, visitPhotoKey } from './domain/media-key.js';
@@ -66,8 +68,11 @@ export function createMediaService(deps: MediaDeps): MediaService {
 }
 
 /** Route dưới `/api/v1`. */
-export async function registerMediaApiRoutes(api: FastifyInstance): Promise<void> {
-  await api.register(uploadsRoutes);
+export async function registerMediaApiRoutes(
+  api: FastifyInstance,
+  presenters: UploadPresenters = {},
+): Promise<void> {
+  await api.register(uploadsRoutes, { presenters });
 }
 
 /** `GET /media/*` ở gốc (ngoài `/api/v1`). */

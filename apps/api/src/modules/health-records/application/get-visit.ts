@@ -12,5 +12,5 @@ export async function getVisit(
 ): Promise<VisitView> {
   const row = await deps.visits.findById(trx, ownerId, id);
   if (!row) throw new NotFoundError();
-  return toVisitView(row, await visitPhotoViews());
+  return toVisitView(row, await visitPhotoViews(deps, trx, ownerId, id));
 }

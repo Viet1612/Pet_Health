@@ -853,6 +853,13 @@ export interface paths {
               status: 'PROCESSING' | 'READY' | 'FAILED';
               /** @enum {string} */
               reason?: 'UNSUPPORTED_FORMAT' | 'CORRUPT' | 'TOO_MANY_PIXELS' | 'PROCESSING_ERROR';
+              /** @description Ảnh khám đã xử lý (S3-04) */
+              photo?: {
+                /** Format: uuid */
+                id: string;
+                thumbUrl: string;
+                url: string;
+              };
             };
           };
         };
@@ -1301,6 +1308,92 @@ export interface paths {
         };
       };
     };
+    trace?: never;
+  };
+  '/visits/{id}/photos': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Đính ảnh vào lần khám (multipart, field `file`, ≤ 5 MB, tối đa 5 ảnh)
+     * @description Bắt buộc Idempotency-Key. Ảnh xử lý nền; hỏi trạng thái ở GET /uploads/{uploadId}.
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: {
+          'idempotency-key'?: string;
+        };
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        202: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              photoId: string;
+              /** Format: uuid */
+              uploadId: string;
+              /** @enum {string} */
+              status: 'PROCESSING';
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/photos/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Xóa một ảnh của lần khám */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
 }

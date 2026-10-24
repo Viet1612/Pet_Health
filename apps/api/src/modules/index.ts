@@ -1,6 +1,11 @@
 import type { FastifyInstance } from 'fastify';
 
-import { registerHealthRecordsRoutes, type HealthRecordsDeps } from './health-records/index.js';
+import {
+  registerHealthRecordsRoutes,
+  visitPhotoPresenter,
+  visitPhotoResolver,
+  type HealthRecordsDeps,
+} from './health-records/index.js';
 import { registerIdentityRoutes, type IdentityDeps } from './identity/index.js';
 import {
   registerMediaApiRoutes,
@@ -22,13 +27,13 @@ export interface ModuleDeps {
 export async function registerModules(api: FastifyInstance, deps: ModuleDeps): Promise<void> {
   await registerIdentityRoutes(api, deps.identity);
   await registerPetsRoutes(api, deps.pets, deps.media);
-  await registerMediaApiRoutes(api);
+  await registerMediaApiRoutes(api, { VISIT_PHOTO: visitPhotoPresenter(deps.media) });
   await registerHealthRecordsRoutes(api, deps.healthRecords, deps.media);
 }
 
 /** Nơi lưu và gắn ảnh theo loại mục tiêu; mô-đun sở hữu mục tiêu thêm vào (AVATAR ở S2-03). */
 export function mediaTargetResolvers(clock: ClockPort): TargetResolvers {
-  return { AVATAR: petAvatarTargetResolver(clock) };
+  return { AVATAR: petAvatarTargetResolver(clock), VISIT_PHOTO: visitPhotoResolver() };
 }
 
 /** Route ở gốc (ngoài `/api/v1`) của các mô-đun. */

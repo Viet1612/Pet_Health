@@ -42,7 +42,12 @@ export interface TargetResolver {
    * Gắn ảnh vào mục tiêu; chạy cùng transaction với `uploads.status = READY`. Trả các khóa ảnh cũ
    * cần xóa sau commit. Mục tiêu vừa bị xóa → ném `TargetGoneError`.
    */
-  onReady(trx: Transaction<Database>, upload: UploadRecord, key: string): Promise<string[]>;
+  onReady(
+    trx: Transaction<Database>,
+    upload: UploadRecord,
+    key: string,
+    output: { bytes: number },
+  ): Promise<string[]>;
   onFailed?(q: Q, upload: UploadRecord, reason: FailReason): Promise<void>;
 }
 
@@ -55,6 +60,17 @@ export class TargetGoneError extends Error {
 }
 
 export type TargetResolvers = Partial<Record<TargetKind, TargetResolver>>;
+
+/**
+ * Thông tin bổ sung cho `GET /uploads/{id}` khi ảnh đã `READY` (ví dụ `photo` của ảnh khám, S3-04);
+ * mô-đun sở hữu mục tiêu cung cấp. Chạy trong transaction có `app.user_id` của chủ.
+ */
+export type UploadPresenter = (
+  trx: Transaction<Database>,
+  upload: UploadRecord,
+) => Promise<Record<string, unknown> | undefined>;
+
+export type UploadPresenters = Partial<Record<TargetKind, UploadPresenter>>;
 
 /** Job `media.process`. */
 export interface MediaProcessJob {

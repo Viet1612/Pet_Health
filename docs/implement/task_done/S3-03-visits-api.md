@@ -5,7 +5,7 @@
 | Task | [S3-03](../tasks/S3-03-visits-api.md) |
 | Trạng thái | Xong, đã gọi thử trên server dev |
 | Ngày hoàn thành | 2026-10-25 |
-| Commit | xem [README](README.md) |
+| Commit | `c696fbf` |
 
 ## Kết quả
 

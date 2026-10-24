@@ -21,6 +21,7 @@ import {
   signMediaUrl,
   verifyMediaSignature,
 } from '../src/modules/media/domain/signed-url.js';
+import { purgePrefix } from '../src/modules/media/application/purge-prefix.js';
 import { LocalDiskStorage } from '../src/platform/storage/local-disk-storage.js';
 
 const U1 = '01a16a77-ba1a-7c34-9b39-a53332ba4d26';
@@ -171,6 +172,19 @@ describe('LocalDiskStorage', () => {
     await storage.deletePrefix(`u/${U1}/p/${U2}/`);
     expect(await storage.read(key)).toBeNull();
     expect(await storage.readStream(key)).toBeNull();
+  });
+
+  it('purgePrefix dạng tệp: xóa đúng 1 ảnh và thumbnail, giữ ảnh khác', async () => {
+    const dir = `u/${U1}/p/${U2}/v/${U3}/`;
+    const keep = `${dir}${U2}.jpg`;
+    await storage.put(`${dir}${U1}.jpg`, Buffer.from('a'));
+    await storage.put(`${dir}${U1}_thumb.jpg`, Buffer.from('a'));
+    await storage.put(keep, Buffer.from('b'));
+    await purgePrefix(storage, `${dir}${U1}`);
+    expect(await storage.read(`${dir}${U1}.jpg`)).toBeNull();
+    expect(await storage.read(`${dir}${U1}_thumb.jpg`)).toBeNull();
+    expect((await storage.read(keep))?.toString()).toBe('b');
+    await expect(purgePrefix(storage, `${dir}${U1}.jpg`)).rejects.toThrow(/không hợp lệ/);
   });
 
   it('chặn khóa ra ngoài thư mục gốc', async () => {

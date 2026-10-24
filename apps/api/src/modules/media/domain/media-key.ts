@@ -9,8 +9,12 @@ export const MEDIA_KEY_RE = new RegExp(
 /** Prefix hợp lệ cho `media.purge-prefix`: cả user, một thú cưng, ảnh đại diện hoặc một lần khám. */
 export const PURGE_PREFIX_RE = new RegExp(`^u/${UUID}/(p/${UUID}/((avatar|v/${UUID})/)?)?$`);
 
+/** Một ảnh (bỏ đuôi): `…/v/{visit}/{photoId}` → xóa `{photoId}.jpg` và `{photoId}_thumb.jpg`. */
+export const PURGE_FILE_RE = new RegExp(`^u/${UUID}/p/${UUID}/(avatar|v/${UUID})/${UUID}$`);
+
 export const isMediaKey = (key: string): boolean => MEDIA_KEY_RE.test(key);
-export const isPurgePrefix = (prefix: string): boolean => PURGE_PREFIX_RE.test(prefix);
+export const isPurgePrefix = (prefix: string): boolean =>
+  PURGE_PREFIX_RE.test(prefix) || PURGE_FILE_RE.test(prefix);
 
 export const incomingKey = (uploadId: string): string => `incoming/${uploadId}`;
 

@@ -74,6 +74,32 @@ export async function runIdempotent(
   return { ...result, replayed: false };
 }
 
+/**
+ * Phản hồi đã lưu cho (ownerId, key) còn hạn, để route nhận tệp trả lại ngay mà không đọc body
+ * (S3-04). Khóa đang xử lý dở → `null` (runIdempotent sẽ chờ và quyết định).
+ */
+export async function findStoredResponse(
+  trx: Transaction<Database>,
+  input: IdempotencyInput,
+): Promise<IdempotentResult | null> {
+  const row = await trx
+    .selectFrom('idempotency_keys')
+    .select(['request_hash', 'status_code', 'response_body'])
+    .where('owner_id', '=', input.ownerId)
+    .where('key', '=', input.key)
+    .where('created_at', '>=', new Date(input.now.getTime() - TTL_MS))
+    .executeTakeFirst();
+  if (row?.status_code == null) return null;
+  if (!row.request_hash.equals(input.requestHash)) {
+    throw new AppError(
+      422,
+      'IDEMPOTENCY_KEY_REUSED',
+      'Idempotency-Key đã được dùng cho một yêu cầu khác',
+    );
+  }
+  return { status: row.status_code, body: row.response_body, replayed: true };
+}
+
 /** Gửi kết quả; phản hồi phát lại có header `Idempotency-Replayed: true`. */
 export function sendIdempotent(reply: FastifyReply, result: IdempotentResult): FastifyReply {
   if (result.replayed) void reply.header('idempotency-replayed', 'true');

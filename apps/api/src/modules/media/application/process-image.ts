@@ -107,7 +107,7 @@ export async function processImage(
     try {
       staleKeys = await deps.db.transaction().execute(async (trx) => {
         await deps.uploads.markReady(trx, upload.id);
-        return resolver.onReady(trx, upload, finalKey);
+        return resolver.onReady(trx, upload, finalKey, { bytes: output.main.length });
       });
     } catch (error) {
       if (!(error instanceof TargetGoneError)) throw error;

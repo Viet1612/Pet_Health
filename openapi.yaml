@@ -813,6 +813,23 @@ paths:
                       - CORRUPT
                       - TOO_MANY_PIXELS
                       - PROCESSING_ERROR
+                  photo:
+                    description: Ảnh khám đã xử lý (S3-04)
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      thumbUrl:
+                        type: string
+                      url:
+                        type: string
+                    required:
+                      - id
+                      - thumbUrl
+                      - url
+                    additionalProperties: false
                 required:
                   - status
                 additionalProperties: false
@@ -1453,6 +1470,63 @@ paths:
                 additionalProperties: false
     delete:
       summary: Xóa bản ghi khám và mọi ảnh đính kèm
+      tags:
+        - visits
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "204":
+          description: Default Response
+  /visits/{id}/photos:
+    post:
+      summary: Đính ảnh vào lần khám (multipart, field `file`, ≤ 5 MB, tối đa 5 ảnh)
+      tags:
+        - visits
+      description: Bắt buộc Idempotency-Key. Ảnh xử lý nền; hỏi trạng thái ở GET
+        /uploads/{uploadId}.
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+        - schema:
+            type: string
+          in: header
+          name: idempotency-key
+          required: false
+      responses:
+        "202":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  photoId:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  uploadId:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                      - PROCESSING
+                required:
+                  - photoId
+                  - uploadId
+                  - status
+                additionalProperties: false
+  /photos/{id}:
+    delete:
+      summary: Xóa một ảnh của lần khám
       tags:
         - visits
       parameters:
