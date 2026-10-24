@@ -12,6 +12,7 @@ const stubDeps = {
   media: {},
   healthRecords: {},
   scheduling: {},
+  notifications: {},
 } as unknown as ModuleDeps;
 
 const target = fileURLToPath(new URL('../../../openapi.yaml', import.meta.url));

@@ -62,6 +62,140 @@ export const notificationRepository = {
       .execute();
   },
 
+  async getSyncedOn(trx: Trx, ownerId: string): Promise<string | null> {
+    const row = await trx
+      .selectFrom('users')
+      .select('notifications_synced_on')
+      .where('id', '=', ownerId)
+      .executeTakeFirst();
+    return row?.notifications_synced_on ?? null;
+  },
+
+  async setSyncedOn(trx: Trx, ownerId: string, day: string): Promise<void> {
+    await trx
+      .updateTable('users')
+      .set({ notifications_synced_on: day })
+      .where('id', '=', ownerId)
+      .execute();
+  },
+
+  /** Chèn, trùng `(milestone_id, channel, level, due_on_snapshot)` thì bỏ qua; trả dòng thật sự chèn. */
+  async insertMany(
+    trx: Trx,
+    rows: {
+      id: string;
+      owner_id: string;
+      milestone_id: string;
+      level: string;
+      due_on_snapshot: string;
+      appear_on: string;
+      created_at: Date;
+    }[],
+  ): Promise<{ id: string; milestone_id: string }[]> {
+    if (rows.length === 0) return [];
+    return trx
+      .insertInto('notifications')
+      .values(rows.map((r) => ({ ...r, channel: 'in_app' })))
+      .onConflict((oc) =>
+        oc.columns(['milestone_id', 'channel', 'level', 'due_on_snapshot']).doNothing(),
+      )
+      .returning(['id', 'milestone_id'])
+      .execute();
+  },
+
+  /** Mức muộn hơn vừa xuất hiện → mức cũ chưa xem coi như đã xem (`SUPERSEDED`). */
+  async supersede(
+    trx: Trx,
+    ownerId: string,
+    milestoneIds: string[],
+    keepIds: string[],
+    now: Date,
+  ): Promise<void> {
+    if (milestoneIds.length === 0) return;
+    await trx
+      .updateTable('notifications')
+      .set({ read_at: now, read_reason: 'SUPERSEDED' })
+      .where('owner_id', '=', ownerId)
+      .where('milestone_id', 'in', milestoneIds)
+      .where('id', 'not in', keepIds)
+      .where('read_at', 'is', null)
+      .execute();
+  },
+
+  listUnread(q: Q, ownerId: string): Promise<NotificationRow[]> {
+    return q
+      .selectFrom('notifications')
+      .selectAll()
+      .where('owner_id', '=', ownerId)
+      .where('read_at', 'is', null)
+      .execute();
+  },
+
+  async countUnread(q: Q, ownerId: string): Promise<number> {
+    const row = await q
+      .selectFrom('notifications')
+      .select((eb) => eb.fn.countAll<string>().as('n'))
+      .where('owner_id', '=', ownerId)
+      .where('read_at', 'is', null)
+      .executeTakeFirstOrThrow();
+    return Number(row.n);
+  },
+
+  /** Danh sách: `appear_on DESC, level_rank DESC, id DESC`, keyset sau `after`. */
+  list(
+    q: Q,
+    ownerId: string,
+    since: string,
+    after: { appearOn: string; rank: number; id: string } | null,
+    limit: number,
+  ): Promise<NotificationRow[]> {
+    const rank = sql<number>`CASE level WHEN 'OVERDUE' THEN 3 WHEN 'D1' THEN 2 ELSE 1 END`;
+    let query = q
+      .selectFrom('notifications')
+      .selectAll()
+      .where('owner_id', '=', ownerId)
+      .where('appear_on', '>=', since);
+    if (after) {
+      query = query.where(
+        sql<boolean>`(appear_on, ${rank}, id) < (${after.appearOn}::date, ${after.rank}::int, ${after.id}::uuid)`,
+      );
+    }
+    return query
+      .orderBy('appear_on', 'desc')
+      .orderBy(rank, 'desc')
+      .orderBy('id', 'desc')
+      .limit(limit)
+      .execute();
+  },
+
+  /** ID của người khác bị RLS và điều kiện `owner_id` loại, bỏ qua âm thầm. */
+  async markRead(
+    trx: Trx,
+    ownerId: string,
+    ids: string[],
+    reason: 'USER' | 'BANNER',
+    now: Date,
+  ): Promise<void> {
+    await trx
+      .updateTable('notifications')
+      .set({ read_at: now, read_reason: reason })
+      .where('owner_id', '=', ownerId)
+      .where('id', 'in', ids)
+      .where('read_at', 'is', null)
+      .execute();
+  },
+
+  /** Chỉ các thông báo tạo trước `upTo` (thông báo mới trên thiết bị khác vẫn chưa xem). */
+  async markAllRead(trx: Trx, ownerId: string, upTo: Date, now: Date): Promise<void> {
+    await trx
+      .updateTable('notifications')
+      .set({ read_at: now, read_reason: 'USER' })
+      .where('owner_id', '=', ownerId)
+      .where('read_at', 'is', null)
+      .where('created_at', '<=', upTo < now ? upTo : now)
+      .execute();
+  },
+
   byMilestone(q: Q, ownerId: string, milestoneId: string): Promise<NotificationRow[]> {
     return q
       .selectFrom('notifications')

@@ -13,7 +13,12 @@ import {
   type MediaDeps,
   type TargetResolvers,
 } from './media/index.js';
-import { notificationQuery, onMilestoneEvent } from './notifications/index.js';
+import {
+  notificationQuery,
+  onMilestoneEvent,
+  registerNotificationsRoutes,
+  type NotificationsDeps,
+} from './notifications/index.js';
 import { petAvatarTargetResolver, registerPetsRoutes, type PetsDeps } from './pets/index.js';
 import {
   registerSchedulingRoutes,
@@ -29,6 +34,7 @@ export interface ModuleDeps {
   media: MediaDeps;
   healthRecords: HealthRecordsDeps;
   scheduling: SchedulingDeps;
+  notifications: NotificationsDeps;
 }
 
 /** Đăng ký route của mọi mô-đun nghiệp vụ. Dùng chung cho main-api và sinh OpenAPI. */
@@ -45,6 +51,7 @@ export async function registerModules(api: FastifyInstance, deps: ModuleDeps): P
     events: milestoneEvents,
     notifications: notificationQuery,
   });
+  await registerNotificationsRoutes(api, deps.notifications);
 }
 
 /** Nơi lưu và gắn ảnh theo loại mục tiêu; mô-đun sở hữu mục tiêu thêm vào (AVATAR ở S2-03). */

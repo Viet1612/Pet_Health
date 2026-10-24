@@ -5,7 +5,7 @@
 | Task | [S4-02](../tasks/S4-02-complete-undo-api.md) |
 | Trạng thái | Xong, đã gọi thử trên server dev |
 | Ngày hoàn thành | 2026-10-25 |
-| Commit | xem [README](README.md) |
+| Commit | `81fce8a` |
 
 ## Kết quả
 

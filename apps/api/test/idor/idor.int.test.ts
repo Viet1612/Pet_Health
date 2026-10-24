@@ -60,6 +60,7 @@ const stubDeps = {
   media: {},
   healthRecords: {},
   scheduling: {},
+  notifications: {},
 } as unknown as ModuleDeps;
 
 async function collectRoutes(
@@ -117,6 +118,7 @@ beforeAll(async () => {
     pets: { clock },
     healthRecords: { clock },
     scheduling: { clock },
+    notifications: { clock },
     media: {
       storage: new LocalDiskStorage(mediaRoot),
       jobQueue: fakeJobQueue,

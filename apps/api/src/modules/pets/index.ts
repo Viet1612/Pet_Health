@@ -43,6 +43,8 @@ export interface PetQueryPort {
   ): Promise<{ id: string; name: string; weightTargetKg: string | null } | null>;
   /** Múi giờ IANA của tài khoản (tính "hôm nay"). */
   ownerTimezone(trx: Trx, ownerId: string): Promise<string | undefined>;
+  /** Tên thú cưng theo id (thông báo, dashboard). */
+  getNames(trx: Trx, ownerId: string, ids: string[]): Promise<Map<string, string>>;
 }
 
 export const petQuery: PetQueryPort = {
@@ -51,6 +53,16 @@ export const petQuery: PetQueryPort = {
     return row ? { id: row.id, name: row.name, weightTargetKg: row.weight_target_kg } : null;
   },
   ownerTimezone: (trx, ownerId) => kyselyPetRepository.ownerTimezone(trx, ownerId),
+  async getNames(trx, ownerId, ids) {
+    if (ids.length === 0) return new Map();
+    const rows = await trx
+      .selectFrom('pets')
+      .select(['id', 'name'])
+      .where('owner_id', '=', ownerId)
+      .where('id', 'in', ids)
+      .execute();
+    return new Map(rows.map((r) => [r.id, r.name]));
+  },
 };
 
 /** `TargetResolver` cho ảnh đại diện (đăng ký vào worker ảnh). */
