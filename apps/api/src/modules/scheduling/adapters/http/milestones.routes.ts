@@ -3,10 +3,12 @@ import { z } from 'zod';
 
 import { runIdempotent, sendIdempotent } from '../../../../platform/idempotency/run-idempotent.js';
 import { cancelMilestone } from '../../application/cancel-milestone.js';
+import { completeMilestone } from '../../application/complete-milestone.js';
 import { createMilestone } from '../../application/create-milestone.js';
 import { getMilestoneDetail } from '../../application/get-detail.js';
 import { listMilestonesByPet } from '../../application/list-by-pet.js';
 import type { SchedulingAppDeps } from '../../application/ports.js';
+import { undoCompleteMilestone } from '../../application/undo-complete-milestone.js';
 import { updateMilestone } from '../../application/update-milestone.js';
 import {
   ownerOf,
@@ -120,6 +122,49 @@ export const milestonesRoutes: FastifyPluginAsyncZod<SchedulingAppDeps> = (app, 
       const ownerId = ownerOf(req);
       const id = uuidOf(req.params.id);
       return req.withTx((trx) => cancelMilestone(deps, trx, ownerId, id));
+    },
+  );
+
+  app.post(
+    '/milestones/:id/complete',
+    {
+      schema: {
+        tags: ['milestones'],
+        summary: 'Đánh dấu đã thực hiện (tạo mốc kế tiếp, hoàn tác được trong 15 s)',
+        description: 'Idempotent theo `doneOn`: gọi lại cùng ngày trả cùng kết quả.',
+        params: zIdParams,
+        body: z.object({ doneOn: z.string().describe('YYYY-MM-DD, không sau hôm nay') }),
+        response: {
+          200: z.object({
+            milestone: zMilestone,
+            nextMilestone: zMilestone.nullable(),
+            resolvedNotificationIds: z.array(z.uuid()),
+            undoExpiresAt: z.iso.datetime(),
+          }),
+        },
+      },
+    },
+    async (req) => {
+      const ownerId = ownerOf(req);
+      const id = uuidOf(req.params.id);
+      return req.withTx((trx) => completeMilestone(deps, trx, ownerId, id, req.body.doneOn));
+    },
+  );
+
+  app.post(
+    '/milestones/:id/undo-complete',
+    {
+      schema: {
+        tags: ['milestones'],
+        summary: 'Hoàn tác "đã thực hiện" (trong 15 s)',
+        params: zIdParams,
+        response: { 200: z.object({ milestone: zMilestone }) },
+      },
+    },
+    async (req) => {
+      const ownerId = ownerOf(req);
+      const id = uuidOf(req.params.id);
+      return req.withTx((trx) => undoCompleteMilestone(deps, trx, ownerId, id));
     },
   );
 

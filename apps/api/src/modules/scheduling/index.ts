@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
+import { noopAnalytics } from '../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../platform/clock/clock.js';
 import type { EventPublisher } from '../../platform/events/sync-event-bus.js';
 import { petQuery } from '../pets/index.js';
@@ -28,6 +29,7 @@ export async function registerSchedulingRoutes(
     milestones: milestoneRepository,
     events: wiring.events,
     notifications: wiring.notifications,
+    analytics: noopAnalytics,
   });
 }
 

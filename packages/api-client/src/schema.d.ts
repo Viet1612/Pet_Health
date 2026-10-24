@@ -1792,6 +1792,172 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/milestones/{id}/complete': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Đánh dấu đã thực hiện (tạo mốc kế tiếp, hoàn tác được trong 15 s)
+     * @description Idempotent theo `doneOn`: gọi lại cùng ngày trả cùng kết quả.
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description YYYY-MM-DD, không sau hôm nay */
+            doneOn: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              milestone: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                petId: string;
+                /** @enum {string} */
+                type: 'VACCINE' | 'FLEA' | 'DEWORM';
+                /** Format: date */
+                dueOn: string;
+                /** Format: date */
+                dueSetOn: string;
+                note: string | null;
+                cycleMonths: number | null;
+                /** @enum {string} */
+                status: 'PENDING' | 'DONE' | 'CANCELLED';
+                /** @enum {string} */
+                displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+                daysUntilDue: number | null;
+                doneOn: string | null;
+                /** @enum {string} */
+                origin: 'MANUAL' | 'AUTO';
+                previousId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              };
+              nextMilestone: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                petId: string;
+                /** @enum {string} */
+                type: 'VACCINE' | 'FLEA' | 'DEWORM';
+                /** Format: date */
+                dueOn: string;
+                /** Format: date */
+                dueSetOn: string;
+                note: string | null;
+                cycleMonths: number | null;
+                /** @enum {string} */
+                status: 'PENDING' | 'DONE' | 'CANCELLED';
+                /** @enum {string} */
+                displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+                daysUntilDue: number | null;
+                doneOn: string | null;
+                /** @enum {string} */
+                origin: 'MANUAL' | 'AUTO';
+                previousId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              } | null;
+              resolvedNotificationIds: string[];
+              /** Format: date-time */
+              undoExpiresAt: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/milestones/{id}/undo-complete': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Hoàn tác "đã thực hiện" (trong 15 s) */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              milestone: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                petId: string;
+                /** @enum {string} */
+                type: 'VACCINE' | 'FLEA' | 'DEWORM';
+                /** Format: date */
+                dueOn: string;
+                /** Format: date */
+                dueSetOn: string;
+                note: string | null;
+                cycleMonths: number | null;
+                /** @enum {string} */
+                status: 'PENDING' | 'DONE' | 'CANCELLED';
+                /** @enum {string} */
+                displayStatus: 'UPCOMING' | 'OVERDUE' | 'DONE' | 'CANCELLED';
+                daysUntilDue: number | null;
+                doneOn: string | null;
+                /** @enum {string} */
+                origin: 'MANUAL' | 'AUTO';
+                previousId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+              };
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {

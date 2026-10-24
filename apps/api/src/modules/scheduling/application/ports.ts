@@ -1,5 +1,6 @@
 import type { Insertable, Kysely, Selectable, Transaction, Updateable } from 'kysely';
 
+import type { AnalyticsPort } from '../../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../../platform/clock/clock.js';
 import type { Milestones } from '../../../platform/db/database.types.js';
 import type { Database } from '../../../platform/db/kysely.js';
@@ -55,7 +56,14 @@ export interface NotificationQueryPort {
     ownerId: string,
     milestoneId: string,
   ): Promise<
-    { level: string; dueOnSnapshot: string; readAt: Date | null; resolvedAt: Date | null }[]
+    {
+      id: string;
+      level: string;
+      dueOnSnapshot: string;
+      readAt: Date | null;
+      resolvedAt: Date | null;
+      resolution: string | null;
+    }[]
   >;
 }
 
@@ -65,4 +73,5 @@ export interface SchedulingAppDeps {
   milestones: MilestoneRepository;
   events: EventPublisher<MilestoneEvent>;
   notifications: NotificationQueryPort;
+  analytics: AnalyticsPort;
 }
