@@ -23,5 +23,7 @@ export const dashboardQuery = (filter: DashboardFilter) =>
     queryFn: async (): Promise<DashboardData> =>
       unwrap(await api.GET('/dashboard', { params: { query: { pet: filter } } })),
     staleTime: 5_000,
+    // Giữ dữ liệu từng bộ lọc 10 phút: quay lại thú cưng vừa xem hiện ngay rồi làm mới ngầm.
+    gcTime: 10 * 60_000,
     refetchOnWindowFocus: true,
   });

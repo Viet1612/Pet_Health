@@ -1,5 +1,5 @@
 import { ApiError } from '@ph/api-client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { PawPrint } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -88,7 +88,8 @@ function DashboardEmpty({ emailVerified }: { emailVerified: boolean }) {
  */
 export function DashboardScreen({ timezoneToday }: { timezoneToday: string }) {
   const filter = useDashboardFilter();
-  const query = useQuery(dashboardQuery(filter));
+  // Đổi bộ lọc: giữ nội dung cũ (làm mờ) trong lúc tải, không nháy về skeleton.
+  const query = useQuery({ ...dashboardQuery(filter), placeholderData: keepPreviousData });
   const queryClient = useQueryClient();
   const toast = useToast();
   const [pending, setPending] = useState<{ action: Action; pet?: Pet } | null>(null);
@@ -142,8 +143,10 @@ export function DashboardScreen({ timezoneToday }: { timezoneToday: string }) {
   return (
     <>
       <div
+        aria-busy={query.isPlaceholderData || undefined}
         className={cx(
-          'grid items-start gap-4 md:grid-cols-[3fr_2fr]',
+          'grid items-start gap-4 transition-opacity md:grid-cols-[3fr_2fr]',
+          query.isPlaceholderData && 'pointer-events-none opacity-60',
           hasTop
             ? "md:[grid-template-areas:'top_top'_'weight_routines'_'milestones_routines']"
             : "md:[grid-template-areas:'weight_routines'_'milestones_routines']",
