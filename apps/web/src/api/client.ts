@@ -21,7 +21,8 @@ export const api = createApiClient({
   baseUrl: '/api/v1',
   getCsrfToken: () => csrfToken,
   onUnauthorized: (problem: Problem, request) => {
-    if (IGNORE_401.has(request.path)) return;
+    // Sai mật khẩu hiện tại ở /me/* là lỗi của form, không phải phiên hết hạn (S6-01).
+    if (IGNORE_401.has(request.path) || problem.code === 'WRONG_PASSWORD') return;
     window.dispatchEvent(new CustomEvent(SESSION_EXPIRED_EVENT, { detail: problem }));
   },
 });

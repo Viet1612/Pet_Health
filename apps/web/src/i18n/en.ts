@@ -486,6 +486,64 @@ export const en: Messages = {
     languageHint: 'Applies to the app on this device.',
     localeNames: { vi: 'Tiếng Việt', en: 'English' },
     languageChanged: 'Language changed',
+    groups: {
+      account: 'Account',
+      time: 'Time',
+      security: 'Security',
+      danger: 'Danger zone',
+    },
+    email: 'Email',
+    emailLine: (email: string, verified: boolean) =>
+      `${email} · ${verified ? 'verified' : 'not verified'}`,
+    pendingEmail: (email: string) => `Waiting for verification: ${email}`,
+    changeEmail: 'Change email',
+    timezone: 'Time zone',
+    timezoneLine: (label: string, now: string) => `${label} · now ${now}`,
+    changePassword: 'Change password',
+    logout: 'Log out',
+    deleteAccount: 'Delete account',
+    deleteHint: 'Permanently delete all pets, health records and photos',
+    version: (v: string) => `Pet Health · web version ${v}`,
+    emailDialog: {
+      title: 'Change email',
+      subtitle: 'The new email only takes effect after you verify it (link valid for 60 minutes)',
+      newEmail: 'New email',
+      password: 'Current password',
+      submit: 'Send verification link',
+      sent: (email: string) => `Verification link sent to ${email}`,
+    },
+    passwordDialog: {
+      title: 'Change password',
+      subtitle: "You'll be logged out on all other devices",
+      current: 'Current password',
+      next: 'New password',
+      nextHint: '8–128 characters',
+      submit: 'Change password',
+      done: 'Password changed',
+    },
+    timezoneDialog: {
+      title: 'Time zone',
+      search: 'Search city or time zone',
+      empty: 'No time zone found',
+    },
+    deleteDialog: {
+      title: 'Delete account permanently?',
+      body: (pets: number) =>
+        `All ${plural(pets, 'pet', 'pets')}, weights, health records, photos, schedules and reminders will be deleted right away and can't be recovered. You'll be logged out on all devices.`,
+      password: 'Enter your password to confirm',
+      submit: 'Delete account',
+    },
+    errors: {
+      wrongPassword: 'Incorrect password',
+      emailTaken: 'This email is already in use',
+      sameEmail: 'The new email is the same as the current one',
+      tooMany: (min: number) =>
+        `Too many attempts. Try again in ${plural(min, 'minute', 'minutes')}`,
+    },
+    menu: {
+      myPets: 'My pets',
+      timezone: (offset: string) => `Time zone ${offset}`,
+    },
   },
   quickAdd: {
     weight: 'Weight',
@@ -607,6 +665,7 @@ export const en: Messages = {
       locked: (min: number) =>
         `5 failed attempts. Please try again in ${plural(min, 'minute', 'minutes')}.`,
       expired: 'Your session has expired. Log in again to continue.',
+      accountDeleted: 'Your account has been deleted.',
     },
     register: {
       title: 'Create account',
@@ -640,6 +699,9 @@ export const en: Messages = {
       verifying: 'Verifying…',
       successTitle: 'Email verified',
       successBody: (email: string) => `You can recover your password through ${email} if needed.`,
+      changedTitle: 'Account email updated',
+      changedBody: (email: string) => `New sign-in email: ${email}`,
+      toSettings: 'Back to Settings',
       toHome: 'Go to Overview',
       expiredBody:
         'Verification links are valid for 24 hours and can be used once. Resend to get a new link.',

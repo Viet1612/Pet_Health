@@ -1,79 +1,9 @@
-import { Link, useRouterState } from '@tanstack/react-router';
-import { LogOut, Menu, Settings } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useRouterState } from '@tanstack/react-router';
 
 import { BellButton } from '../../features/notifications';
 import { PetSwitcher } from '../../features/pets';
-import { useLogoutAction } from '../../features/session';
-import { m } from '../../i18n';
+import { AccountMenu } from './AccountMenu';
 import { QuickAdd } from './QuickAdd';
-import { IconButton } from '../../ui/IconButton';
-
-/** Menu phone: Cài đặt, Đăng xuất. */
-function PhoneMenu() {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const logout = useLogoutAction();
-
-  useEffect(() => {
-    if (!open) return;
-    const close = (e: MouseEvent | KeyboardEvent) => {
-      if (
-        e instanceof KeyboardEvent ? e.key === 'Escape' : !ref.current?.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', close);
-    document.addEventListener('keydown', close);
-    return () => {
-      document.removeEventListener('mousedown', close);
-      document.removeEventListener('keydown', close);
-    };
-  }, [open]);
-
-  return (
-    <div ref={ref} className="relative md:hidden">
-      <IconButton
-        aria-label={m.topBar.menu}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        icon={<Menu size={24} />}
-        onClick={() => {
-          setOpen((v) => !v);
-        }}
-      />
-      {open && (
-        <div
-          role="menu"
-          className="border-divider bg-surface absolute top-12 right-0 z-50 min-w-48 rounded-md border py-1 shadow-lg"
-        >
-          <Link
-            to="/settings"
-            role="menuitem"
-            className="text-body hover:bg-surface-2 flex min-h-11 w-full items-center gap-3 px-4"
-            onClick={() => {
-              setOpen(false);
-            }}
-          >
-            <Settings size={20} aria-hidden />
-            {m.nav.settings}
-          </Link>
-          <button
-            type="button"
-            role="menuitem"
-            disabled={logout.isPending}
-            className="text-body hover:bg-surface-2 flex min-h-11 w-full items-center gap-3 px-4"
-            onClick={() => void logout.run()}
-          >
-            <LogOut size={20} aria-hidden />
-            {m.auth.logout}
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
 
 /**
  * CMP-03 (khung): phone = khe PetSwitcher · Chuông · "+" · Menu;
@@ -92,7 +22,7 @@ export function TopBar() {
       </div>
       <BellButton />
       <QuickAdd />
-      <PhoneMenu />
+      <AccountMenu />
     </header>
   );
 }

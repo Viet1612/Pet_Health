@@ -1,8 +1,9 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 
 import { cx } from './cx';
 
-export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
+/** React 19: `ref` là prop thường, đi qua `...rest` (AccountMenu trả focus về nút). */
+export interface IconButtonProps extends Omit<ComponentPropsWithRef<'button'>, 'children'> {
   /** Bắt buộc: nút chỉ có icon phải có tên đọc được (NFR-USA). */
   'aria-label': string;
   icon: ReactNode;

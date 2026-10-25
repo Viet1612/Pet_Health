@@ -24,7 +24,7 @@ const t = m.auth.verify;
 
 type VerifyState =
   | { kind: 'verifying' }
-  | { kind: 'success'; email: string }
+  | { kind: 'success'; email: string; changed: boolean }
   | { kind: 'problem'; problem: LinkProblemKind }
   | { kind: 'resend-only' };
 
@@ -53,8 +53,8 @@ function VerifyEmailPage() {
     if (!token || started.current) return;
     started.current = true;
     verify.mutate(token, {
-      onSuccess: ({ user }) => {
-        setState({ kind: 'success', email: user.email });
+      onSuccess: ({ user, purpose }) => {
+        setState({ kind: 'success', email: user.email, changed: purpose === 'CHANGE_EMAIL' });
       },
       onError: (err) => {
         setState({
@@ -120,9 +120,19 @@ function VerifyEmailPage() {
         >
           <CheckCircle2 size={32} />
         </div>
-        <h1 className="text-h1">{t.successTitle}</h1>
-        <p className="text-body text-text-muted">{t.successBody(state.email)}</p>
-        <div className="mt-2 w-full">{homeLink}</div>
+        <h1 className="text-h1">{state.changed ? t.changedTitle : t.successTitle}</h1>
+        <p className="text-body text-text-muted">
+          {state.changed ? t.changedBody(state.email) : t.successBody(state.email)}
+        </p>
+        <div className="mt-2 w-full">
+          {state.changed && loggedIn ? (
+            <Link to="/settings" className={buttonClassName('primary', true)}>
+              {t.toSettings}
+            </Link>
+          ) : (
+            homeLink
+          )}
+        </div>
       </div>
     );
   }

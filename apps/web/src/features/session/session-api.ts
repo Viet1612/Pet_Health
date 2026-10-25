@@ -129,7 +129,9 @@ export function useVerifyEmail() {
       unwrap(await api.POST('/auth/verify-email', { body: { token } })),
     onSuccess: ({ user }) => {
       queryClient.setQueryData<Session | null>(SESSION_KEY, (old) =>
-        old ? { ...old, user: { ...old.user, emailVerified: user.emailVerified } } : old,
+        old
+          ? { ...old, user: { ...old.user, email: user.email, emailVerified: user.emailVerified } }
+          : old,
       );
     },
   });

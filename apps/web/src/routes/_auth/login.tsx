@@ -25,11 +25,13 @@ const t = m.auth.login;
 interface LoginSearch {
   next?: string;
   expired?: 1;
+  /** Sau khi xóa tài khoản (S6-02). */
+  reason?: 'account-deleted';
 }
 
 /** SCR-01 · Đăng nhập (14:1772), sai mật khẩu (23:2828), tạm khóa (23:2868). */
 function LoginPage() {
-  const { next, expired } = Route.useSearch();
+  const { next, expired, reason } = Route.useSearch();
   const navigate = useNavigate();
   const toast = useToast();
   const login = useLogin();
@@ -86,6 +88,7 @@ function LoginPage() {
 
       <form noValidate onSubmit={(e) => void onSubmit(e)} className="flex flex-col gap-4">
         {expired === 1 && !error && !locked && <Alert tone="info">{t.expired}</Alert>}
+        {reason === 'account-deleted' && !error && <Alert tone="info">{t.accountDeleted}</Alert>}
         {error === 'invalid' && <Alert tone="danger">{t.invalid}</Alert>}
         {locked && (
           <Alert tone="warning">{t.locked(minutesFrom((lockedUntil - now) / 1000))}</Alert>
@@ -127,6 +130,7 @@ export const Route = createFileRoute('/_auth/login')({
   validateSearch: (search: Record<string, unknown>): LoginSearch => ({
     ...(typeof search.next === 'string' ? { next: search.next } : {}),
     ...(search.expired === 1 || search.expired === '1' ? { expired: 1 as const } : {}),
+    ...(search.reason === 'account-deleted' ? { reason: 'account-deleted' as const } : {}),
   }),
   staticData: { title: t.title },
   component: LoginPage,
