@@ -4,3 +4,6 @@ export { ProfileFormDialog } from './ProfileFormDialog';
 export { ProfileHeader, ProfileScreen } from './ProfileScreen';
 export { myProfileQuery, profileQuery, type MyProfile, type Profile } from './queries';
 export { UserAvatar } from './UserAvatar';
+export { ComposerScreen } from './ComposerScreen';
+export { PostDetailScreen } from './PostDetailScreen';
+export { postQuery } from './queries';

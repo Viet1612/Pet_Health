@@ -412,6 +412,10 @@ export const en: Messages = {
       ACCOUNT_LOCKED: 'Account temporarily locked after too many failed logins',
       EMAIL_TAKEN: 'This email is already in use',
       USERNAME_TAKEN: 'Username is already taken',
+      POST_LIMIT_REACHED: 'You have reached the limit of 30 posts today',
+      POST_ALREADY_PUBLISHED: 'This post is already published',
+      PHOTO_POSITION_TAKEN: 'This photo slot is already used',
+      LAST_PHOTO: 'A post needs at least one photo',
       USERNAME_CHANGE_TOO_SOON: 'You can only change your username once every 14 days',
       PROFILE_NOT_SET: "You haven't created a public profile yet",
       WRONG_PASSWORD: 'Current password is incorrect',
@@ -470,6 +474,8 @@ export const en: Messages = {
           return 'Value out of range';
         case 'USERNAME_INVALID':
           return 'Username must be 3–30 lowercase letters, digits, dots or underscores';
+        case 'PET_NOT_OWNED':
+          return "That pet isn't yours";
         case 'USERNAME_RESERVED':
           return "This username isn't available";
         case 'USERNAME_TAKEN':
@@ -574,6 +580,7 @@ export const en: Messages = {
     visit: 'Vet visit',
     milestone: 'Health milestone',
     routine: 'Daily task',
+    post: 'Post',
     noPet: 'Add a pet first',
   },
   pets: {
@@ -689,6 +696,51 @@ export const en: Messages = {
     toMyProfile: 'View my profile',
     notFound: 'Profile not found',
     avatarAlt: (name: string) => `${name}'s profile photo`,
+    composer: {
+      title: 'New post',
+      cancel: 'Cancel',
+      next: 'Next',
+      publish: 'Share',
+      newPost: 'New post',
+      choose: 'Choose photos',
+      hint: 'Up to 5 photos · JPG, PNG, HEIC · max 5 MB each',
+      maxPhotos: 'Up to 5 photos',
+      needPhoto: 'Choose at least 1 photo',
+      moveBack: (i: number) => `Move photo ${String(i)} earlier`,
+      moveForward: (i: number) => `Move photo ${String(i)} later`,
+      remove: (i: number) => `Remove photo ${String(i)}`,
+      caption: 'Caption',
+      tagPets: 'Tag pets (optional)',
+      tagLimit: 'Tag up to 5 pets',
+      progress: (done: number, total: number) => `${String(done)} of ${String(total)} photos done`,
+      uploading: (pct: number) => `${String(pct)}%`,
+      processing: 'Processing',
+      failed: 'Failed',
+      retry: 'Retry',
+      dropFailed: 'Remove failed photos and share',
+      posted: 'Posted',
+      reselect: 'Your caption was restored. Choose the photos again to share.',
+    },
+    post: {
+      menu: 'Post options',
+      edit: 'Edit post',
+      delete: 'Delete post',
+      deleteTitle: 'Delete this post?',
+      deleteBody: 'The photos and caption will be permanently deleted.',
+      deleted: 'Post deleted',
+      save: 'Save',
+      saved: 'Saved',
+      notFound: 'This post is no longer available',
+      processing: 'Processing',
+      photo: (i: number, n: number) => `Photo ${String(i)} of ${String(n)}`,
+      prev: 'Previous photo',
+      next: 'Next photo',
+      multi: 'Multiple photos',
+      open: (i: number) => `Open post ${String(i)}`,
+      grid: 'Posts',
+      pets: 'Pets in this post',
+      titleOf: (name: string) => `Post by ${name}`,
+    },
     complete: {
       title: 'Complete your account',
       lead: "Your account doesn't have a nickname or date of birth yet. Add them to continue.",

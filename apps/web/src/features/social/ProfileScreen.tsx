@@ -9,6 +9,7 @@ import { EmptyState } from '../../ui/EmptyState';
 import { ErrorState } from '../../ui/ErrorState';
 import { Skeleton } from '../../ui/Skeleton';
 import { ProfileFormDialog } from './ProfileFormDialog';
+import { ProfileGrid } from './ProfileGrid';
 import { myProfileQuery, profileQuery, type Profile } from './queries';
 import { UserAvatar } from './UserAvatar';
 
@@ -49,7 +50,7 @@ export function ProfileHeader({ profile, onEdit }: { profile: Profile; onEdit?: 
   );
 }
 
-/** SCR hồ sơ công khai `/u/{username}`. Lưới ảnh có ở F-05. */
+/** SCR hồ sơ công khai `/u/{username}`: đầu hồ sơ + lưới bài 3 cột (F-06). */
 export function ProfileScreen({ username }: { username: string }) {
   const profile = useQuery(profileQuery(username));
   const mine = useQuery({ ...myProfileQuery, enabled: profile.data?.isMe === true });
@@ -77,9 +78,7 @@ export function ProfileScreen({ username }: { username: string }) {
           setEditing(true);
         }}
       />
-      {profile.data.postCount === 0 && (
-        <p className="text-body text-text-muted py-8 text-center">{t.noPosts}</p>
-      )}
+      <ProfileGrid username={profile.data.username} />
       {editing && mine.data && (
         <ProfileFormDialog
           profile={mine.data}

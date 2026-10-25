@@ -102,9 +102,11 @@ export const postRepository = {
 
   /**
    * Bài nháp đủ ảnh READY → `PUBLISHED`. Gọi sau mỗi lần ảnh READY hoặc bỏ ảnh lỗi; trả `true` nếu
-   * vừa chuyển trạng thái.
+   * vừa chuyển trạng thái. Khóa dòng bài trước rồi mới đếm (câu lệnh sau, snapshot mới): hai ảnh
+   * xử lý song song thì transaction sau chờ transaction trước commit và thấy cả hai ảnh READY.
    */
   async publishIfComplete(trx: Trx, id: string, now: Date): Promise<boolean> {
+    await trx.selectFrom('posts').select('id').where('id', '=', id).forUpdate().execute();
     const res = await sql<{ id: string }>`
       UPDATE posts p SET status = 'PUBLISHED', published_at = ${now}, created_at = ${now},
                          updated_at = ${now}

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Newspaper, UserRound } from 'lucide-react';
+import { Newspaper, Plus, UserRound } from 'lucide-react';
 import { useState } from 'react';
 
 import { m } from '../../i18n';
@@ -59,19 +59,28 @@ export function FeedScreen() {
   }
 
   return (
-    <EmptyState
-      icon={<Newspaper size={32} />}
-      title={t.feedTitle}
-      description={t.feedSoon}
-      action={
-        <Link
-          to="/u/$username"
-          params={{ username: profile.data.username }}
-          className={buttonClassName('secondary')}
-        >
-          {t.toMyProfile}
+    <div className="mx-auto flex w-full max-w-[760px] flex-col gap-4">
+      <div className="flex items-center justify-between gap-2">
+        <h1 className="text-h1">{t.feedTitle}</h1>
+        <Link to="/feed/new" className={buttonClassName('primary')}>
+          <Plus size={20} aria-hidden />
+          {t.composer.newPost}
         </Link>
-      }
-    />
+      </div>
+      <EmptyState
+        icon={<Newspaper size={32} />}
+        title={t.feedTitle}
+        description={t.feedSoon}
+        action={
+          <Link
+            to="/u/$username"
+            params={{ username: profile.data.username }}
+            className={buttonClassName('secondary')}
+          >
+            {t.toMyProfile}
+          </Link>
+        }
+      />
+    </div>
   );
 }

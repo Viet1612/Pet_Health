@@ -1,5 +1,10 @@
 import { ApiError, type paths } from '@ph/api-client';
-import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  infiniteQueryOptions,
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { api, unwrap } from '../../api/client';
 import { SESSION_KEY } from '../session';
@@ -75,6 +80,65 @@ export function useUpdatePersonal() {
         queryClient.invalidateQueries({ queryKey: SESSION_KEY }),
         queryClient.invalidateQueries({ queryKey: ME_KEY }),
       ]);
+    },
+  });
+}
+
+export type Post =
+  paths['/posts/{id}']['get']['responses'][200]['content']['application/json']['post'];
+export type GridItem =
+  paths['/profiles/{username}/posts']['get']['responses'][200]['content']['application/json']['items'][number];
+
+export const POST_KEY = ['social', 'post'] as const;
+export const GRID_KEY = ['social', 'grid'] as const;
+
+export const postQuery = (id: string) =>
+  queryOptions({
+    queryKey: [...POST_KEY, id],
+    queryFn: async (): Promise<Post> =>
+      unwrap(await api.GET('/posts/{id}', { params: { path: { id } } })).post,
+    staleTime: 30_000,
+  });
+
+/** Lưới hồ sơ: 18 bài/trang, cuộn tới cuối tải trang kế. */
+export const profilePostsQuery = (username: string) =>
+  infiniteQueryOptions({
+    queryKey: [...GRID_KEY, username.toLowerCase()],
+    queryFn: async ({ pageParam }) =>
+      unwrap(
+        await api.GET('/profiles/{username}/posts', {
+          params: {
+            path: { username },
+            query: pageParam ? { cursor: pageParam } : {},
+          },
+        }),
+      ),
+    initialPageParam: '',
+    getNextPageParam: (last) => last.nextCursor ?? undefined,
+    staleTime: 30_000,
+  });
+
+export function useUpdatePost(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (body: { caption: string | null; petIds: string[] }) =>
+      unwrap(await api.PATCH('/posts/{id}', { params: { path: { id } }, body })).post,
+    onSuccess: (post) => {
+      queryClient.setQueryData([...POST_KEY, id], post);
+    },
+  });
+}
+
+export function useDeletePost(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      await api.DELETE('/posts/{id}', { params: { path: { id } } });
+    },
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: [...POST_KEY, id] });
+      void queryClient.invalidateQueries({ queryKey: GRID_KEY });
+      void queryClient.invalidateQueries({ queryKey: PROFILE_KEY });
     },
   });
 }

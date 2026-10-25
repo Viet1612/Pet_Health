@@ -96,3 +96,17 @@ export function formatSignedTenths(tenths: number, loc: Locale = locale): string
   if (tenths < 0) return `${MINUS}${body}`;
   return body;
 }
+
+/**
+ * Thời gian tương đối cho bài đăng (F-06): "3 giờ trước" / "3 hours ago"; quá 7 ngày → ngày tháng.
+ */
+export function formatRelative(iso: string, now = Date.now(), loc: Locale = locale): string {
+  const diffSec = Math.round((new Date(iso).getTime() - now) / 1000);
+  const abs = Math.abs(diffSec);
+  const rtf = new Intl.RelativeTimeFormat(loc, { numeric: 'auto' });
+  if (abs < 60) return rtf.format(0, 'second');
+  if (abs < 3600) return rtf.format(Math.round(diffSec / 60), 'minute');
+  if (abs < 86_400) return rtf.format(Math.round(diffSec / 3600), 'hour');
+  if (abs < 7 * 86_400) return rtf.format(Math.round(diffSec / 86_400), 'day');
+  return formatDate(iso.slice(0, 10), loc);
+}

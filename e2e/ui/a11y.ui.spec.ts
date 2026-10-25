@@ -3,6 +3,9 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
+import { readFileSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
+
 import { ApiSession, PASSWORD, resetClock, setClock, vn } from '../support/api';
 import { ORIGIN } from '../support/env';
 
@@ -114,5 +117,54 @@ test('axe + vùng chạm trên các màn chính', async ({ page }) => {
   await check('/pets/new', heading('Thêm thú cưng'));
   await check(`/pets/${petId}/visits/new`, visible('Triệu chứng'));
 
+  expect(problems, problems.join('\n')).toEqual([]);
+});
+
+test('axe + vùng chạm trên các màn bản tin (F-05, F-06)', async ({ page }) => {
+  const s = await ApiSession.register();
+  const username = `e2e_${randomUUID().slice(0, 8)}`;
+  await s.call('PUT', '/me/profile', { username, displayName: 'Mẹ Mochi', bio: 'Yêu chó' });
+  const petId = await s.createPet('Mochi');
+  const created = await s.call(
+    'POST',
+    '/posts',
+    { caption: 'Mochi đi dạo @abc', petIds: [petId], photoCount: 2 },
+    { idempotent: true },
+  );
+  const postId = created.body.id as string;
+  const file = {
+    name: 'photo.jpg',
+    mimeType: 'image/jpeg',
+    buffer: readFileSync(new URL('../fixtures/photo.jpg', import.meta.url)),
+  };
+  for (const position of [0, 1]) {
+    await s.upload('POST', `/posts/${postId}/photos?position=${String(position)}`, file);
+  }
+  await expect
+    .poll(async () => (await s.call('GET', `/posts/${postId}`)).body.post.status, {
+      timeout: 20_000,
+    })
+    .toBe('PUBLISHED');
+  await s.dispose();
+
+  await page.goto(`${ORIGIN}/login`);
+  await page.getByLabel('Email').fill(s.email);
+  await page.getByLabel('Mật khẩu', { exact: true }).fill(PASSWORD);
+  await page.getByRole('button', { name: 'Đăng nhập' }).click();
+  await expect(page).toHaveURL(`${ORIGIN}/`);
+
+  const problems: string[] = [];
+  const check = async (path: string, name: string) => {
+    await page.goto(`${ORIGIN}${path}`);
+    await expect(page.getByRole('heading', { name, level: 1 })).toBeAttached({ timeout: 15_000 });
+    for (const v of await axeViolations(page)) problems.push(`[axe ${path}] ${v}`);
+    if ((page.viewportSize()?.width ?? 0) < 768) {
+      for (const t of await smallTargets(page)) problems.push(`[44px ${path}] ${t}`);
+    }
+  };
+  await check('/feed', 'Bản tin');
+  await check('/feed/new', 'Bài mới');
+  await check(`/u/${username}`, 'Mẹ Mochi');
+  await check(`/p/${postId}`, 'Bài của Mẹ Mochi');
   expect(problems, problems.join('\n')).toEqual([]);
 });

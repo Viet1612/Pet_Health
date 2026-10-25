@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
-import { CalendarClock, ListChecks, NotebookPen, Plus, Scale } from 'lucide-react';
+import { CalendarClock, ImagePlus, ListChecks, NotebookPen, Plus, Scale } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 import { MilestoneFormDialog } from '../../features/milestones';
@@ -123,6 +123,18 @@ export function QuickAdd() {
           {item('visit', <NotebookPen size={20} aria-hidden />, m.quickAdd.visit)}
           {item('milestone', <CalendarClock size={20} aria-hidden />, m.quickAdd.milestone)}
           {item('routine', <ListChecks size={20} aria-hidden />, m.quickAdd.routine)}
+          <button
+            type="button"
+            role="menuitem"
+            className="text-body hover:bg-surface-2 border-divider flex min-h-11 w-full items-center gap-3 border-t px-4"
+            onClick={() => {
+              setMenuOpen(false);
+              void navigate({ to: '/feed/new' });
+            }}
+          >
+            <ImagePlus size={20} aria-hidden />
+            {m.quickAdd.post}
+          </button>
         </div>
       )}
 
