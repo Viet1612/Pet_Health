@@ -6,7 +6,11 @@ import { useEffect, useState } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
 import { m } from '../../i18n';
-import { setDashboardFilter, useDashboardFilter } from '../../lib/dashboard-filter';
+import {
+  registerDashboardPrefetch,
+  setDashboardFilter,
+  useDashboardFilter,
+} from '../../lib/dashboard-filter';
 import { buttonClassName } from '../../ui/Button';
 import { Card } from '../../ui/Card';
 import { cx } from '../../ui/cx';
@@ -94,6 +98,14 @@ export function DashboardScreen({ timezoneToday }: { timezoneToday: string }) {
   const toast = useToast();
   const [pending, setPending] = useState<{ action: Action; pet?: Pet } | null>(null);
   const [completing, setCompleting] = useState<MilestoneDetailData | null>(null);
+
+  useEffect(
+    () =>
+      registerDashboardPrefetch((filters) => {
+        for (const f of filters) void queryClient.query(dashboardQuery(f)).catch(() => undefined);
+      }),
+    [queryClient],
+  );
 
   // Thú cưng đã bị xóa ở thiết bị khác → về "Tất cả".
   const gone = query.error instanceof ApiError && query.error.status === 404;

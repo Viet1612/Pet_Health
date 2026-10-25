@@ -3,7 +3,11 @@ import { Check, ChevronDown, LayoutGrid, Plus } from 'lucide-react';
 import { useRef, useState, type KeyboardEvent } from 'react';
 
 import { m } from '../../i18n';
-import { setDashboardFilter, useDashboardFilter } from '../../lib/dashboard-filter';
+import {
+  prefetchDashboard,
+  setDashboardFilter,
+  useDashboardFilter,
+} from '../../lib/dashboard-filter';
 import { buttonClassName } from '../../ui/Button';
 import { cx } from '../../ui/cx';
 import { ResponsiveDialog } from '../../ui/ResponsiveDialog';
@@ -98,6 +102,8 @@ export function PetSwitcher() {
         aria-label={t.switcher.open(allSelected ? m.dashboard.all : current.name)}
         onClick={() => {
           const index = Math.max(0, options.indexOf(selectedId));
+          // Ở Dashboard: tải trước dữ liệu các lựa chọn khác để chọn là hiện ngay.
+          if (onDashboard) prefetchDashboard(options.filter((o) => o !== selectedId));
           setActive(index);
           setOpen(true);
           requestAnimationFrame(() => optionRefs.current[index]?.focus());

@@ -41,3 +41,18 @@ function subscribe(listener: () => void): () => void {
 export function useDashboardFilter(): DashboardFilter {
   return useSyncExternalStore(subscribe, getDashboardFilter, () => 'all');
 }
+
+// Dashboard đăng ký hàm tải trước; PetSwitcher gọi khi mở sheet để đổi bộ lọc hiện ngay
+// (lib không phụ thuộc feature nào).
+let prefetcher: ((filters: DashboardFilter[]) => void) | null = null;
+
+export function registerDashboardPrefetch(fn: (filters: DashboardFilter[]) => void): () => void {
+  prefetcher = fn;
+  return () => {
+    if (prefetcher === fn) prefetcher = null;
+  };
+}
+
+export function prefetchDashboard(filters: DashboardFilter[]): void {
+  prefetcher?.(filters);
+}
