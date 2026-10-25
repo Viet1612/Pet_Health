@@ -1,8 +1,9 @@
 import { Link, useRouter, useRouterState } from '@tanstack/react-router';
-import { Check, ChevronDown, Plus } from 'lucide-react';
+import { Check, ChevronDown, LayoutGrid, Plus } from 'lucide-react';
 import { useRef, useState, type KeyboardEvent } from 'react';
 
 import { m } from '../../i18n';
+import { setDashboardFilter, useDashboardFilter } from '../../lib/dashboard-filter';
 import { buttonClassName } from '../../ui/Button';
 import { cx } from '../../ui/cx';
 import { ResponsiveDialog } from '../../ui/ResponsiveDialog';
@@ -12,9 +13,13 @@ import { useSelectedPet } from './use-selected-pet';
 
 const t = m.pets;
 
+/** Một lựa chọn trong sheet: một thú cưng, hoặc "Tất cả" (chỉ ở Dashboard, US-061). */
+const ALL = 'all';
+
 /**
  * CMP-04 PetSwitcher (21:2115): nút trong TopBar mở sheet chọn thú cưng. Đổi thú cưng trên route
- * có `:petId` → sang cùng route của con mới. 0 thú cưng → nút "+ Thêm thú cưng".
+ * có `:petId` → sang cùng route của con mới. 0 thú cưng → nút "+ Thêm thú cưng". Ở Dashboard có
+ * thêm "Tất cả" và lựa chọn đồng bộ với bộ lọc Dashboard.
  */
 export function PetSwitcher() {
   const { pets, selected, select } = useSelectedPet();
@@ -29,6 +34,8 @@ export function PetSwitcher() {
     },
   });
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const filter = useDashboardFilter();
+  const onDashboard = pathname === '/';
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
@@ -45,17 +52,26 @@ export function PetSwitcher() {
   const current = selected ?? pets[0];
   if (!current) return null;
   const full = pets.length >= PET_LIMIT;
+  const showAll = onDashboard && pets.length > 1;
+  const allSelected = showAll && filter === ALL;
+  const options = showAll ? [ALL, ...pets.map((p) => p.id)] : pets.map((p) => p.id);
+  const selectedId = allSelected ? ALL : current.id;
 
-  const choose = (petId: string) => {
-    select(petId);
+  const choose = (id: string) => {
     setOpen(false);
-    if (routePetId && routePetId !== petId) {
-      router.history.push(pathname.replace(routePetId, petId));
+    if (id === ALL) {
+      setDashboardFilter(ALL);
+      return;
+    }
+    select(id);
+    setDashboardFilter(id);
+    if (routePetId && routePetId !== id) {
+      router.history.push(pathname.replace(routePetId, id));
     }
   };
 
   const focusOption = (index: number) => {
-    const next = (index + pets.length) % pets.length;
+    const next = (index + options.length) % options.length;
     setActive(next);
     optionRefs.current[next]?.focus();
   };
@@ -69,8 +85,8 @@ export function PetSwitcher() {
       focusOption(active - 1);
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      const pet = pets[active];
-      if (pet) choose(pet.id);
+      const id = options[active];
+      if (id) choose(id);
     }
   };
 
@@ -79,20 +95,23 @@ export function PetSwitcher() {
       <button
         type="button"
         aria-haspopup="listbox"
-        aria-label={t.switcher.open(current.name)}
+        aria-label={t.switcher.open(allSelected ? m.dashboard.all : current.name)}
         onClick={() => {
-          const index = Math.max(
-            0,
-            pets.findIndex((p) => p.id === current.id),
-          );
+          const index = Math.max(0, options.indexOf(selectedId));
           setActive(index);
           setOpen(true);
           requestAnimationFrame(() => optionRefs.current[index]?.focus());
         }}
         className="hover:bg-surface-2 flex min-h-11 max-w-full min-w-0 items-center gap-2 rounded-full px-2"
       >
-        <PetAvatar pet={current} size={24} />
-        <span className="text-body min-w-0 truncate font-semibold">{current.name}</span>
+        {allSelected ? (
+          <LayoutGrid size={22} aria-hidden className="shrink-0" />
+        ) : (
+          <PetAvatar pet={current} size={24} />
+        )}
+        <span className="text-body min-w-0 truncate font-semibold">
+          {allSelected ? m.dashboard.all : current.name}
+        </span>
         <ChevronDown size={18} aria-hidden className="shrink-0" />
       </button>
 
@@ -110,8 +129,35 @@ export function PetSwitcher() {
           onKeyDown={onKeyDown}
           className="flex flex-col gap-1"
         >
-          {pets.map((pet, index) => {
-            const isSelected = pet.id === current.id;
+          {showAll && (
+            <li
+              ref={(el) => {
+                optionRefs.current[0] = el;
+              }}
+              role="option"
+              aria-selected={allSelected}
+              tabIndex={active === 0 ? 0 : -1}
+              onClick={() => {
+                choose(ALL);
+              }}
+              className={cx(
+                'flex min-h-14 cursor-pointer items-center gap-3 rounded-md px-3 py-2',
+                allSelected ? 'bg-primary-soft' : 'hover:bg-surface-2',
+              )}
+            >
+              <span
+                aria-hidden
+                className="bg-surface-2 flex size-8 shrink-0 items-center justify-center rounded-full"
+              >
+                <LayoutGrid size={18} />
+              </span>
+              <span className="text-body min-w-0 flex-1 font-semibold">{m.dashboard.all}</span>
+              {allSelected && <Check size={20} aria-hidden className="text-primary shrink-0" />}
+            </li>
+          )}
+          {pets.map((pet, i) => {
+            const index = showAll ? i + 1 : i;
+            const isSelected = !allSelected && pet.id === current.id;
             return (
               <li
                 key={pet.id}

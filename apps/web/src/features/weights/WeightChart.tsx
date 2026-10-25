@@ -7,12 +7,20 @@ import type { ChartData } from './chart-data';
 const WeightChartImpl = lazy(() => import('./WeightChartImpl'));
 
 /** CMP-22 biểu đồ cân nặng; skeleton kích thước cố định khi đang tải (tránh CLS). */
-export function WeightChart(props: { data: ChartData; target: number | null; caption: string }) {
+export function WeightChart(props: {
+  data: ChartData;
+  target: number | null;
+  caption: string;
+  compact?: boolean;
+}) {
   return (
     <Suspense
       fallback={
         <div aria-busy="true">
-          <Skeleton shape="chart" className="h-[260px] md:h-[340px]" />
+          <Skeleton
+            shape="chart"
+            className={props.compact ? 'h-[140px]' : 'h-[260px] md:h-[340px]'}
+          />
         </div>
       }
     >

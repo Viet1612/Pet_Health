@@ -12,7 +12,7 @@ import {
 
 import { m } from '../../i18n';
 import { cx } from '../../ui/cx';
-import { dueLine, milestoneTitle, statusChip, type ChipTone } from './format';
+import { dueLine, milestoneTitle, statusChip, type ChipInput, type ChipTone } from './format';
 import type { Milestone, MilestoneType } from './queries';
 
 const TYPE_ICON = { VACCINE: Syringe, FLEA: Droplet, DEWORM: Pill } as const;
@@ -49,7 +49,7 @@ const TONE_ICON: Record<ChipTone, typeof Clock> = {
 };
 
 /** StatusChip: luôn có icon + chữ (không chỉ dựa vào màu). */
-export function StatusChip({ milestone }: { milestone: Milestone }) {
+export function StatusChip({ milestone }: { milestone: ChipInput }) {
   const { tone, label } = statusChip(milestone);
   const Icon = TONE_ICON[tone];
   return (

@@ -20,9 +20,16 @@ export interface WeightChartImplProps {
   /** Mục tiêu (kg, số) hoặc null. */
   target: number | null;
   caption: string;
+  /** Bản thu gọn cho Dashboard: cao 120 px. */
+  compact?: boolean;
 }
 
-export default function WeightChartImpl({ data, target, caption }: WeightChartImplProps) {
+export default function WeightChartImpl({
+  data,
+  target,
+  caption,
+  compact = false,
+}: WeightChartImplProps) {
   const boxRef = useRef<HTMLDivElement>(null);
   const plotRef = useRef<uPlot | null>(null);
   const [active, setActive] = useState<number | null>(null);
@@ -34,7 +41,7 @@ export default function WeightChartImpl({ data, target, caption }: WeightChartIm
     const primary = cssVar('--primary');
     const muted = cssVar('--text-muted');
     const divider = cssVar('--divider');
-    const heightFor = () => (window.innerWidth >= 768 ? 320 : 240);
+    const heightFor = () => (compact ? 120 : window.innerWidth >= 768 ? 320 : 240);
 
     const xs = points.map((p) => p.x);
     const ys = points.map((p) => p.y);
@@ -103,7 +110,7 @@ export default function WeightChartImpl({ data, target, caption }: WeightChartIm
       plot.destroy();
       plotRef.current = null;
     };
-  }, [points, target, data.start, data.end]);
+  }, [points, target, data.start, data.end, compact]);
 
   /** ←/→ trên figure đang focus: di chuyển tooltip giữa các điểm. */
   const onKeyDown = (e: KeyboardEvent<HTMLElement>) => {

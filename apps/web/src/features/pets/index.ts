@@ -4,6 +4,7 @@ export { formatLocalDate, initialOf, matchesConfirmName, petSubline, sexLabel } 
 export { PetAvatar } from './PetAvatar';
 export { PetCard } from './PetCard';
 export { PetForm } from './PetForm';
+export { PetPickDialog } from './PetPickDialog';
 export { PetSwitcher } from './PetSwitcher';
 export {
   PET_LIMIT,

@@ -279,6 +279,46 @@ export const vi = {
     },
     notPending: 'Mốc đã được thực hiện hoặc đã hủy',
   },
+  dashboard: {
+    all: 'Tất cả',
+    greeting: 'Xin chào!',
+    routinesTitle: 'Hôm nay',
+    routinesTitleAll: 'Hôm nay · Tất cả',
+    manageRoutines: 'Quản lý việc →',
+    milestonesTitle: 'Mốc sắp tới',
+    milestonesTitleAll: 'Mốc sắp tới · Tất cả',
+    viewAll: 'Xem tất cả',
+    weightTitle: 'Cân nặng',
+    weightTitleOf: (pet: string) => `Cân nặng · ${pet}`,
+    addWeight: '+ Cân nặng',
+    weightEmpty: 'Chưa có số đo nào. Cân bé và ghi lại để theo dõi xu hướng.',
+    banner: {
+      region: 'Nhắc nhở',
+      close: 'Đóng nhắc nhở',
+      done: 'Đã thực hiện',
+      view: 'Xem',
+      overdue: (type: string, pet: string, days: number, dayMonth: string) =>
+        `${type} của ${pet} đã quá hạn ${String(days)} ngày (${dayMonth})`,
+      upcoming: (type: string, pet: string, label: string, date: string) =>
+        `${type} của ${pet} — ${label}, ${date}`,
+      more: (n: number) => `+${String(n)} nhắc khác`,
+    },
+    verify: {
+      text: 'Xác minh email để có thể lấy lại mật khẩu khi quên',
+      resend: 'Gửi lại',
+      sent: 'Đã gửi lại email xác minh',
+      tooMany: 'Bạn đã gửi lại quá nhiều lần, thử lại sau 1 giờ',
+    },
+    pickPet: 'Chọn thú cưng',
+    steps: {
+      title: '3 bước để được nhắc lịch',
+      items: [
+        'Thêm hồ sơ thú cưng',
+        'Tạo mốc vaccine, nhỏ gáy, tẩy giun',
+        'Mở app mỗi ngày để xem nhắc và tick việc',
+      ],
+    },
+  },
   routines: {
     title: 'Việc hằng ngày',
     pageTitle: (pet: string) => `Việc hằng ngày · ${pet}`,
@@ -370,7 +410,13 @@ export const vi = {
     localeNames: { vi: 'Tiếng Việt', en: 'English' },
     languageChanged: 'Đã đổi ngôn ngữ',
   },
-  quickAdd: { weight: 'Cân nặng', noPet: 'Thêm thú cưng trước' },
+  quickAdd: {
+    weight: 'Cân nặng',
+    visit: 'Lần khám',
+    milestone: 'Mốc y tế',
+    routine: 'Việc hằng ngày',
+    noPet: 'Thêm thú cưng trước',
+  },
   pets: {
     title: 'Thú cưng',
     count: (n: number) => `${String(n)}/10 thú cưng`,

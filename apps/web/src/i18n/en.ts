@@ -286,6 +286,46 @@ export const en: Messages = {
     },
     notPending: 'This milestone is already done or cancelled',
   },
+  dashboard: {
+    all: 'All',
+    greeting: 'Hello!',
+    routinesTitle: 'Today',
+    routinesTitleAll: 'Today · All',
+    manageRoutines: 'Manage tasks →',
+    milestonesTitle: 'Coming up',
+    milestonesTitleAll: 'Coming up · All',
+    viewAll: 'See all',
+    weightTitle: 'Weight',
+    weightTitleOf: (pet: string) => `Weight · ${pet}`,
+    addWeight: '+ Weight',
+    weightEmpty: 'No weights yet. Weigh your pet and log it to follow the trend.',
+    banner: {
+      region: 'Reminders',
+      close: 'Dismiss reminders',
+      done: 'Done',
+      view: 'View',
+      overdue: (type: string, pet: string, days: number, dayMonth: string) =>
+        `${pet}'s ${type.toLowerCase()} is ${plural(days, 'day', 'days')} overdue (${dayMonth})`,
+      upcoming: (type: string, pet: string, label: string, date: string) =>
+        `${pet}'s ${type.toLowerCase()} — ${label}, ${date}`,
+      more: (n: number) => `+${plural(n, 'more reminder', 'more reminders')}`,
+    },
+    verify: {
+      text: 'Verify your email so you can recover your password if you forget it',
+      resend: 'Resend',
+      sent: 'Verification email sent again',
+      tooMany: 'Too many resend requests. Try again in 1 hour',
+    },
+    pickPet: 'Choose a pet',
+    steps: {
+      title: '3 steps to get reminders',
+      items: [
+        'Add a pet profile',
+        'Create vaccination, flea and deworming milestones',
+        'Open the app daily to see reminders and tick off tasks',
+      ],
+    },
+  },
   routines: {
     title: 'Daily care',
     pageTitle: (pet: string) => `Daily care · ${pet}`,
@@ -441,7 +481,13 @@ export const en: Messages = {
     localeNames: { vi: 'Tiếng Việt', en: 'English' },
     languageChanged: 'Language changed',
   },
-  quickAdd: { weight: 'Weight', noPet: 'Add a pet first' },
+  quickAdd: {
+    weight: 'Weight',
+    visit: 'Vet visit',
+    milestone: 'Health milestone',
+    routine: 'Daily task',
+    noPet: 'Add a pet first',
+  },
   pets: {
     title: 'Pets',
     count: (n: number) => `${String(n)}/10 pets`,

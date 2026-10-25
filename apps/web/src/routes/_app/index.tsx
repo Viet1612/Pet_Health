@@ -1,25 +1,20 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { PawPrint } from 'lucide-react';
+import { createFileRoute } from '@tanstack/react-router';
 
+import { DashboardScreen } from '../../features/dashboard';
+import { useSession } from '../../features/session';
+import { todayIn } from '../../features/weights';
 import { m } from '../../i18n';
-import { buttonClassName } from '../../ui/Button';
-import { EmptyState } from '../../ui/EmptyState';
 
-// Giữ chỗ: Dashboard SCR-06 làm ở S5-04.
+/**
+ * SCR-06 Dashboard: màn hình đầu tiên sau đăng nhập (FR-DSH-001). Không có loader: `useQuery` trong
+ * màn hình là nơi duy nhất gọi `GET /dashboard` (1 request), skeleton giữ chỗ trong lúc chờ.
+ */
 function Home() {
+  const { data: session } = useSession();
   return (
     <>
       <h1 className="sr-only">{m.nav.home}</h1>
-      <EmptyState
-        icon={<PawPrint size={32} />}
-        title={m.empty.firstPetTitle}
-        description={m.empty.firstPetDescription}
-        action={
-          <Link to="/pets" className={buttonClassName()}>
-            {m.empty.firstPetAction}
-          </Link>
-        }
-      />
+      <DashboardScreen timezoneToday={todayIn(session?.user.timezone)} />
     </>
   );
 }

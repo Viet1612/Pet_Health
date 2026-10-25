@@ -22,7 +22,9 @@ export function dueLine(m: Milestone): string {
 export type ChipTone = 'danger' | 'warning' | 'neutral' | 'success' | 'cancelled';
 
 /** StatusChip: luôn có chữ đi kèm màu (quá hạn đỏ, ≤ 7 ngày cam, đã thực hiện xanh). */
-export function statusChip(m: Milestone): { tone: ChipTone; label: string } {
+export type ChipInput = Pick<Milestone, 'status' | 'doneOn' | 'daysUntilDue' | 'dueOn'>;
+
+export function statusChip(m: ChipInput): { tone: ChipTone; label: string } {
   if (m.status === 'DONE')
     return { tone: 'success', label: t.chip.done(formatDate(m.doneOn ?? '')) };
   if (m.status === 'CANCELLED') return { tone: 'cancelled', label: t.chip.cancelled };
