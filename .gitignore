@@ -9,3 +9,6 @@ playwright-report/
 test-results/
 *.tsbuildinfo
 .DS_Store
+
+# Thư mục tạm của TanStack Router plugin
+apps/web/.tanstack/

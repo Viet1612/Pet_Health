@@ -2,6 +2,7 @@ import { Outlet } from '@tanstack/react-router';
 import { CalendarCheck, NotebookPen, PawPrint, TrendingUp } from 'lucide-react';
 
 import { m } from '../../i18n';
+import { OfflineBanner } from '../../ui/OfflineBanner';
 import { cx } from '../../ui/cx';
 
 function Logo({ inverted = false }: { inverted?: boolean }) {
@@ -86,6 +87,9 @@ export function AuthLayout() {
         id="main"
         className="flex min-h-dvh flex-1 flex-col justify-center px-6 py-8 md:items-center md:px-8 lg:py-12"
       >
+        <div className="mb-3 w-full md:max-w-[440px]">
+          <OfflineBanner />
+        </div>
         <div
           className={cx(
             'bg-surface w-full md:max-w-[440px] md:rounded-xl md:p-10 md:shadow-[0_8px_32px_rgb(194_24_91/0.10)]',

@@ -1,7 +1,9 @@
-import { useRef, useState, type ReactNode } from 'react';
+import { ApiError } from '@ph/api-client';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 import { toUserMessage } from '../../api/to-user-message';
 import { m } from '../../i18n';
+import { clearDraft, readDraft, saveDraft } from '../../lib/draft';
 import { Button } from '../../ui/Button';
 import { TextAreaCounter } from '../../ui/TextAreaCounter';
 import { TextField } from '../../ui/TextField';
@@ -48,12 +50,28 @@ export function VisitForm({
   onDirtyChange?: (dirty: boolean) => void;
 }) {
   const toast = useToast();
+  const formId = `visit-${mode}`;
+  // Bản nháp giữ lại khi hết phiên lúc đang lưu (FLW-06): điền lại rồi xóa.
+  const [draft] = useState(() => readDraft(formId));
+  const fromDraft = (f: Field): string | undefined =>
+    typeof draft?.[f] === 'string' ? draft[f] : undefined;
   const [values, setValues] = useState<Record<Field, string>>({
-    visitedOn: initial?.visitedOn ?? today,
-    symptoms: initial?.symptoms ?? '',
-    diagnosis: initial?.diagnosis ?? '',
-    prescription: initial?.prescription ?? '',
+    visitedOn: fromDraft('visitedOn') ?? initial?.visitedOn ?? today,
+    symptoms: fromDraft('symptoms') ?? initial?.symptoms ?? '',
+    diagnosis: fromDraft('diagnosis') ?? initial?.diagnosis ?? '',
+    prescription: fromDraft('prescription') ?? initial?.prescription ?? '',
   });
+  const restored = useRef(false);
+  useEffect(() => {
+    // StrictMode chạy effect 2 lần: chỉ báo một lần.
+    if (!draft || restored.current) return;
+    restored.current = true;
+    clearDraft();
+    onDirtyChange?.(true);
+    toast.show({ kind: 'success', message: m.system.draftRestored });
+    // Chỉ chạy một lần khi mở form.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [pending, setPending] = useState(false);
   const refs = useRef<Partial<Record<Field, HTMLElement | null>>>({});
@@ -86,6 +104,8 @@ export function VisitForm({
     }
 
     setPending(true);
+    // Giữ vị trí trước khi gọi API: 401 sẽ chuyển sang /login ngay trong lúc chờ.
+    const here = { pathname: window.location.pathname, search: window.location.search };
     try {
       const text = (s: string) => (s.trim() === '' ? null : s);
       await onSubmit({
@@ -95,6 +115,10 @@ export function VisitForm({
         prescription: text(values.prescription),
       });
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        saveDraft(formId, values, here);
+        return;
+      }
       const msg = toUserMessage(err);
       if (msg.kind === 'fields') {
         const fieldErrors: Partial<Record<Field, string>> = {};

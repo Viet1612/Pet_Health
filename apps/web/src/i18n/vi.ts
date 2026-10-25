@@ -406,6 +406,15 @@ export const vi = {
     ) => string | null,
   },
   password: { show: 'Hiện', hide: 'Ẩn' },
+  system: {
+    offline: 'Mất kết nối — thay đổi chưa được lưu',
+    offlineHint: 'Nội dung đang nhập được giữ nguyên. Nút Lưu bật lại khi có mạng.',
+    needNetwork: 'Cần kết nối mạng để lưu',
+    draftRestored: 'Đã khôi phục nội dung đang nhập',
+    expiredDraft:
+      'Phiên đăng nhập đã hết hạn. Đăng nhập lại để tiếp tục — nội dung đang nhập vẫn được giữ.',
+    returnTo: (screen: string) => `Sau khi đăng nhập sẽ quay lại: ${screen}`,
+  },
   settings: {
     title: 'Cài đặt',
     language: 'Ngôn ngữ / Language',

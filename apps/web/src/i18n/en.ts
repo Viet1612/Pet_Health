@@ -480,6 +480,14 @@ export const en: Messages = {
     },
   },
   password: { show: 'Show', hide: 'Hide' },
+  system: {
+    offline: 'Offline — changes are not saved',
+    offlineHint: "What you've typed is kept. Save turns back on when you're online.",
+    needNetwork: 'You need a connection to save',
+    draftRestored: 'Your unsaved input was restored',
+    expiredDraft: "Your session has expired. Log in again to continue — what you've typed is kept.",
+    returnTo: (screen: string) => `After logging in you'll return to: ${screen}`,
+  },
   settings: {
     title: 'Settings',
     language: 'Language / Ngôn ngữ',

@@ -24,6 +24,8 @@ export const API_ENV: Record<string, string> = {
   // Mỗi lần đăng ký gửi một IP giả qua CF-Connecting-IP, để giới hạn 10 lần/giờ/IP không chặn
   // các tài khoản E2E (chạy từ cùng một máy).
   TRUST_CF_CONNECTING_IP: 'true',
+  // Mỗi lần chạy gửi hàng chục email vào Mailpit: hạn mức thật (400/ngày) sẽ chặn thư sau vài lần chạy.
+  SMTP_DAILY_LIMIT: '1000000',
   MEDIA_ROOT: './.data/media-e2e',
   HEARTBEAT_FILE: './.data/alive-e2e',
 };

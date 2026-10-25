@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ApiError } from '@ph/api-client';
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -32,6 +32,14 @@ interface LoginSearch {
 /** SCR-01 · Đăng nhập (14:1772), sai mật khẩu (23:2828), tạm khóa (23:2868). */
 function LoginPage() {
   const { next, expired, reason } = Route.useSearch();
+  const router = useRouter();
+  // Tên màn hình sẽ quay lại sau khi đăng nhập (FLW-06).
+  const returnTitle =
+    expired === 1 && next
+      ? [...router.matchRoutes(safeNext(next).split('?')[0] ?? '/')]
+          .reverse()
+          .find((match) => match.staticData.title)?.staticData.title
+      : undefined;
   const navigate = useNavigate();
   const toast = useToast();
   const login = useLogin();
@@ -87,7 +95,12 @@ function LoginPage() {
       <p className="text-body text-text-muted mb-6">{m.auth.tagline}</p>
 
       <form noValidate onSubmit={(e) => void onSubmit(e)} className="flex flex-col gap-4">
-        {expired === 1 && !error && !locked && <Alert tone="info">{t.expired}</Alert>}
+        {expired === 1 && !error && !locked && (
+          <Alert tone="warning">
+            {m.system.expiredDraft}
+            {returnTitle && <span className="mt-1 block">{m.system.returnTo(returnTitle)}</span>}
+          </Alert>
+        )}
         {reason === 'account-deleted' && !error && <Alert tone="info">{t.accountDeleted}</Alert>}
         {error === 'invalid' && <Alert tone="danger">{t.invalid}</Alert>}
         {locked && (

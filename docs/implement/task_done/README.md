@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 43 / 54 task
+**Tiến độ:** 44 / 54 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -51,4 +51,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S5-03 | `GET /dashboard`: banner, checklist, 5 mốc sắp tới, cân nặng, lọc theo thú cưng | Xong, test E2E API Pass; chưa đo hiệu năng | 2026-10-25 | `d8e5308` | [S5-03](S5-03-dashboard-api.md) |
 | S5-04 | Giao diện Dashboard SCR-06: banner nhắc, banner xác minh, 3 panel, lọc "Tất cả", QuickAdd 4 mục | Xong, E2E giao diện Pass; chưa đo Lighthouse | 2026-10-25 | `29a8722` | [S5-04](S5-04-dashboard-ui.md) |
 | S6-01 | API `/me`: múi giờ, đổi mật khẩu, đổi email có xác nhận, xóa tài khoản | Xong, test E2E API Pass | 2026-10-25 | `9565569` | [S6-01](S6-01-settings-api.md) |
-| S6-02 | Giao diện Cài đặt SCR-18 (email, múi giờ, mật khẩu, xóa tài khoản), menu tài khoản | Xong, E2E giao diện Pass | 2026-10-25 | — | [S6-02](S6-02-settings-ui.md) |
+| S6-02 | Giao diện Cài đặt SCR-18 (email, múi giờ, mật khẩu, xóa tài khoản), menu tài khoản | Xong, E2E giao diện Pass | 2026-10-25 | `4f2399b` | [S6-02](S6-02-settings-ui.md) |
+| S6-03 | Mất mạng (banner, nút Lưu tắt), hết phiên giữ bản nháp, đồng bộ đa thiết bị | Xong, E2E Pass | 2026-10-25 | — | [S6-03](S6-03-system-states.md) |

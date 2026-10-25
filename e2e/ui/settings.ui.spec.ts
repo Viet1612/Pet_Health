@@ -27,7 +27,7 @@ async function login(page: Page, email: string) {
 
 async function openSettings(page: Page) {
   const menu = page.getByRole('button', { name: 'Menu tài khoản' });
-  if (await menu.isVisible()) {
+  if ((page.viewportSize()?.width ?? 0) < 768) {
     await menu.click();
     await page.getByRole('menuitem', { name: 'Cài đặt' }).click();
   } else {
@@ -38,8 +38,9 @@ async function openSettings(page: Page) {
 
 /** Phone hiện mọi nhóm; ≥ 768 px phải chọn nhóm ở menu bên trái. */
 async function section(page: Page, name: string) {
-  const nav = page.getByRole('navigation', { name: 'Cài đặt' });
-  if (await nav.isVisible()) await nav.getByRole('link', { name }).click();
+  // Quyết định theo bề rộng (menu nhóm chỉ hiện sau khi tải xong /me).
+  if ((page.viewportSize()?.width ?? 0) < 768) return;
+  await page.getByRole('navigation', { name: 'Cài đặt' }).getByRole('link', { name }).click();
 }
 
 const visible = (page: Page, name: string) =>

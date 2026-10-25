@@ -1,5 +1,7 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
+import { m } from '../i18n';
+import { useOnline } from '../lib/online';
 import { cx } from './cx';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -40,10 +42,14 @@ export function Button({
   type = 'button',
   ...rest
 }: ButtonProps) {
+  // Nút gửi form tắt khi mất mạng (ST-01); nội dung form giữ nguyên.
+  const online = useOnline();
+  const blocked = type === 'submit' && !online;
   return (
     <button
       type={type}
-      disabled={Boolean(disabled) || loading}
+      disabled={Boolean(disabled) || loading || blocked}
+      {...(blocked ? { title: m.system.needNetwork } : {})}
       aria-busy={loading || undefined}
       className={cx(buttonClassName(variant, fullWidth), className)}
       {...rest}

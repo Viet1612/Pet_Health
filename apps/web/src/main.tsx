@@ -7,12 +7,16 @@ import { createRoot } from 'react-dom/client';
 
 import { createQueryClient } from './app/query-client';
 import { locale } from './i18n';
+import { watchConnection } from './lib/online';
+import { probeHealth } from './api/health';
 import { routeTree } from './routeTree.gen';
 import { ToastProvider } from './ui/toast';
 
 document.documentElement.lang = locale;
 
 const queryClient = createQueryClient();
+// Có mạng lại → làm mới dữ liệu đang hiện (ST-01).
+watchConnection(probeHealth, () => void queryClient.invalidateQueries({ type: 'active' }));
 
 const router = createRouter({
   routeTree,
