@@ -97,6 +97,20 @@
   --duration-base: var(--motion-base);
 }
 
+/* Dòng checklist lưu lỗi (FLW-05); tắt khi giảm chuyển động (khối reduced-motion ở trên). */
+@keyframes ph-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
 @keyframes ph-countdown {
   from {
     width: 100%;

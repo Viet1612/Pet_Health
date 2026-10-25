@@ -26,6 +26,7 @@ import { Route as AppPetsPetIdIndexRouteImport } from './routes/_app/pets/$petId
 import { Route as AppPetsPetIdEditRouteImport } from './routes/_app/pets/$petId/edit'
 import { Route as AppPetsPetIdHealthRouteImport } from './routes/_app/pets/$petId/health'
 import { Route as AppPetsPetIdMilestonesRouteImport } from './routes/_app/pets/$petId/milestones'
+import { Route as AppPetsPetIdRoutinesRouteImport } from './routes/_app/pets/$petId/routines'
 import { Route as AppVisitsVisitIdIndexRouteImport } from './routes/_app/visits/$visitId/index'
 import { Route as AppVisitsVisitIdEditRouteImport } from './routes/_app/visits/$visitId/edit'
 import { Route as AppPetsPetIdHealthIndexRouteImport } from './routes/_app/pets/$petId/health/index'
@@ -117,6 +118,11 @@ const AppPetsPetIdMilestonesRoute = AppPetsPetIdMilestonesRouteImport.update({
   path: '/pets/$petId/milestones',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPetsPetIdRoutinesRoute = AppPetsPetIdRoutinesRouteImport.update({
+  id: '/pets/$petId/routines',
+  path: '/pets/$petId/routines',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppVisitsVisitIdIndexRoute = AppVisitsVisitIdIndexRouteImport.update({
   id: '/visits/$visitId/',
   path: '/visits/$visitId/',
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/pets/$petId/edit': typeof AppPetsPetIdEditRoute
   '/pets/$petId/health': typeof AppPetsPetIdHealthRouteWithChildren
   '/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
+  '/pets/$petId/routines': typeof AppPetsPetIdRoutinesRoute
   '/visits/$visitId/edit': typeof AppVisitsVisitIdEditRoute
   '/pets/$petId/': typeof AppPetsPetIdIndexRoute
   '/visits/$visitId/': typeof AppVisitsVisitIdIndexRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/pets': typeof AppPetsIndexRoute
   '/pets/$petId/edit': typeof AppPetsPetIdEditRoute
   '/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
+  '/pets/$petId/routines': typeof AppPetsPetIdRoutinesRoute
   '/visits/$visitId/edit': typeof AppVisitsVisitIdEditRoute
   '/pets/$petId': typeof AppPetsPetIdIndexRoute
   '/visits/$visitId': typeof AppVisitsVisitIdIndexRoute
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/_app/pets/$petId/edit': typeof AppPetsPetIdEditRoute
   '/_app/pets/$petId/health': typeof AppPetsPetIdHealthRouteWithChildren
   '/_app/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
+  '/_app/pets/$petId/routines': typeof AppPetsPetIdRoutinesRoute
   '/_app/visits/$visitId/edit': typeof AppVisitsVisitIdEditRoute
   '/_app/pets/$petId/': typeof AppPetsPetIdIndexRoute
   '/_app/visits/$visitId/': typeof AppVisitsVisitIdIndexRoute
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/pets/$petId/edit'
     | '/pets/$petId/health'
     | '/pets/$petId/milestones'
+    | '/pets/$petId/routines'
     | '/visits/$visitId/edit'
     | '/pets/$petId/'
     | '/visits/$visitId/'
@@ -260,6 +270,7 @@ export interface FileRouteTypes {
     | '/pets'
     | '/pets/$petId/edit'
     | '/pets/$petId/milestones'
+    | '/pets/$petId/routines'
     | '/visits/$visitId/edit'
     | '/pets/$petId'
     | '/visits/$visitId'
@@ -285,6 +296,7 @@ export interface FileRouteTypes {
     | '/_app/pets/$petId/edit'
     | '/_app/pets/$petId/health'
     | '/_app/pets/$petId/milestones'
+    | '/_app/pets/$petId/routines'
     | '/_app/visits/$visitId/edit'
     | '/_app/pets/$petId/'
     | '/_app/visits/$visitId/'
@@ -420,6 +432,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPetsPetIdMilestonesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/pets/$petId/routines': {
+      id: '/_app/pets/$petId/routines'
+      path: '/pets/$petId/routines'
+      fullPath: '/pets/$petId/routines'
+      preLoaderRoute: typeof AppPetsPetIdRoutinesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/visits/$visitId/': {
       id: '/_app/visits/$visitId/'
       path: '/visits/$visitId'
@@ -490,6 +509,7 @@ interface AppRouteChildren {
   AppPetsPetIdEditRoute: typeof AppPetsPetIdEditRoute
   AppPetsPetIdHealthRoute: typeof AppPetsPetIdHealthRouteWithChildren
   AppPetsPetIdMilestonesRoute: typeof AppPetsPetIdMilestonesRoute
+  AppPetsPetIdRoutinesRoute: typeof AppPetsPetIdRoutinesRoute
   AppVisitsVisitIdEditRoute: typeof AppVisitsVisitIdEditRoute
   AppPetsPetIdIndexRoute: typeof AppPetsPetIdIndexRoute
   AppVisitsVisitIdIndexRoute: typeof AppVisitsVisitIdIndexRoute
@@ -506,6 +526,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPetsPetIdEditRoute: AppPetsPetIdEditRoute,
   AppPetsPetIdHealthRoute: AppPetsPetIdHealthRouteWithChildren,
   AppPetsPetIdMilestonesRoute: AppPetsPetIdMilestonesRoute,
+  AppPetsPetIdRoutinesRoute: AppPetsPetIdRoutinesRoute,
   AppVisitsVisitIdEditRoute: AppVisitsVisitIdEditRoute,
   AppPetsPetIdIndexRoute: AppPetsPetIdIndexRoute,
   AppVisitsVisitIdIndexRoute: AppVisitsVisitIdIndexRoute,

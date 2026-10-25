@@ -137,7 +137,11 @@ function PetProfilePage() {
               label={t.shortcuts.milestones}
               to={`/pets/${petId}/milestones`}
             />
-            <Shortcut icon={<ListChecks size={22} />} label={t.shortcuts.routines} />
+            <Shortcut
+              icon={<ListChecks size={22} />}
+              label={t.shortcuts.routines}
+              to={`/pets/${petId}/routines`}
+            />
           </nav>
           <div className="md:hidden">
             <DeleteLink pet={pet} onOpen={deleteDialog.show} />
