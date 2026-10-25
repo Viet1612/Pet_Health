@@ -156,22 +156,3 @@ test('xóa tài khoản: sai mật khẩu → 401 không xóa; đúng → 204, p
   await expect(ApiSession.login(s.email)).rejects.toThrow(/401/);
   await s.dispose();
 });
-
-test('đổi múi giờ: giờ việc hằng ngày được quy đổi sang múi mới', async () => {
-  await setClock(vn('2026-11-14'));
-  const s = await ApiSession.register();
-  const petId = await s.createPet();
-  await s.call(
-    'POST',
-    `/pets/${petId}/routines`,
-    { name: 'Cho ăn', timeOfDay: '07:00' },
-    { idempotent: true },
-  );
-  expect((await s.call('PATCH', '/me', { timezone: 'UTC' })).status).toBe(200);
-  const list = await s.call('GET', `/pets/${petId}/routines`);
-  expect(list.body.items[0]?.timeOfDay).toBe('00:00');
-  // Đổi lại về VN → 07:00 như cũ.
-  await s.call('PATCH', '/me', { timezone: 'Asia/Ho_Chi_Minh' });
-  expect((await s.call('GET', `/pets/${petId}/routines`)).body.items[0]?.timeOfDay).toBe('07:00');
-  await s.dispose();
-});

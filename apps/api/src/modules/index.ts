@@ -22,7 +22,7 @@ import {
   type NotificationsDeps,
 } from './notifications/index.js';
 import { petAvatarTargetResolver, registerPetsRoutes, type PetsDeps } from './pets/index.js';
-import { registerRoutinesRoutes, shiftRoutineTimes, type RoutinesDeps } from './routines/index.js';
+import { registerRoutinesRoutes, type RoutinesDeps } from './routines/index.js';
 import {
   registerSchedulingRoutes,
   type MilestoneEvent,
@@ -56,11 +56,7 @@ export async function registerModules(api: FastifyInstance, deps: ModuleDeps): P
     hmacKey: deps.identity.analyticsHmacKey,
     trustCfConnectingIp: deps.identity.trustCfConnectingIp,
   });
-  await registerIdentityRoutes(api, {
-    ...deps.identity,
-    analytics,
-    onTimezoneChanged: shiftRoutineTimes,
-  });
+  await registerIdentityRoutes(api, { ...deps.identity, analytics });
   await registerPetsRoutes(api, deps.pets, deps.media);
   await registerMediaApiRoutes(api, { VISIT_PHOTO: visitPhotoPresenter(deps.media) });
   await registerHealthRecordsRoutes(api, deps.healthRecords, deps.media);
