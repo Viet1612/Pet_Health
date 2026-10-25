@@ -9,10 +9,17 @@ export async function writeHeartbeat(file: string, now: number = Date.now()): Pr
   await writeFile(file, String(now));
 }
 
-/** Ghi heartbeat ngay rồi mỗi 30 s. Trả hàm dừng. */
-export function startHeartbeat(file: string, onError: (error: unknown) => void): () => void {
+/**
+ * Ghi heartbeat ngay rồi mỗi 30 s; có `check` (ví dụ `SELECT 1`) thì chỉ ghi khi check qua, để
+ * healthcheck thấy worker "treo" cả khi mất DB. Trả hàm dừng.
+ */
+export function startHeartbeat(
+  file: string,
+  onError: (error: unknown) => void,
+  check?: () => Promise<void>,
+): () => void {
   const beat = (): void => {
-    writeHeartbeat(file).catch(onError);
+    (check ? check() : Promise.resolve()).then(() => writeHeartbeat(file)).catch(onError);
   };
   beat();
   const timer = setInterval(beat, HEARTBEAT_INTERVAL_MS);

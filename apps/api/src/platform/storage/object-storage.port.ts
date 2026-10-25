@@ -21,4 +21,6 @@ export interface ObjectStoragePort {
   delete(key: string): Promise<void>;
   /** Xóa cả thư mục, idempotent. */
   deletePrefix(prefix: string): Promise<void>;
+  /** Tệp ngay dưới `prefix` (không đệ quy) kèm thời điểm sửa; thư mục chưa có → `[]` (S6-06). */
+  list(prefix: string): Promise<{ key: string; modifiedAt: Date }[]>;
 }

@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 46 / 54 task
+**Tiến độ:** 47 / 54 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -54,4 +54,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S6-02 | Giao diện Cài đặt SCR-18 (email, múi giờ, mật khẩu, xóa tài khoản), menu tài khoản | Xong, E2E giao diện Pass | 2026-10-25 | `4f2399b` | [S6-02](S6-02-settings-ui.md) |
 | S6-03 | Mất mạng (banner, nút Lưu tắt), hết phiên giữ bản nháp, đồng bộ đa thiết bị | Xong, E2E Pass | 2026-10-25 | `4e969b0` | [S6-03](S6-03-system-states.md) |
 | S6-04 | Rà soát trợ năng (axe 0 lỗi serious/critical, vùng chạm 44 px, skip link); dark mode không làm | Xong phần trợ năng; dark mode bỏ theo quyết định chỉ dùng giao diện sáng | 2026-10-26 | `9cd6323` | [S6-04](S6-04-dark-mode-a11y.md) |
-| S6-05 | Analytics tự lưu: bảng phân vùng, danh sách trắng, event server/client, 3 view funnel | Xong, E2E API kiểm DB Pass | 2026-10-26 | — | [S6-05](S6-05-analytics.md) |
+| S6-05 | Analytics tự lưu: bảng phân vùng, danh sách trắng, event server/client, 3 view funnel | Xong, E2E API kiểm DB Pass | 2026-10-26 | `6e15042` | [S6-05](S6-05-analytics.md) |
+| S6-06 | Job `maintenance.daily`: 8 bước dọn dẹp theo lô, partition analytics, heartbeat kiểm DB | Xong, test tích hợp Pass | 2026-10-26 | — | [S6-06](S6-06-maintenance-job.md) |

@@ -1,5 +1,6 @@
 import { createRuntime } from './composition-root.js';
 import { loadConfigOrExit } from './config.js';
+import { sql } from 'kysely';
 import sharp from 'sharp';
 
 import { createSendTransactionalEmail } from './modules/identity/adapters/jobs/send-transactional-email.js';
@@ -14,6 +15,7 @@ import {
 import { EMAIL_QUEUE } from './platform/email/jobs.js';
 import { SmtpEmailAdapter } from './platform/email/smtp-email-adapter.js';
 import { startHeartbeat } from './platform/heartbeat.js';
+import { MAINTENANCE_CRON, runMaintenance } from './platform/maintenance/maintenance-daily.job.js';
 import { LocalDiskStorage } from './platform/storage/local-disk-storage.js';
 
 const config = loadConfigOrExit();
@@ -76,11 +78,26 @@ await runtime.boss.work<MediaPurgePrefixJob>(
   },
 );
 
-// Dọn dẹp hằng ngày: S6-06.
-
-const stopHeartbeat = startHeartbeat(config.HEARTBEAT_FILE, (error) => {
-  runtime.logger.warn({ err: error }, 'heartbeat write failed');
+// Dọn dẹp hằng đêm (S6-06): 03:00 giờ VN; pg-boss bảo đảm một lần chạy mỗi mốc cron.
+await runtime.boss.schedule('maintenance.daily', MAINTENANCE_CRON, null, {
+  tz: 'UTC',
+  retryLimit: 3,
+  retryDelay: 600,
 });
+await runtime.boss.work('maintenance.daily', { batchSize: 1 }, async () => {
+  await runMaintenance({ db: runtime.db, clock: runtime.clock, storage, logger: runtime.logger });
+});
+
+// Heartbeat chỉ ghi khi DB còn trả lời (SAD §4.2.2).
+const stopHeartbeat = startHeartbeat(
+  config.HEARTBEAT_FILE,
+  (error) => {
+    runtime.logger.warn({ err: error }, 'heartbeat failed');
+  },
+  async () => {
+    await sql`SELECT 1`.execute(runtime.db);
+  },
+);
 runtime.logger.info('worker started');
 
 let stopping = false;

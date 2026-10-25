@@ -12,7 +12,8 @@
     "db:types": "kysely-codegen --env-file .env --url \"env(MIGRATION_DATABASE_URL)\" --dialect postgres --date-parser string --exclude-pattern \"pgboss.*\" --out-file src/platform/db/database.types.ts",
     "test:idor": "vitest run test/idor",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "build": "pnpm --filter @ph/email-templates build && tsc -p tsconfig.build.json"
+    "build": "pnpm --filter @ph/email-templates build && tsc -p tsconfig.build.json",
+    "maintenance:run": "tsx --env-file=.env scripts/run-maintenance.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^11.1.3",

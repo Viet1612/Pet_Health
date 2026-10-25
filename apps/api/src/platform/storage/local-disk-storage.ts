@@ -1,6 +1,6 @@
-import { createReadStream, createWriteStream } from 'node:fs';
-import { mkdir, open, readFile, rename, rm } from 'node:fs/promises';
-import { dirname, resolve, sep } from 'node:path';
+import { createReadStream, createWriteStream, type Dirent } from 'node:fs';
+import { mkdir, open, readdir, readFile, rename, rm, stat } from 'node:fs/promises';
+import { dirname, join, resolve, sep } from 'node:path';
 import { Transform, type Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 
@@ -101,5 +101,23 @@ export class LocalDiskStorage implements ObjectStoragePort {
 
   async deletePrefix(prefix: string): Promise<void> {
     await rm(this.pathOf(prefix), { recursive: true, force: true });
+  }
+
+  async list(prefix: string): Promise<{ key: string; modifiedAt: Date }[]> {
+    const dir = this.pathOf(prefix);
+    let entries: Dirent[];
+    try {
+      entries = await readdir(dir, { withFileTypes: true });
+    } catch (error) {
+      if (isNotFound(error)) return [];
+      throw error;
+    }
+    const files = entries.filter((e) => e.isFile());
+    return Promise.all(
+      files.map(async (e) => ({
+        key: `${prefix.replace(/\/$/, '')}/${e.name}`,
+        modifiedAt: (await stat(join(dir, e.name))).mtime,
+      })),
+    );
   }
 }
