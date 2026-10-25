@@ -3,7 +3,7 @@
 | Thuộc tính | Giá trị |
 |---|---|
 | Nhóm | Bản tin (Giai đoạn 2) |
-| Phụ thuộc | [S7-01](../tasks/S7-01-production-stack.md) |
+| Phụ thuộc | [S7-01](../tasks/S7-01-production-stack.md) (làm cùng đợt triển khai production, sau F-02 → F-13) |
 | Ước lượng | 1 ngày |
 
 ## Mục tiêu

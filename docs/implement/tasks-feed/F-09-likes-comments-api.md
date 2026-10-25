@@ -30,7 +30,6 @@ Thả / bỏ tim idempotent; bình luận một cấp, xóa được bình luậ
    - Sắp cũ trước (như cuộc trò chuyện), 20/trang.
    - `POST` cần `Idempotency-Key`; rate limit 30 bình luận/10 phút/tài khoản → `429 COMMENT_RATE_LIMITED`.
    - **Xóa:** chủ bình luận hoặc chủ bài (RLS F-03); xóa thật, giảm `comment_count`.
-   - Bình luận có `hidden_at` (F-12) chỉ chủ bình luận thấy.
 3. **Sự kiện:** phát `PostLiked`, `PostCommented`, `UserFollowed` qua `SyncEventBus` trong cùng transaction để F-11 tạo thông báo.
 4. **Analytics** (danh sách trắng S6-05): `post_liked`, `post_commented` (`{ length_bucket: 'short'|'medium'|'long' }`), không gửi nội dung.
 

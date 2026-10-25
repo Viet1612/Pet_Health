@@ -26,7 +26,7 @@ Chứng minh bản tin không làm lộ dữ liệu riêng (đặc biệt dữ l
      - Bất kỳ `storage_key` nào ngoài khóa `posts/` và avatar.
    - Meta-test (F-03): bảng sức khỏe vẫn `owner_isolation`.
 2. **E2E (phone 390 + tablet 834), 3 tài khoản A, B, C:**
-   1. A tạo hồ sơ, đăng bài 2 ảnh gắn "Mochi".
+   1. A tạo hồ sơ, đăng bài 2 ảnh gắn "Mochi" và một bài 1 ảnh không gắn bé.
    2. B tìm A → theo dõi → thấy bài trên bản tin → thả tim, bình luận.
    3. A thấy thông báo hoạt động gộp; A xóa bình luận của B.
    4. C chặn A → C không thấy A ở tìm kiếm.
@@ -34,12 +34,11 @@ Chứng minh bản tin không làm lộ dữ liệu riêng (đặc biệt dữ l
    6. A xóa tài khoản → hồ sơ `404`; số người theo dõi của người khác cập nhật.
 3. **i18n:** mọi chuỗi mới có trong `vi.ts` và `en.ts` (typecheck `Messages`); mã lỗi mới (`USERNAME_TAKEN`, `POST_LIMIT_REACHED`, `COMMENT_RATE_LIMITED`, `PET_NOT_OWNED`…) có câu tiếng Anh trong `en.apiErrors`; thời gian tương đối đúng theo ngôn ngữ.
 4. **Analytics** (thêm vào danh sách trắng S6-05):
-   - Event: `profile_created`, `post_created` (`{ photo_count, has_caption, pet_count }`), `post_liked`, `post_commented`, `user_followed`, `feed_viewed` (`{ items_seen_bucket }`), `user_blocked`, `content_reported` (`{ reason }`).
+   - Event: `profile_created`, `post_created` (`{ photo_count, has_caption, pet_count }`), `post_liked`, `post_commented`, `user_followed`, `feed_viewed` (`{ items_seen_bucket }`), `user_blocked`.
    - View `analytics_funnel_social`: tạo hồ sơ → đăng bài đầu → nhận tim đầu → theo dõi ≥ 3 người.
 5. **Ghi chú vận hành** (`docs/implement/task_done/F-13…`):
-   - Cách dùng script kiểm duyệt.
    - Giới hạn R2 và cách xem dung lượng.
-   - Quy trình xử lý khi có báo cáo nội dung xấu.
+   - Cách xóa tay một bài vi phạm bằng SQL nếu cần (không có chức năng báo cáo).
 
 ## Tiêu chí chấp nhận
 

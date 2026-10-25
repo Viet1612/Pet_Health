@@ -8,13 +8,13 @@
 
 ## Mục tiêu
 
-Trang hồ sơ hiển thị bài dạng lưới vuông 3 cột như Instagram; chạm một ô mở chi tiết bài, vuốt qua lại giữa các ảnh.
+Mỗi tài khoản có **một** trang hồ sơ hiển thị **toàn bộ** bài đã đăng dạng lưới vuông 3 cột như Instagram, không chia tab theo từng thú cưng; chạm một ô mở chi tiết bài, vuốt qua lại giữa các ảnh.
 
 ## Phạm vi
 
 **Trong phạm vi:** `/u/{username}` (phần đầu hồ sơ + lưới), `/p/{postId}` (chi tiết bài), carousel ảnh, menu "⋯" của chủ bài (Sửa chú thích, Xóa bài).
 
-**Ngoài phạm vi:** nút Theo dõi (F-07), tim và bình luận (F-10), Báo cáo (F-12).
+**Ngoài phạm vi:** nút Theo dõi (F-07), tim và bình luận (F-10), Chặn (F-12); lọc lưới theo thú cưng.
 
 ## Chi tiết kỹ thuật
 
@@ -29,9 +29,9 @@ Trang hồ sơ hiển thị bài dạng lưới vuông 3 cột như Instagram; c
 3. **Chi tiết bài `/p/{id}`:**
    - Đầu bài: avatar + username (link hồ sơ), thời gian tương đối ("3 giờ trước" / "3 hours ago" qua `Intl.RelativeTimeFormat`).
    - Carousel: vuốt (`scroll-snap-type: x mandatory`), chấm chỉ vị trí, nút ←/→ ở ≥ 768 px, phím ←/→.
-   - Chú thích (link hóa `@username`), chip tên thú cưng.
+   - Chú thích (link hóa `@username`); chip tên thú cưng **chỉ khi bài có gắn**.
 4. **Sửa / xóa (chủ bài):**
-   - "Sửa" mở sheet chú thích + chọn bé → `PATCH`.
+   - "Sửa" mở sheet chú thích + chọn / bỏ gắn bé → `PATCH`.
    - "Xóa" → `ConfirmDialog` → `DELETE` → về hồ sơ, toast "Đã xóa bài".
 5. **Ảnh đang xử lý / lỗi:** khung xám "Đang xử lý" như ảnh khám.
 

@@ -28,8 +28,8 @@ Màn **Bản tin** hiện bài của người mình theo dõi (và của chính 
    ORDER BY p.created_at DESC, p.id DESC LIMIT 10;
    ```
 
-   RLS tự loại bài bị ẩn và người đã chặn (F-03). Index `(owner_id, created_at DESC, id DESC)`. `EXPLAIN` phải dùng index, không quét toàn bảng.
-2. **Phản hồi:** `{ items: PostView[], nextCursor }`, cursor mã hóa base64url `{at, id}`. Ghép `likedByMe`, tên thú cưng, URL ký trong ≤ 3 truy vấn phụ (không N+1).
+   RLS tự loại bài nháp của người khác và người đã chặn (F-03). Index `(owner_id, created_at DESC, id DESC)`. `EXPLAIN` phải dùng index, không quét toàn bảng.
+2. **Phản hồi:** `{ items: PostView[], nextCursor }`, cursor mã hóa base64url `{at, id}`. Ghép `likedByMe`, tên thú cưng (nếu bài có gắn), URL ký trong ≤ 3 truy vấn phụ (không N+1).
 3. **Giao diện:**
    - Thẻ bài: đầu (avatar, username, thời gian), carousel ảnh (dùng lại F-06), hàng nút ♥ 💬, số tim, chú thích rút gọn 2 dòng + "xem thêm", "Xem N bình luận".
    - `useInfiniteQuery`, tải trước trang kế khi còn 3 bài; ảnh `loading="lazy"` với khung tỉ lệ cố định (không giật).

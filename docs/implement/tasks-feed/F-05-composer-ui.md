@@ -1,4 +1,4 @@
-# F-05 · Giao diện soạn bài: chọn nhiều ảnh, chú thích, gắn thú cưng
+# F-05 · Giao diện soạn bài: chọn nhiều ảnh, chú thích, gắn thú cưng (tùy chọn)
 
 | Thuộc tính | Giá trị |
 |---|---|
@@ -8,7 +8,7 @@
 
 ## Mục tiêu
 
-Đăng một bài trong ≤ 3 bước: chọn ảnh → viết chú thích và gắn bé → Đăng. Ảnh tải nền có % từng ảnh; mất mạng không mất nội dung đang soạn.
+Đăng một bài trong ≤ 3 bước: chọn ảnh → viết chú thích (gắn bé nếu muốn) → Đăng. Ảnh tải nền có % từng ảnh; mất mạng không mất nội dung đang soạn.
 
 ## Phạm vi
 
@@ -24,7 +24,7 @@
    - Ô xem trước 1:1, kéo để đổi thứ tự (bàn phím: nút ←/→ trên ảnh đang focus), nút ✕ bỏ ảnh.
 2. **Bước 2 — chi tiết:**
    - Chú thích (`TextAreaCounter`, 2.200 ký tự).
-   - Chip chọn thú cưng của mình (tối đa 5).
+   - Mục **"Gắn thú cưng (không bắt buộc)"**: chip các bé của mình, chạm để chọn / bỏ chọn, tối đa 5. Mặc định **không chọn bé nào**; tài khoản chưa có thú cưng thì ẩn mục này.
 3. **Đăng:**
    - `POST /posts` (Idempotency-Key giữ qua "Thử lại") → tải ảnh song song tối đa 2 (dùng lại `upload-store`).
    - Thanh tiến trình tổng + % từng ảnh.
@@ -46,5 +46,5 @@
 
 ## Kiểm thử
 
-- **E2E (phone + tablet):** chọn 2 ảnh mẫu, chú thích, gắn bé, Đăng → bài hiện trên bản tin và hồ sơ.
+- **E2E (phone + tablet):** (1) chọn 2 ảnh, chú thích, gắn 1 bé, Đăng; (2) chọn 1 ảnh, không gắn bé, Đăng → cả hai bài hiện trên bản tin và hồ sơ, bài (2) không có chip thú cưng.
 - **Unit:** sắp xếp lại thứ tự ảnh, kiểm giới hạn.

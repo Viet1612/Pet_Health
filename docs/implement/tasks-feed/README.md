@@ -13,36 +13,36 @@ Các câu hỏi còn mở ở Phase2-ideas §4 được chốt tạm như sau. �
 | # | Câu hỏi | Chốt tạm | Lý do |
 |---|---|---|---|
 | D1 | Bài đăng công khai hay chỉ người theo dõi? | **Công khai với mọi tài khoản đã đăng nhập.** Khách chưa đăng nhập không xem được | Đơn giản, đúng kiểu Instagram công khai; không có trang công khai cho máy tìm kiếm nên ít rủi ro lộ dữ liệu |
-| D2 | Kiểm duyệt nội dung | **Tự ẩn khi đủ 3 báo cáo từ 3 tài khoản khác nhau** + lệnh SQL/script cho chủ dự án khôi phục hoặc xóa. Chưa có trang admin | Đủ cho quy mô nhỏ; trang admin để sau |
+| D2 | Kiểm duyệt nội dung | **Không có chức năng báo cáo** (không báo cáo, không tự ẩn, không kiểm duyệt). Người dùng tự bảo vệ bằng **chặn** + giới hạn chống spam (F-12) | Chủ dự án chốt 2026-10-26: không cần |
 | D3 | Hạn mức ảnh | **Tối đa 5 ảnh/bài, 5 MB/ảnh, 30 bài/ngày/tài khoản** | Giữ dung lượng R2 trong gói miễn phí lúc đầu |
 | D4 | Tách dữ liệu sức khỏe | Mô-đun mới `social`; **bảng sức khỏe giữ nguyên RLS `owner_isolation`**. Bảng xã hội dùng chính sách đọc riêng (F-03) | Không được để thay đổi phân quyền làm lộ cân nặng, sổ y tế, lịch mốc |
-| D5 | Gắn thú cưng vào bài | Chỉ hiện **tên** thú cưng (và avatar), không hiện tuổi, giống, dữ liệu sức khỏe | Hồ sơ thú cưng vẫn là dữ liệu riêng |
+| D5 | Hiển thị bài và hồ sơ | Bài đăng hiện **tên người dùng** (avatar, tên hiển thị, `@username`). **Gắn thú cưng là tùy chọn** lúc đăng: chọn 0–5 bé hoặc không chọn; nếu gắn chỉ hiện tên bé, không hiện tuổi, giống, dữ liệu sức khỏe. Mỗi tài khoản có **một bản tin** và **một hồ sơ** chứa toàn bộ ảnh đã đăng, không chia theo từng bé | Chủ dự án chốt 2026-10-26 |
 | D6 | Thông báo xã hội | Bảng riêng `social_notifications`; chuông dùng chung, đếm cả hai loại | Bảng `notifications` hiện gắn chặt với mốc y tế (`milestone_id NOT NULL`) |
 
-## Điều kiện trước
+## Thứ tự làm
 
-- **Server production có HTTPS** ([S7-01](../tasks/S7-01-production-stack.md), [S7-02](../tasks/S7-02-cloudflare-email.md)): bản tin chỉ có ý nghĩa khi nhiều người cùng truy cập.
-- **F-01 (lưu ảnh lên R2)** làm trước mọi task có ảnh.
+- **Làm bản tin trước trên máy dev**, rồi triển khai production một thể (S7 + F-01) sau khi xong F-02 → F-13. Trên dev, ảnh vẫn lưu đĩa local; thử nhiều tài khoản qua máy tính và điện thoại (Tailscale).
+- **F-01 (lưu ảnh lên R2)** làm cùng đợt triển khai production; không task bản tin nào phụ thuộc F-01.
 
 ## Bảng task
 
 | Task | Tên | Phụ thuộc | Ước lượng |
 |---|---|---|---|
-| [F-01](F-01-r2-storage.md) | Lưu ảnh lên Cloudflare R2 qua `ObjectStoragePort` | S7-01 | 1 |
+| [F-01](F-01-r2-storage.md) | Lưu ảnh lên Cloudflare R2 qua `ObjectStoragePort` (làm cùng đợt production) | S7-01 | 1 |
 | [F-02](F-02-public-profile.md) | Hồ sơ công khai: username, tên hiển thị, giới thiệu, ảnh đại diện | — | 1,5 |
 | [F-03](F-03-social-schema.md) | Schema mô-đun `social` và chính sách RLS đọc công khai | F-02 | 1,5 |
-| [F-04](F-04-posts-api.md) | API bài đăng: đăng, sửa chú thích, xóa, xem; ảnh `POST_PHOTO` | F-01, F-03 | 2 |
-| [F-05](F-05-composer-ui.md) | Giao diện soạn bài: chọn nhiều ảnh, chú thích, gắn thú cưng | F-04 | 1,5 |
+| [F-04](F-04-posts-api.md) | API bài đăng: đăng, sửa chú thích, xóa, xem; ảnh `POST_PHOTO` | F-03 | 2 |
+| [F-05](F-05-composer-ui.md) | Giao diện soạn bài: chọn nhiều ảnh, chú thích, gắn thú cưng (tùy chọn) | F-04 | 1,5 |
 | [F-06](F-06-profile-grid-post-detail.md) | Hồ sơ dạng lưới 3 cột và chi tiết bài (vuốt ảnh) | F-04 | 1,5 |
 | [F-07](F-07-follow-search.md) | Theo dõi / bỏ theo dõi, danh sách, tìm theo username | F-03 | 1,5 |
 | [F-08](F-08-feed.md) | Bản tin từ người đang theo dõi (API + giao diện cuộn vô hạn) | F-04, F-07 | 2 |
 | [F-09](F-09-likes-comments-api.md) | API thả tim và bình luận | F-04 | 1,5 |
 | [F-10](F-10-likes-comments-ui.md) | Giao diện thả tim (nhấn đúp), bình luận | F-06, F-09 | 1,5 |
 | [F-11](F-11-social-notifications.md) | Thông báo thả tim, bình luận, theo dõi | F-07, F-09 | 1,5 |
-| [F-12](F-12-safety.md) | Chặn người dùng, báo cáo bài, tự ẩn, giới hạn chống spam | F-08, F-09 | 2 |
+| [F-12](F-12-safety.md) | Chặn người dùng và giới hạn chống spam | F-08, F-09 | 1 |
 | [F-13](F-13-cross-account-tests.md) | Test chéo tài khoản (IDOR/RLS), E2E, vi/en, analytics | F-01→F-12 | 1,5 |
 
-**Tổng:** 13 task, khoảng 20 ngày công (4–5 tuần làm bán thời gian).
+**Tổng:** 13 task, khoảng 19 ngày công (F-02 → F-13 khoảng 18 ngày trên máy dev, F-01 làm cùng đợt production).
 
 ## Dùng lại từ Giai đoạn 1
 
