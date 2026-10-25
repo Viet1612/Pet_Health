@@ -9,7 +9,12 @@ import { cx } from '../../ui/cx';
 import { MilestoneTypeIcon, StatusChip, typeLabel } from '../milestones';
 import { RoutineChecklist } from '../routines';
 import { buildChartData, formatDelta, formatKg, WeightChart } from '../weights';
-import type { DashboardData, DashboardMilestone, DashboardWeight } from './queries';
+import type {
+  DashboardData,
+  DashboardMilestone,
+  DashboardWeight,
+  DashboardWeightRow,
+} from './queries';
 
 const t = m.dashboard;
 
@@ -186,6 +191,57 @@ export function MilestonesPanel({
           ))}
         </ul>
       )}
+    </Panel>
+  );
+}
+
+/** Lọc "Tất cả": cân nặng hiện tại của từng thú cưng, chạm → màn Cân nặng của bé đó. */
+export function WeightListPanel({
+  rows,
+  onAdd,
+  className,
+}: {
+  rows: DashboardWeightRow[];
+  onAdd: () => void;
+  className?: string;
+}) {
+  return (
+    <Panel title={t.weightTitleAll} className={className}>
+      <ul className="divide-divider m-0 list-none divide-y p-0">
+        {rows.map((r) => (
+          <li key={r.petId}>
+            <Link
+              to="/pets/$petId/health/weight"
+              params={{ petId: r.petId }}
+              className="hover:bg-surface-2 flex min-h-14 items-center gap-3 rounded-md px-1 py-2"
+            >
+              <span className="min-w-0 flex-1">
+                <span className="text-body block truncate font-semibold">{r.petName}</span>
+                {r.measuredOn && (
+                  <span className="text-small text-text-muted block">
+                    {t.measuredOn(formatDate(r.measuredOn))}
+                  </span>
+                )}
+              </span>
+              <span className="flex flex-col items-end">
+                <span className={cx('text-body', r.weightKg ? 'font-semibold' : 'text-text-muted')}>
+                  {r.weightKg ? formatKg(r.weightKg) : t.noWeight}
+                </span>
+                {r.target && (
+                  <span className="text-caption text-text-muted">
+                    {m.weights.target(formatKg(r.target))}
+                  </span>
+                )}
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-2">
+        <Button variant="secondary" onClick={onAdd}>
+          {t.addWeight}
+        </Button>
+      </div>
     </Panel>
   );
 }

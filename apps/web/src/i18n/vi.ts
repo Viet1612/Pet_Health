@@ -290,6 +290,9 @@ export const vi = {
     viewAll: 'Xem tất cả',
     weightTitle: 'Cân nặng',
     weightTitleOf: (pet: string) => `Cân nặng · ${pet}`,
+    weightTitleAll: 'Cân nặng · Tất cả',
+    noWeight: 'Chưa có số đo',
+    measuredOn: (date: string) => `Đo ngày ${date}`,
     addWeight: '+ Cân nặng',
     weightEmpty: 'Chưa có số đo nào. Cân bé và ghi lại để theo dõi xu hướng.',
     banner: {

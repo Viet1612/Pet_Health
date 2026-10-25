@@ -3787,6 +3787,42 @@ paths:
                           - series
                         additionalProperties: false
                       - type: "null"
+                    description: Một thú cưng; lọc "Tất cả" → null
+                  weights:
+                    anyOf:
+                      - type: array
+                        items:
+                          type: object
+                          properties:
+                            petId:
+                              type: string
+                              format: uuid
+                              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                            petName:
+                              type: string
+                            measuredOn:
+                              anyOf:
+                                - type: string
+                                  format: date
+                                  pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                                - type: "null"
+                            weightKg:
+                              type:
+                                - string
+                                - "null"
+                            target:
+                              type:
+                                - string
+                                - "null"
+                          required:
+                            - petId
+                            - petName
+                            - measuredOn
+                            - weightKg
+                            - target
+                          additionalProperties: false
+                      - type: "null"
+                    description: 'Lọc "Tất cả": cân nặng hiện tại của từng thú cưng'
                 required:
                   - today
                   - account
@@ -3795,6 +3831,7 @@ paths:
                   - routines
                   - upcomingMilestones
                   - weight
+                  - weights
                 additionalProperties: false
 servers:
   - url: /api/v1

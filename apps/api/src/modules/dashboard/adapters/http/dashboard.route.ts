@@ -59,7 +59,20 @@ const zDashboard = z.object({
         .nullable(),
       series: z.array(z.object({ measuredOn: z.iso.date(), weightKg: z.string() })),
     })
-    .nullable(),
+    .nullable()
+    .describe('Một thú cưng; lọc "Tất cả" → null'),
+  weights: z
+    .array(
+      z.object({
+        petId: z.uuid(),
+        petName: z.string(),
+        measuredOn: z.iso.date().nullable(),
+        weightKg: z.string().nullable(),
+        target: z.string().nullable(),
+      }),
+    )
+    .nullable()
+    .describe('Lọc "Tất cả": cân nặng hiện tại của từng thú cưng'),
 });
 
 /** SCR-06 Dashboard trong đúng 1 request (FR-DSH-001→007). */

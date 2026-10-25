@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 
 import type { ClockPort } from '../../platform/clock/clock.js';
-import { weightQuery } from '../health-records/index.js';
+import { latestWeightsForPets, weightQuery } from '../health-records/index.js';
 import type { MediaDeps } from '../media/index.js';
 import { notificationSummaryFor } from '../notifications/index.js';
 import { createPetListQuery, petQuery } from '../pets/index.js';
@@ -32,5 +32,6 @@ export async function registerDashboardRoutes(
       milestoneQuery.upcomingForDashboard(trx, ownerId, petIds, today),
     weightSummary: (trx, ownerId, petId, today) =>
       weightQuery.summaryForDashboard(trx, ownerId, petId, today),
+    latestWeights: (trx, ownerId, petIds) => latestWeightsForPets(trx, ownerId, petIds),
   });
 }

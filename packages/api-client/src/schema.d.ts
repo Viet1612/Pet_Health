@@ -2576,6 +2576,7 @@ export interface paths {
                 daysUntilDue: number;
                 petName: string;
               }[];
+              /** @description Một thú cưng; lọc "Tất cả" → null */
               weight: {
                 /** Format: uuid */
                 petId: string;
@@ -2593,6 +2594,17 @@ export interface paths {
                   weightKg: string;
                 }[];
               } | null;
+              /** @description Lọc "Tất cả": cân nặng hiện tại của từng thú cưng */
+              weights:
+                | {
+                    /** Format: uuid */
+                    petId: string;
+                    petName: string;
+                    measuredOn: string | null;
+                    weightKg: string | null;
+                    target: string | null;
+                  }[]
+                | null;
             };
           };
         };

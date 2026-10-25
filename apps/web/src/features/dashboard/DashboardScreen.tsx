@@ -27,7 +27,7 @@ import {
 import { PetPickDialog } from '../pets';
 import { RoutineFormDialog } from '../routines';
 import { WeightEntryDialog } from '../weights';
-import { MilestonesPanel, RoutinesPanel, WeightPanel } from './panels';
+import { MilestonesPanel, RoutinesPanel, WeightListPanel, WeightPanel } from './panels';
 import { dashboardQuery, type DashboardData } from './queries';
 import { ReminderBanner } from './ReminderBanner';
 import { VerifyEmailBanner } from './VerifyEmailBanner';
@@ -194,15 +194,25 @@ export function DashboardScreen({ timezoneToday }: { timezoneToday: string }) {
             start('milestone');
           }}
         />
-        {data.weight && (
-          <WeightPanel
+        {data.weights ? (
+          <WeightListPanel
             className="md:[grid-area:weight]"
-            weight={data.weight}
-            all={all}
+            rows={data.weights}
             onAdd={() => {
               start('weight');
             }}
           />
+        ) : (
+          data.weight && (
+            <WeightPanel
+              className="md:[grid-area:weight]"
+              weight={data.weight}
+              all={all}
+              onAdd={() => {
+                start('weight');
+              }}
+            />
+          )
         )}
       </div>
 

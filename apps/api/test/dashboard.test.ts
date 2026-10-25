@@ -36,22 +36,26 @@ function fakePorts(pets = PETS) {
       calls.push(`weight:${petId}:${today}`);
       return Promise.resolve({ latest: null, series: [] });
     },
+    latestWeights: (_t, _o, petIds) => {
+      calls.push(`latest:${petIds.join(',')}`);
+      return Promise.resolve(new Map([['p2', { measuredOn: '2026-11-01', weightKg: '9.3' }]]));
+    },
   };
   const withTx = <T>(fn: (trx: never) => Promise<T>) => fn(undefined as never);
   return { ports, calls, withTx };
 }
 
 describe('getDashboard', () => {
-  it('đồng bộ thông báo trước, rồi 3 truy vấn đọc; "Tất cả" lấy cân nặng của thú cưng đầu', async () => {
+  it('đồng bộ thông báo trước, rồi 3 truy vấn đọc; "Tất cả" trả cân nặng hiện tại từng thú cưng', async () => {
     const { ports, calls, withTx } = fakePorts();
     const view = await getDashboard(ports, withTx, 'u1', true, 'all');
     expect(calls[0]).toBe('sync+summary');
-    expect(calls.slice(1).sort()).toEqual([
-      'milestones:p1,p2',
-      'routines:p1,p2',
-      'weight:p1:2026-11-14',
+    expect(calls.slice(1).sort()).toEqual(['latest:p1,p2', 'milestones:p1,p2', 'routines:p1,p2']);
+    expect(view.weight).toBeNull();
+    expect(view.weights).toEqual([
+      { petId: 'p1', petName: 'Mochi', measuredOn: null, weightKg: null, target: '9.0' },
+      { petId: 'p2', petName: 'Bơ', measuredOn: '2026-11-01', weightKg: '9.3', target: null },
     ]);
-    expect(view.weight).toMatchObject({ petId: 'p1', petName: 'Mochi', target: '9.0' });
     expect(view.routines).toMatchObject({ doneCount: 1, totalCount: 1 });
     expect(view.routines.items[0]?.petName).toBe('Bơ');
     // Không có banner trong phạm vi → unreadCount của phạm vi = 0.
@@ -64,6 +68,7 @@ describe('getDashboard', () => {
     await getDashboard(ports, withTx, 'u1', false, 'p2');
     expect(calls).toContain('routines:p2');
     expect(calls).toContain('weight:p2:2026-11-14');
+    expect(calls.some((c) => c.startsWith('latest:'))).toBe(false);
   });
 
   it('không có thú cưng: không gọi port nào khác', async () => {

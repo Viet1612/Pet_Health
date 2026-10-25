@@ -83,8 +83,9 @@ test('banner: OVERDUE > D1 > D7, moreCount; lọc theo thú cưng không lẫn t
   expect(all.body.notifications.unreadCount).toBe(3);
   expect(all.body.notifications.banner.top).toMatchObject({ level: 'OVERDUE', petName: 'Bơ' });
   expect(all.body.notifications.banner.moreCount).toBe(2);
-  // Thú cưng đầu tiên (cũ nhất) cho phần cân nặng khi "Tất cả".
-  expect(all.body.weight).toMatchObject({ petName: 'Mochi', latest: null, series: [] });
+  // "Tất cả": cân nặng hiện tại từng thú cưng, không có biểu đồ.
+  expect(all.body.weight).toBeNull();
+  expect(all.body.weights.map((w: { petName: string }) => w.petName)).toEqual(['Mochi', 'Bơ']);
 
   const onlyMochi = await s.call('GET', `/dashboard?pet=${mochi}`);
   expect(onlyMochi.body.notifications.unreadCount).toBe(2);
@@ -134,7 +135,7 @@ test('checklist gộp mọi thú cưng có petName; cân nặng: delta và serie
   );
   await s.call('PUT', `/routines/${r.body.id as string}/completion`, { done: true });
 
-  const res = await s.call('GET', '/dashboard');
+  const res = await s.call('GET', `/dashboard?pet=${mochi}`);
   expect(res.status, JSON.stringify(res.body)).toBe(200);
   expect(res.body.routines).toMatchObject({ doneCount: 1, totalCount: 1 });
   expect(res.body.routines.items[0]).toMatchObject({ petName: 'Mochi', done: true });

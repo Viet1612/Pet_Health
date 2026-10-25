@@ -9,6 +9,7 @@ export type DashboardData =
 export type DashboardBanner = NonNullable<DashboardData['notifications']['banner']>;
 export type DashboardMilestone = DashboardData['upcomingMilestones'][number];
 export type DashboardWeight = NonNullable<DashboardData['weight']>;
+export type DashboardWeightRow = NonNullable<DashboardData['weights']>[number];
 
 export const dashboardKey = (filter: DashboardFilter) => ['dashboard', filter] as const;
 

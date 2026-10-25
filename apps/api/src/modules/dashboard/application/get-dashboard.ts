@@ -39,6 +39,11 @@ export interface DashboardPorts {
     petId: string,
     today: LocalDate,
   ): Promise<WeightDashboardSummary>;
+  latestWeights(
+    trx: Trx,
+    ownerId: string,
+    petIds: string[],
+  ): Promise<Map<string, { measuredOn: string; weightKg: string }>>;
 }
 
 type Banner = NonNullable<NotificationSummary['banner']>;
@@ -54,8 +59,19 @@ export interface DashboardView {
     items: (RoutineItem & { petName: string })[];
   };
   upcomingMilestones: (UpcomingMilestone & { petName: string })[];
+  /** Một thú cưng: số đo, chênh lệch, biểu đồ 6 tháng. Lọc "Tất cả" → `null`. */
   weight:
     (WeightDashboardSummary & { petId: string; petName: string; target: string | null }) | null;
+  /** Lọc "Tất cả": cân nặng hiện tại của từng thú cưng (theo thứ tự `pets`); một thú cưng → `null`. */
+  weights:
+    | {
+        petId: string;
+        petName: string;
+        measuredOn: string | null;
+        weightKg: string | null;
+        target: string | null;
+      }[]
+    | null;
 }
 
 /**
@@ -89,11 +105,12 @@ export async function getDashboard(
       routines: { doneCount: 0, totalCount: 0, items: [] },
       upcomingMilestones: [],
       weight: null,
+      weights: null,
     };
   }
 
   const scope = pet === 'all' ? pets.map((p) => p.id) : [pet];
-  const weightPet = pet === 'all' ? pets[0] : pets.find((p) => p.id === pet);
+  const weightPet = pet === 'all' ? undefined : pets.find((p) => p.id === pet);
   const nameOf = new Map(pets.map((p) => [p.id, p.name]));
   const withName = <T extends { petId: string }>(x: T) => ({
     ...x,
@@ -102,12 +119,13 @@ export async function getDashboard(
 
   // Đồng bộ trước (tuần tự), sau đó 3 truy vấn đọc song song.
   const summary = await ports.notificationSummary(withTx, ownerId, pet);
-  const [routines, milestones, weight] = await Promise.all([
+  const [routines, milestones, weight, latest] = await Promise.all([
     withTx((trx) => ports.checklistForToday(trx, ownerId, scope, today)),
     withTx((trx) => ports.upcomingMilestones(trx, ownerId, scope, today)),
     weightPet
       ? withTx((trx) => ports.weightSummary(trx, ownerId, weightPet.id, today))
       : Promise.resolve(null),
+    weightPet ? Promise.resolve(null) : withTx((trx) => ports.latestWeights(trx, ownerId, scope)),
   ]);
 
   const banner = summary.banner ?? null;
@@ -129,5 +147,14 @@ export async function getDashboard(
             ...weight,
           }
         : null,
+    weights: latest
+      ? pets.map((p) => ({
+          petId: p.id,
+          petName: p.name,
+          measuredOn: latest.get(p.id)?.measuredOn ?? null,
+          weightKg: latest.get(p.id)?.weightKg ?? null,
+          target: p.weightTargetKg,
+        }))
+      : null,
   };
 }

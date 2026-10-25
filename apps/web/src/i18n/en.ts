@@ -297,6 +297,9 @@ export const en: Messages = {
     viewAll: 'See all',
     weightTitle: 'Weight',
     weightTitleOf: (pet: string) => `Weight · ${pet}`,
+    weightTitleAll: 'Weight · All',
+    noWeight: 'No weight yet',
+    measuredOn: (date: string) => `Measured ${date}`,
     addWeight: '+ Weight',
     weightEmpty: 'No weights yet. Weigh your pet and log it to follow the trend.',
     banner: {

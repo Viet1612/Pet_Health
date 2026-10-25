@@ -81,6 +81,26 @@ export const weightQuery = {
   },
 };
 
+/** Số đo mới nhất của từng thú cưng (Dashboard lọc "Tất cả"); thú cưng chưa có số đo không có. */
+export async function latestWeightsForPets(
+  trx: Transaction<Database>,
+  ownerId: string,
+  petIds: string[],
+): Promise<Map<string, { measuredOn: string; weightKg: string }>> {
+  if (petIds.length === 0) return new Map();
+  const rows = await trx
+    .selectFrom('weight_entries')
+    .distinctOn('pet_id')
+    .select(['pet_id', 'measured_on', 'weight_kg'])
+    .where('owner_id', '=', ownerId)
+    .where('pet_id', 'in', petIds)
+    .orderBy('pet_id')
+    .orderBy('measured_on', 'desc')
+    .orderBy('created_at', 'desc')
+    .execute();
+  return new Map(rows.map((r) => [r.pet_id, { measuredOn: r.measured_on, weightKg: r.weight_kg }]));
+}
+
 /** Ảnh khám trong worker `media.process` (S3-04). */
 export function visitPhotoResolver(): TargetResolver {
   return visitPhotoTargetResolver(visitPhotosRepo);

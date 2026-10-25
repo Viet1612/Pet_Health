@@ -152,25 +152,28 @@ export default function WeightChartImpl({
           )}
       </p>
       <div ref={boxRef} aria-hidden className="w-full" />
-      <table className="sr-only">
-        <caption>{caption}</caption>
-        <thead>
-          <tr>
-            <th scope="col">{m.weights.tableDate}</th>
-            <th scope="col">{m.weights.tableWeight}</th>
-            {target !== null && <th scope="col">{m.weights.tableVsTarget}</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {points.map((p) => (
-            <tr key={p.x}>
-              <td>{formatDate(p.measuredOn)}</td>
-              <td>{formatKg(p.weightKg)}</td>
-              {target !== null && <td>{vsTarget(p.y)} kg</td>}
+      {/* Bọc trong div sr-only: `caption` của table vẫn vẽ ra ngoài khi chỉ ẩn bảng. */}
+      <div className="sr-only">
+        <table>
+          <caption>{caption}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{m.weights.tableDate}</th>
+              <th scope="col">{m.weights.tableWeight}</th>
+              {target !== null && <th scope="col">{m.weights.tableVsTarget}</th>}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {points.map((p) => (
+              <tr key={p.x}>
+                <td>{formatDate(p.measuredOn)}</td>
+                <td>{formatKg(p.weightKg)}</td>
+                {target !== null && <td>{vsTarget(p.y)} kg</td>}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   );
 }
