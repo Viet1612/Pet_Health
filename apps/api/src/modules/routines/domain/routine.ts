@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 // Quy tắc việc hằng ngày (S5-01, FR-RT-001→007). Thuần, không phụ thuộc DB hay HTTP.
 
 export const MAX_ROUTINES_PER_PET = 20;
@@ -74,6 +76,20 @@ export function validateRoutinePatch(raw: {
     if (timeOfDay !== undefined) value.timeOfDay = timeOfDay;
   }
   return errors.length > 0 ? { ok: false, errors } : { ok: true, value };
+}
+
+/**
+ * Quy đổi giờ trong ngày khi tài khoản đổi múi giờ: cùng một thời điểm thật, đọc theo múi mới.
+ * Lấy độ lệch tại ngày `onDate` (theo múi cũ): "07:00" ở Asia/Ho_Chi_Minh → "00:00" ở UTC.
+ */
+export function convertTimeOfDay(
+  time: string,
+  fromTz: string,
+  toTz: string,
+  onDate: string,
+): string {
+  const at = DateTime.fromISO(`${onDate}T${toHHMM(time)}`, { zone: fromTz });
+  return at.isValid ? at.setZone(toTz).toFormat('HH:mm') : toHHMM(time);
 }
 
 /** Kiểu `time` của PostgreSQL trả "07:00:00" → "07:00". */

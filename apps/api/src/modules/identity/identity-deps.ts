@@ -1,4 +1,4 @@
-import type { Kysely } from 'kysely';
+import type { Kysely, Transaction } from 'kysely';
 
 import type { AnalyticsPort } from '../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../platform/clock/clock.js';
@@ -17,6 +17,14 @@ export interface IdentityDeps {
   trustCfConnectingIp: boolean;
   /** Khóa HMAC cho `userIdHash` (analytics). */
   analyticsHmacKey: string;
+  /** Mô-đun khác cập nhật dữ liệu theo múi giờ mới (quy đổi giờ việc hằng ngày); gắn ở `registerModules`. */
+  onTimezoneChanged?: (
+    trx: Transaction<Database>,
+    userId: string,
+    fromTz: string,
+    toTz: string,
+    now: Date,
+  ) => Promise<unknown>;
   /** Event phía server (`email_verified`, S6-05); gắn ở `registerModules`. */
   analytics?: AnalyticsPort;
 }

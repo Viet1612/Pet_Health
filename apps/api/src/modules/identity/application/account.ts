@@ -8,6 +8,7 @@ import {
   ValidationError,
 } from '../../../platform/errors/app-error.js';
 import { EMAIL_QUEUE, emailLocale } from '../../../platform/email/jobs.js';
+import { withUserTx } from '../../../platform/db/with-user-tx.js';
 import { newId } from '../../../platform/ids.js';
 import { RATE_LIMITS } from '../../../platform/rate-limit/rate-limiter.js';
 import { enqueuePurgePrefix, userPrefix } from '../../media/index.js';
@@ -66,9 +67,16 @@ export async function updateTimezone(
       { field: 'timezone', code: 'INVALID_TIMEZONE', message: 'Múi giờ không hợp lệ' },
     ]);
   }
-  const user = await userRepository.setTimezone(deps.db, userId, timezone);
-  if (!user) throw new UnauthenticatedError();
-  return user;
+  const now = deps.clock.now();
+  return withUserTx(deps.db, userId, async (trx) => {
+    const before = await userRepository.lockForUpdate(trx, userId);
+    if (!before) throw new UnauthenticatedError();
+    const user = await userRepository.setTimezone(trx, userId, timezone);
+    if (!user) throw new UnauthenticatedError();
+    // Giờ việc hằng ngày là thời điểm thật: đổi múi giờ thì quy đổi sang múi mới.
+    await deps.onTimezoneChanged?.(trx, userId, before.timezone, timezone, now);
+    return user;
+  });
 }
 
 /**

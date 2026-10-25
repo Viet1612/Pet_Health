@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  convertTimeOfDay,
   toHHMM,
   validateNewRoutine,
   validateRoutinePatch,
@@ -51,4 +52,14 @@ describe('validateRoutinePatch', () => {
 
 it('toHHMM cắt giây của kiểu time', () => {
   expect(toHHMM('07:05:00')).toBe('07:05');
+});
+
+it('convertTimeOfDay: cùng thời điểm thật, đọc theo múi mới', () => {
+  expect(convertTimeOfDay('07:00:00', 'Asia/Ho_Chi_Minh', 'UTC', '2026-11-14')).toBe('00:00');
+  expect(convertTimeOfDay('07:00', 'Asia/Ho_Chi_Minh', 'Asia/Tokyo', '2026-11-14')).toBe('09:00');
+  // Qua nửa đêm: 06:30 VN = 18:30 hôm trước ở New York (UTC−5 tháng 11).
+  expect(convertTimeOfDay('06:30', 'Asia/Ho_Chi_Minh', 'America/New_York', '2026-11-14')).toBe(
+    '18:30',
+  );
+  expect(convertTimeOfDay('07:00', 'UTC', 'UTC', '2026-11-14')).toBe('07:00');
 });

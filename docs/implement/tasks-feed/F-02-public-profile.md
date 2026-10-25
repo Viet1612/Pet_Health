@@ -15,6 +15,7 @@ Mỗi tài khoản có một hồ sơ công khai để người khác tìm và t
 **Trong phạm vi:**
 - Bảng `profiles`.
 - API `GET /profiles/{username}`, `GET /me/profile`, `PUT /me/profile`, ảnh đại diện người dùng (`USER_AVATAR`).
+- **Nickname khi đăng ký:** form đăng ký có thêm ô "Nickname" (bắt buộc); lưu `users.nickname` (1–50 ký tự sau trim). Tài khoản cũ chưa có nickname → hỏi một lần khi đăng nhập.
 - Màn "Tạo hồ sơ" lần đầu vào Bản tin.
 - Màn sửa hồ sơ trong Cài đặt.
 
@@ -52,12 +53,13 @@ CREATE TABLE profiles (
 
 **Giao diện:**
 - Mục **"Bản tin"** mới trên thanh điều hướng (icon `images`).
-- Lần đầu mở mà chưa có hồ sơ → màn **"Tạo hồ sơ"**: ảnh đại diện, tên hiển thị (gợi ý từ phần trước `@` của email), username (kiểm trùng trực tiếp, hiện ✓/✗), giới thiệu.
+- Lần đầu mở mà chưa có hồ sơ → màn **"Tạo hồ sơ"**: ảnh đại diện, tên hiển thị (điền sẵn bằng **nickname** lúc đăng ký, sửa được), username (kiểm trùng trực tiếp, hiện ✓/✗), giới thiệu.
 - **Cài đặt → Hồ sơ công khai:** sửa các trường trên.
 - **Hồ sơ người khác** `/u/{username}`: avatar, tên, username, giới thiệu (lưới bài ở F-06).
 
 ## Tiêu chí chấp nhận
 
+- [ ] Đăng ký bắt buộc nhập nickname 1–50 ký tự; trống hoặc chỉ khoảng trắng → lỗi dưới trường. Nickname hiện ở menu tài khoản và điền sẵn tên hiển thị khi tạo hồ sơ.
 - [ ] Tạo hồ sơ với username hợp lệ → mở được `/u/{username}` từ tài khoản khác; không có email hay dữ liệu sức khỏe trong phản hồi.
 - [ ] Username trùng (không phân biệt hoa thường) → `409`; sai quy tắc hoặc tên cấm → `422`.
 - [ ] Đổi username lần 2 trong 14 ngày → `429` kèm số ngày còn lại.
