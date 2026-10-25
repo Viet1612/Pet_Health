@@ -1,27 +1,63 @@
 import { UnauthenticatedError } from '../../../platform/errors/app-error.js';
-import { EMAIL_QUEUE, emailLocale } from '../../../platform/email/jobs.js';
+import { EMAIL_QUEUE, emailLocale, maskEmail } from '../../../platform/email/jobs.js';
 import { newId } from '../../../platform/ids.js';
 import { RATE_LIMITS } from '../../../platform/rate-limit/rate-limiter.js';
 import { authTokenRepository } from '../adapters/persistence/auth-token-repository.js';
 import { userRepository, type UserRow } from '../adapters/persistence/user-repository.js';
 import type { IdentityDeps } from '../identity-deps.js';
-import { consumeToken, findUsableToken, tokenUsed } from './email-token.js';
+import { emailTaken, noticeTime } from './account.js';
+import { consumeToken, findUsableTokenOf, tokenUsed } from './email-token.js';
 import { VERIFY_TOKEN_TTL_MS } from './register-user.js';
 import { tokenService } from './token-service.js';
 
+/** Lỗi unique của PostgreSQL (email đã có user khác). */
+const isUniqueViolation = (error: unknown): boolean =>
+  (error as { code?: string } | null)?.code === '23505';
+
 /**
- * Xác minh email (US-002, FR-AUTH-004). Không cần phiên: liên kết có thể mở trên thiết bị chưa
- * đăng nhập. Không tạo phiên.
+ * Xác minh email (US-002, FR-AUTH-004) hoặc xác nhận email mới (FR-AUTH-015). Không cần phiên:
+ * liên kết có thể mở trên thiết bị chưa đăng nhập. Không tạo phiên.
  */
-export async function verifyEmail(deps: IdentityDeps, token: string): Promise<UserRow> {
+export async function verifyEmail(
+  deps: IdentityDeps,
+  token: string,
+): Promise<{ user: UserRow; purpose: 'VERIFY_EMAIL' | 'CHANGE_EMAIL' }> {
   const now = deps.clock.now();
-  const row = await findUsableToken(deps.db, token, 'VERIFY_EMAIL', now);
-  return deps.db.transaction().execute(async (trx) => {
-    await consumeToken(trx, row, now);
-    const user = await userRepository.markEmailVerified(trx, row.user_id, now);
-    if (!user) throw tokenUsed();
-    return user;
-  });
+  const row = await findUsableTokenOf(deps.db, token, ['VERIFY_EMAIL', 'CHANGE_EMAIL'], now);
+  if (row.kind === 'VERIFY_EMAIL') {
+    return deps.db.transaction().execute(async (trx) => {
+      await consumeToken(trx, row, now);
+      const user = await userRepository.markEmailVerified(trx, row.user_id, now);
+      if (!user) throw tokenUsed();
+      return { user, purpose: 'VERIFY_EMAIL' as const };
+    });
+  }
+
+  const newEmail = (row.payload as { newEmail?: string } | null)?.newEmail;
+  if (!newEmail) throw tokenUsed();
+  try {
+    return await deps.db.transaction().execute(async (trx) => {
+      await consumeToken(trx, row, now);
+      const before = await userRepository.lockForUpdate(trx, row.user_id);
+      if (!before) throw tokenUsed();
+      const taken = await userRepository.findByEmail(trx, newEmail);
+      if (taken && taken.id !== before.id) throw emailTaken();
+      const user = await userRepository.setVerifiedEmail(trx, row.user_id, newEmail, now);
+      if (!user) throw tokenUsed();
+      // Thư tới email cũ: lớp phát hiện khi người khác đổi email (không xác nhận lại email cũ).
+      await deps.jobQueue.enqueue(trx, EMAIL_QUEUE, {
+        template: 'EMAIL_CHANGED_NOTICE',
+        to: before.email,
+        maskedNewEmail: maskEmail(newEmail),
+        at: noticeTime(now, before.timezone, before.locale),
+        locale: emailLocale(before.locale),
+      });
+      return { user, purpose: 'CHANGE_EMAIL' as const };
+    });
+  } catch (error) {
+    if (isUniqueViolation(error)) throw emailTaken();
+    throw error;
+  }
 }
 
 /**

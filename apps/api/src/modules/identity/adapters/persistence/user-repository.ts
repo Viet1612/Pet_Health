@@ -91,6 +91,39 @@ export const userRepository = {
       .execute();
   },
 
+  /** Đổi múi giờ; `notifications_synced_on = NULL` để lần đọc kế tiếp đồng bộ lại theo ngày mới. */
+  async setTimezone(q: Q, id: string, timezone: string): Promise<UserRow | undefined> {
+    return q
+      .updateTable('users')
+      .set({ timezone, notifications_synced_on: null })
+      .where('id', '=', id)
+      .returningAll()
+      .executeTakeFirst();
+  },
+
+  async setPasswordHash(q: Q, id: string, passwordHash: string): Promise<void> {
+    await q
+      .updateTable('users')
+      .set({ password_hash: passwordHash })
+      .where('id', '=', id)
+      .execute();
+  },
+
+  /** Đổi email đã chứng minh sở hữu (token CHANGE_EMAIL): email mới coi như đã xác minh. */
+  async setVerifiedEmail(q: Q, id: string, email: string, now: Date): Promise<UserRow | undefined> {
+    return q
+      .updateTable('users')
+      .set({ email, email_verified_at: now })
+      .where('id', '=', id)
+      .returningAll()
+      .executeTakeFirst();
+  },
+
+  /** Xóa tài khoản; FK `ON DELETE CASCADE` xóa mọi dữ liệu của user (SAD §3.2.3). */
+  async delete(q: Q, id: string): Promise<void> {
+    await q.deleteFrom('users').where('id', '=', id).execute();
+  },
+
   async updateLoginState(
     q: Q,
     id: string,

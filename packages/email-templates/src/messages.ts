@@ -9,10 +9,19 @@ interface ActionCopy {
   expiry: string;
 }
 
+interface NoticeCopy {
+  subject: string;
+  title: string;
+  body: (maskedNewEmail: string, at: string) => string;
+  warning: string;
+}
+
 interface EmailMessages {
   layout: { copyLink: string; ignore: string };
   verifyEmail: ActionCopy;
   resetPassword: ActionCopy;
+  changeEmail: ActionCopy;
+  emailChanged: NoticeCopy;
 }
 
 /** Chuỗi email theo ngôn ngữ; thiếu key ở một ngôn ngữ là lỗi typecheck. */
@@ -36,6 +45,20 @@ export const EMAIL_MESSAGES: Record<EmailLocale, EmailMessages> = {
       buttonLabel: 'Đặt lại mật khẩu',
       expiry: 'Liên kết hết hạn sau 60 phút.',
     },
+    changeEmail: {
+      subject: 'Xác nhận email mới cho Pet Health',
+      title: 'Xác nhận email mới',
+      explanation:
+        'Bấm nút dưới đây để dùng địa chỉ này làm email đăng nhập của tài khoản Pet Health.',
+      buttonLabel: 'Xác nhận email mới',
+      expiry: 'Liên kết hết hạn sau 60 phút.',
+    },
+    emailChanged: {
+      subject: 'Email tài khoản vừa được đổi',
+      title: 'Email tài khoản vừa được đổi',
+      body: (masked, at) => `Email đăng nhập Pet Health đã đổi sang ${masked} lúc ${at}.`,
+      warning: 'Nếu không phải bạn, hãy đặt lại mật khẩu ngay.',
+    },
   },
   en: {
     layout: {
@@ -55,6 +78,20 @@ export const EMAIL_MESSAGES: Record<EmailLocale, EmailMessages> = {
       explanation: 'Click the button below to set a new password for your Pet Health account.',
       buttonLabel: 'Reset password',
       expiry: 'This link expires in 60 minutes.',
+    },
+    changeEmail: {
+      subject: 'Confirm your new Pet Health email',
+      title: 'Confirm your new email',
+      explanation:
+        'Click the button below to use this address to sign in to your Pet Health account.',
+      buttonLabel: 'Confirm new email',
+      expiry: 'This link expires in 60 minutes.',
+    },
+    emailChanged: {
+      subject: 'Your account email was changed',
+      title: 'Your account email was changed',
+      body: (masked, at) => `Your Pet Health sign-in email was changed to ${masked} at ${at}.`,
+      warning: "If this wasn't you, reset your password right away.",
     },
   },
 };

@@ -17,7 +17,8 @@ export const zNewPassword = z
   .string({ error: 'Trường bắt buộc' })
   .refine((s) => codePoints(s) >= 8 && codePoints(s) <= 128, {
     error: 'Mật khẩu cần 8–128 ký tự',
-  });
+  })
+  .refine((s) => s.trim() !== '', { error: 'Mật khẩu không được chỉ có khoảng trắng' });
 
 /** Token trong liên kết email: base64url 43 ký tự. */
 export const zToken = z.string({ error: 'Liên kết không hợp lệ' });

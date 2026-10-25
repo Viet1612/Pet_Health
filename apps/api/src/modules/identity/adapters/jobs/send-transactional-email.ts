@@ -1,11 +1,15 @@
-import { renderEmail } from '@ph/email-templates';
+import { renderEmail, renderEmailChangedNotice } from '@ph/email-templates';
 import type { Kysely } from 'kysely';
 import type { Logger } from 'pino';
 
 import type { ClockPort } from '../../../../platform/clock/clock.js';
 import type { Database } from '../../../../platform/db/kysely.js';
 import { EmailRejectedError, type EmailPort } from '../../../../platform/email/email-port.js';
-import { EMAIL_LINK_PATH, emailJobSchema } from '../../../../platform/email/jobs.js';
+import {
+  EMAIL_LINK_PATH,
+  emailJobSchema,
+  PRIORITY_TEMPLATES,
+} from '../../../../platform/email/jobs.js';
 import { fixedWindow, incrementCounter } from '../../../../platform/rate-limit/rate-limiter.js';
 
 const DAY_SEC = 86_400;
@@ -50,12 +54,19 @@ export function createSendTransactionalEmail(deps: SendEmailDeps) {
         { job: 'email.transactional', template: job.template, count },
         'smtp_daily_limit_80',
       );
-      // Gần hết hạn mức: chỉ còn gửi thư đặt lại mật khẩu.
-      if (job.template !== 'RESET_PASSWORD') return;
+      // Gần hết hạn mức: chỉ còn gửi thư đặt lại mật khẩu và thông báo đổi email.
+      if (!PRIORITY_TEMPLATES.has(job.template)) return;
     }
 
-    const link = `${deps.appOrigin}${EMAIL_LINK_PATH[job.template]}#token=${job.token}`;
-    const rendered = await renderEmail(job.template, link, job.locale ?? 'vi');
+    const locale = job.locale ?? 'vi';
+    const rendered =
+      job.template === 'EMAIL_CHANGED_NOTICE'
+        ? await renderEmailChangedNotice({ maskedNewEmail: job.maskedNewEmail, at: job.at }, locale)
+        : await renderEmail(
+            job.template,
+            `${deps.appOrigin}${EMAIL_LINK_PATH[job.template]}#token=${job.token}`,
+            locale,
+          );
 
     try {
       await deps.email.send({ to: job.to, ...rendered });

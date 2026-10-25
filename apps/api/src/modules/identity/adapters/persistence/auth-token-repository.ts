@@ -52,6 +52,34 @@ export const authTokenRepository = {
       .executeTakeFirst();
   },
 
+  /** Token chưa dùng, chưa hết hạn của user theo loại (đổi email đang chờ, S6-01). */
+  findActive(
+    q: Q,
+    userId: string,
+    kind: AuthTokenKind,
+    now: Date,
+  ): Promise<AuthTokenRow | undefined> {
+    return q
+      .selectFrom('auth_tokens')
+      .selectAll()
+      .where('user_id', '=', userId)
+      .where('kind', '=', kind)
+      .where('used_at', 'is', null)
+      .where('expires_at', '>', now)
+      .executeTakeFirst();
+  },
+
+  /** Vô hiệu token chưa dùng cùng loại (đổi mật khẩu → liên kết đặt lại cũ hết hiệu lực). */
+  async useAll(q: Q, userId: string, kind: AuthTokenKind, now: Date): Promise<void> {
+    await q
+      .updateTable('auth_tokens')
+      .set({ used_at: now })
+      .where('user_id', '=', userId)
+      .where('kind', '=', kind)
+      .where('used_at', 'is', null)
+      .execute();
+  },
+
   /** Đánh dấu đã dùng; trả `false` nếu token đã bị dùng (kể cả bởi request song song). */
   async consume(q: Q, id: string, now: Date): Promise<boolean> {
     const row = await q

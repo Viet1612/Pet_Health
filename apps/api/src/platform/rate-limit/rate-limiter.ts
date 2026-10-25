@@ -20,6 +20,13 @@ export const RATE_LIMITS = {
     limit: 5,
     windowSec: 3600,
   }),
+  /** Nhập sai mật khẩu ở `/me/*` (đổi mật khẩu, đổi email, xóa tài khoản): 5 lần / 15 phút. */
+  passwordCheck: (userId: string) => ({ bucket: `pwcheck:${userId}`, limit: 5, windowSec: 900 }),
+  emailChange: (userId: string) => ({
+    bucket: `email-change:${userId}`,
+    limit: 5,
+    windowSec: 3600,
+  }),
 } as const;
 
 /** Đầu cửa sổ cố định chứa `nowMs` và số giây còn lại tới hết cửa sổ (làm tròn lên). */

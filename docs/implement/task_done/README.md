@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 41 / 54 task
+**Tiến độ:** 42 / 54 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -49,4 +49,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S5-01 | API việc hằng ngày: 2 bảng + RLS, 5 route, giới hạn 20, `RoutineQueryPort` | Xong, test E2E API Pass | 2026-10-25 | `4265bee` | [S5-01](S5-01-routines-api.md) |
 | S5-02 | Giao diện SCR-16 Việc hằng ngày, ChecklistItem, sheet Thêm/Sửa, xóa có xác nhận | Xong, E2E giao diện Pass | 2026-10-25 | `acbedff` | [S5-02](S5-02-routines-ui.md) |
 | S5-03 | `GET /dashboard`: banner, checklist, 5 mốc sắp tới, cân nặng, lọc theo thú cưng | Xong, test E2E API Pass; chưa đo hiệu năng | 2026-10-25 | `d8e5308` | [S5-03](S5-03-dashboard-api.md) |
-| S5-04 | Giao diện Dashboard SCR-06: banner nhắc, banner xác minh, 3 panel, lọc "Tất cả", QuickAdd 4 mục | Xong, E2E giao diện Pass; chưa đo Lighthouse | 2026-10-25 | — | [S5-04](S5-04-dashboard-ui.md) |
+| S5-04 | Giao diện Dashboard SCR-06: banner nhắc, banner xác minh, 3 panel, lọc "Tất cả", QuickAdd 4 mục | Xong, E2E giao diện Pass; chưa đo Lighthouse | 2026-10-25 | `29a8722` | [S5-04](S5-04-dashboard-ui.md) |
+| S6-01 | API `/me`: múi giờ, đổi mật khẩu, đổi email có xác nhận, xóa tài khoản | Xong, test E2E API Pass | 2026-10-25 | — | [S6-01](S6-01-settings-api.md) |

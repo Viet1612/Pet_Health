@@ -16,10 +16,15 @@ export const verifyEmailRoutes: FastifyPluginAsyncZod<IdentityDeps> = (app, deps
         tags: ['auth'],
         summary: 'Xác minh email bằng token trong liên kết',
         body: z.object({ token: zToken }),
-        response: { 200: z.object({ user: zUser }) },
+        response: {
+          200: z.object({ user: zUser, purpose: z.enum(['VERIFY_EMAIL', 'CHANGE_EMAIL']) }),
+        },
       },
     },
-    async (req) => ({ user: toUserDto(await verifyEmail(deps, req.body.token)) }),
+    async (req) => {
+      const { user, purpose } = await verifyEmail(deps, req.body.token);
+      return { user: toUserDto(user), purpose };
+    },
   );
 
   app.post(

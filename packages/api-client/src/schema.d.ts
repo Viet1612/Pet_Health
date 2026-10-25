@@ -336,6 +336,8 @@ export interface paths {
                 /** Format: date-time */
                 createdAt: string;
               };
+              /** @enum {string} */
+              purpose: 'VERIFY_EMAIL' | 'CHANGE_EMAIL';
             };
           };
         };
@@ -462,6 +464,119 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/me': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Thông tin tài khoản */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              user: {
+                /** Format: uuid */
+                id: string;
+                email: string;
+                emailVerified: boolean;
+                timezone: string;
+                /** @enum {string} */
+                locale: 'vi' | 'en';
+                /** Format: date-time */
+                createdAt: string;
+                /** @description Email mới đang chờ xác nhận (liên kết 60 phút) */
+                pendingEmail: string | null;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    /** Xóa tài khoản cùng toàn bộ dữ liệu và ảnh */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            password: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    /** Đổi múi giờ */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description IANA, ví dụ Asia/Ho_Chi_Minh */
+            timezone: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              user: {
+                /** Format: uuid */
+                id: string;
+                email: string;
+                emailVerified: boolean;
+                timezone: string;
+                /** @enum {string} */
+                locale: 'vi' | 'en';
+                /** Format: date-time */
+                createdAt: string;
+              };
+            };
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
   '/me/locale': {
     parameters: {
       query?: never;
@@ -506,6 +621,88 @@ export interface paths {
         };
       };
     };
+    trace?: never;
+  };
+  '/me/password': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Đổi mật khẩu (giữ phiên hiện tại, hủy phiên khác) */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            currentPassword: string;
+            newPassword: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/me/email': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Yêu cầu đổi email (gửi liên kết xác nhận tới email mới) */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            newEmail: string;
+            password: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        202: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
   '/pets': {

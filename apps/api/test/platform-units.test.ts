@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { isSelectableTimezone } from '../src/platform/calendar/today.js';
 import { FakeClock } from '../src/platform/clock/clock.js';
+import { maskEmail } from '../src/platform/email/jobs.js';
 import { genReqId, REF_PATTERN } from '../src/platform/http/request-id.js';
 import { fieldErrorCode, fieldErrorParams } from '../src/platform/http/zod-messages.vi.js';
 import { newId } from '../src/platform/ids.js';
@@ -87,5 +89,19 @@ describe('newId', () => {
     const b = newId();
     expect(a).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
     expect(b > a).toBe(true);
+  });
+});
+
+describe('S6-01: múi giờ chọn được, che email', () => {
+  it('isSelectableTimezone', () => {
+    for (const ok of ['Asia/Ho_Chi_Minh', 'UTC', 'Europe/London']) {
+      expect(isSelectableTimezone(ok)).toBe(true);
+    }
+    for (const bad of ['GMT+7', '', 'Asia/Hanoi']) expect(isSelectableTimezone(bad)).toBe(false);
+  });
+
+  it('maskEmail', () => {
+    expect(maskEmail('vi.nguyen@example.com')).toBe('vi***@example.com');
+    expect(maskEmail('a@b.vn')).toBe('a***@b.vn');
   });
 });

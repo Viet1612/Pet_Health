@@ -34,6 +34,21 @@ export async function findUsableToken(
   return row;
 }
 
+/** Như `findUsableToken` nhưng nhận một trong nhiều loại (xác minh email + đổi email, S6-01). */
+export async function findUsableTokenOf(
+  q: Kysely<Database>,
+  token: string,
+  kinds: readonly AuthTokenKind[],
+  now: Date,
+): Promise<AuthTokenRow> {
+  if (!TOKEN_PATTERN.test(token)) throw tokenInvalid();
+  const row = await authTokenRepository.findByHash(q, tokenService.hashOf(token));
+  if (!row || !kinds.includes(row.kind as AuthTokenKind)) throw tokenInvalid();
+  if (row.used_at) throw tokenUsed();
+  if (row.expires_at <= now) throw tokenExpired();
+  return row;
+}
+
 /** Đánh dấu token đã dùng; bị request song song dùng trước → 410 TOKEN_USED. */
 export async function consumeToken(
   trx: Transaction<Database>,

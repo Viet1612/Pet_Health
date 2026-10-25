@@ -310,8 +310,14 @@ paths:
                       - locale
                       - createdAt
                     additionalProperties: false
+                  purpose:
+                    type: string
+                    enum:
+                      - VERIFY_EMAIL
+                      - CHANGE_EMAIL
                 required:
                   - user
+                  - purpose
                 additionalProperties: false
   /auth/verify-email/resend:
     post:
@@ -363,6 +369,136 @@ paths:
       responses:
         "204":
           description: Default Response
+  /me:
+    get:
+      summary: Thông tin tài khoản
+      tags:
+        - auth
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      email:
+                        type: string
+                      emailVerified:
+                        type: boolean
+                      timezone:
+                        type: string
+                      locale:
+                        type: string
+                        enum:
+                          - vi
+                          - en
+                      createdAt:
+                        type: string
+                        format: date-time
+                        pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                      pendingEmail:
+                        description: Email mới đang chờ xác nhận (liên kết 60 phút)
+                        type:
+                          - string
+                          - "null"
+                    required:
+                      - id
+                      - email
+                      - emailVerified
+                      - timezone
+                      - locale
+                      - createdAt
+                      - pendingEmail
+                    additionalProperties: false
+                required:
+                  - user
+                additionalProperties: false
+    patch:
+      summary: Đổi múi giờ
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                timezone:
+                  type: string
+                  description: IANA, ví dụ Asia/Ho_Chi_Minh
+              required:
+                - timezone
+              additionalProperties: false
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      email:
+                        type: string
+                      emailVerified:
+                        type: boolean
+                      timezone:
+                        type: string
+                      locale:
+                        type: string
+                        enum:
+                          - vi
+                          - en
+                      createdAt:
+                        type: string
+                        format: date-time
+                        pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                    required:
+                      - id
+                      - email
+                      - emailVerified
+                      - timezone
+                      - locale
+                      - createdAt
+                    additionalProperties: false
+                required:
+                  - user
+                additionalProperties: false
+    delete:
+      summary: Xóa tài khoản cùng toàn bộ dữ liệu và ảnh
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  minLength: 1
+              required:
+                - password
+              additionalProperties: false
+      responses:
+        "204":
+          description: Default Response
   /me/locale:
     patch:
       summary: Đổi ngôn ngữ của tài khoản
@@ -398,6 +534,55 @@ paths:
                 required:
                   - locale
                 additionalProperties: false
+  /me/password:
+    post:
+      summary: Đổi mật khẩu (giữ phiên hiện tại, hủy phiên khác)
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                  minLength: 1
+                newPassword:
+                  type: string
+              required:
+                - currentPassword
+                - newPassword
+              additionalProperties: false
+      responses:
+        "204":
+          description: Default Response
+  /me/email:
+    post:
+      summary: Yêu cầu đổi email (gửi liên kết xác nhận tới email mới)
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newEmail:
+                  type: string
+                  minLength: 1
+                password:
+                  type: string
+                  minLength: 1
+              required:
+                - newEmail
+                - password
+              additionalProperties: false
+      responses:
+        "202":
+          description: Default Response
   /pets:
     get:
       summary: Danh sách thú cưng

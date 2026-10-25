@@ -408,6 +408,7 @@ export const en: Messages = {
       INVALID_CREDENTIALS: 'Incorrect email or password',
       ACCOUNT_LOCKED: 'Account temporarily locked after too many failed logins',
       EMAIL_TAKEN: 'This email is already in use',
+      WRONG_PASSWORD: 'Current password is incorrect',
       TOKEN_INVALID: 'This link is invalid',
       TOKEN_EXPIRED: 'This link has expired',
       TOKEN_USED: 'This link has already been used',
@@ -469,6 +470,8 @@ export const en: Messages = {
           return 'Invalid time zone';
         case 'EMAIL_TAKEN':
           return 'This email is already in use';
+        case 'SAME_EMAIL':
+          return 'The new email is the same as the current one';
         case 'CONFIRM_NAME_MISMATCH':
           return "Name doesn't match";
         default:
