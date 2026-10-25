@@ -30,9 +30,24 @@ export const zLocale = z.enum(LOCALES);
 
 const toLocale = (v: string): Locale => (v === 'en' ? 'en' : 'vi');
 
+/** Nickname (F-02): 1–50 ký tự sau trim, bắt buộc khi đăng ký. */
+export const zNickname = z
+  .string({ error: 'Nhập nickname' })
+  .trim()
+  .min(1, { error: 'Nhập nickname' })
+  .max(50, { error: 'Nickname tối đa 50 ký tự' });
+
+/** Ngày sinh (F-02): `YYYY-MM-DD`; khoảng hợp lệ kiểm ở application theo múi giờ. */
+export const zBirthDate = z
+  .string({ error: 'Nhập ngày sinh' })
+  .min(1, { error: 'Nhập ngày sinh' })
+  .describe('YYYY-MM-DD, từ 1900-01-01 tới hôm nay');
+
 export const zUser = z.object({
   id: z.uuid(),
   email: z.string(),
+  nickname: z.string().nullable().describe('null: tài khoản cũ chưa đặt nickname'),
+  birthDate: z.iso.date().nullable().describe('null: tài khoản cũ chưa nhập ngày sinh'),
   emailVerified: z.boolean(),
   timezone: z.string(),
   locale: zLocale,
@@ -44,6 +59,8 @@ export function toUserDto(row: UserRow): UserDto {
   return {
     id: row.id,
     email: row.email,
+    nickname: row.nickname,
+    birthDate: row.birth_date,
     emailVerified: row.email_verified_at !== null,
     timezone: row.timezone,
     locale: toLocale(row.locale),

@@ -29,6 +29,8 @@ test('luồng cốt lõi: tạo mốc → nhắc D7, D1 → đánh dấu (có ho
   // Đăng ký → xác minh qua liên kết trong Mailpit.
   await page.goto(`${ORIGIN}/register`);
   await page.getByLabel('Email').fill(email);
+  await page.getByLabel('Nickname').fill('Mẹ Mochi');
+  await page.getByLabel('Ngày sinh').fill('1995-03-08');
   await page.getByLabel('Mật khẩu', { exact: true }).fill(PASSWORD);
   await page.getByRole('button', { name: 'Đăng ký' }).click();
   await expect(page).toHaveURL(`${ORIGIN}/`);

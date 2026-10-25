@@ -1,4 +1,5 @@
 import { isValidTimezone } from '../../../platform/calendar/today.js';
+import { checkBirthDate } from './birth-date.js';
 import { ConflictError, ValidationError } from '../../../platform/errors/app-error.js';
 import { newId } from '../../../platform/ids.js';
 import { EMAIL_QUEUE, emailLocale } from '../../../platform/email/jobs.js';
@@ -21,6 +22,10 @@ export interface RegisterInput {
   email: string;
   password: string;
   timezone?: string | undefined;
+  /** F-02: tên gọi khi đăng ký (đã trim, 1–50 ký tự). */
+  nickname: string;
+  /** F-02: ngày sinh `YYYY-MM-DD` (chưa kiểm). */
+  birthDate: string;
   /** Ngôn ngữ web đang dùng lúc đăng ký (S4-09); mặc định `vi`. */
   locale?: 'vi' | 'en' | undefined;
   clientIp: string;
@@ -44,6 +49,8 @@ export async function registerUser(
     ]);
   }
 
+  const birthDate = checkBirthDate(input.birthDate, timezone, deps.clock.now());
+
   // Argon2 tốn 50–100 ms: băm trước, không giữ transaction.
   const passwordHash = await deps.hasher.hash(input.password);
   const now = deps.clock.now();
@@ -55,6 +62,8 @@ export async function registerUser(
         email: input.email,
         passwordHash,
         timezone,
+        nickname: input.nickname,
+        birthDate,
         locale: input.locale ?? 'vi',
         createdAt: now,
       });

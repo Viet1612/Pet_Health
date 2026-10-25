@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { m } from '../../i18n';
+import { deviceToday } from '../pets/format';
 
 const t = m.auth;
 const codePoints = (s: string): number => Array.from(s).length;
@@ -22,9 +23,22 @@ export const loginSchema = z.object({
 });
 export type LoginValues = z.infer<typeof loginSchema>;
 
+export const zNicknameField = z
+  .string()
+  .trim()
+  .min(1, { error: t.required })
+  .refine((s) => codePoints(s) <= 50, { error: t.nicknameTooLong });
+
+export const zUserBirthDateField = z
+  .string()
+  .min(1, { error: t.required })
+  .refine((d) => d <= deviceToday(), { error: t.futureBirthDate });
+
 export const registerSchema = z.object({
   email: zEmailField,
   password: zNewPasswordField,
+  nickname: zNicknameField,
+  birthDate: zUserBirthDateField,
   timezone: z.string().min(1),
 });
 export type RegisterValues = z.infer<typeof registerSchema>;

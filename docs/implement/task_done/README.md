@@ -55,4 +55,15 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S6-03 | Mất mạng (banner, nút Lưu tắt), hết phiên giữ bản nháp, đồng bộ đa thiết bị | Xong, E2E Pass | 2026-10-25 | `4e969b0` | [S6-03](S6-03-system-states.md) |
 | S6-04 | Rà soát trợ năng (axe 0 lỗi serious/critical, vùng chạm 44 px, skip link); dark mode không làm | Xong phần trợ năng; dark mode bỏ theo quyết định chỉ dùng giao diện sáng | 2026-10-26 | `9cd6323` | [S6-04](S6-04-dark-mode-a11y.md) |
 | S6-05 | Analytics tự lưu: bảng phân vùng, danh sách trắng, event server/client, 3 view funnel | Xong, E2E API kiểm DB Pass | 2026-10-26 | `6e15042` | [S6-05](S6-05-analytics.md) |
-| S6-06 | Job `maintenance.daily`: 8 bước dọn dẹp theo lô, partition analytics, heartbeat kiểm DB | Xong, test tích hợp Pass | 2026-10-26 | — | [S6-06](S6-06-maintenance-job.md) |
+| S6-06 | Job `maintenance.daily`: 8 bước dọn dẹp theo lô, partition analytics, heartbeat kiểm DB | Xong, test tích hợp Pass | 2026-10-26 | `89b64e5` | [S6-06](S6-06-maintenance-job.md) |
+
+## Bản tin (Phase 2)
+
+Task ở [../tasks-feed/](../tasks-feed/README.md). Làm trên máy dev trước; F-01 (R2) làm cùng đợt triển khai production.
+
+**Tiến độ:** 2 / 13 task
+
+| Task | Tên | Trạng thái | Ngày | Commit | Kết quả |
+|---|---|---|---|---|---|
+| F-02 | Hồ sơ công khai, nickname và ngày sinh khi đăng ký | Xong, E2E API + IDOR Pass | 2026-10-26 | — | [F-02](F-02-public-profile.md) |
+| F-03 | Schema mạng xã hội và RLS "đọc công khai, ghi chỉ chủ", chặn nhau | Xong, test tích hợp RLS Pass | 2026-10-26 | — | [F-03](F-03-social-schema.md) |

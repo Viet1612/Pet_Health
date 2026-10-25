@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 import { problemText, toUserMessage } from '../../api/to-user-message';
+import { deviceToday } from '../../features/pets/format';
 import { registerSchema, useRegister, type RegisterValues } from '../../features/session';
 import { m } from '../../i18n';
 import { Button } from '../../ui/Button';
@@ -16,6 +17,13 @@ import { track } from '../../api/analytics';
 
 const t = m.auth.register;
 const DEFAULT_TZ = 'Asia/Ho_Chi_Minh';
+const REGISTER_FIELDS: (keyof RegisterValues)[] = [
+  'email',
+  'password',
+  'nickname',
+  'birthDate',
+  'timezone',
+];
 
 function timezoneLabel(tz: string): string {
   try {
@@ -39,7 +47,7 @@ function RegisterPage() {
     resolver: zodResolver(registerSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    defaultValues: { email: '', password: '', timezone: DEFAULT_TZ },
+    defaultValues: { email: '', password: '', nickname: '', birthDate: '', timezone: DEFAULT_TZ },
   });
   const passwordLength = Array.from(useWatch({ control: form.control, name: 'password' })).length;
 
@@ -59,8 +67,8 @@ function RegisterPage() {
       if (message.kind === 'fields') {
         let first = true;
         for (const [field, text] of Object.entries(message.fields)) {
-          if (field === 'email' || field === 'password' || field === 'timezone') {
-            form.setError(field, { message: text }, { shouldFocus: first });
+          if (REGISTER_FIELDS.includes(field as keyof RegisterValues)) {
+            form.setError(field as keyof RegisterValues, { message: text }, { shouldFocus: first });
             first = false;
           }
         }
@@ -86,6 +94,23 @@ function RegisterPage() {
           autoComplete="email"
           error={form.formState.errors.email?.message}
           {...form.register('email')}
+        />
+        <TextField
+          label={m.auth.nickname}
+          autoComplete="nickname"
+          maxLength={50}
+          hint={m.auth.nicknameHint}
+          error={form.formState.errors.nickname?.message}
+          {...form.register('nickname')}
+        />
+        <TextField
+          label={m.auth.birthDate}
+          type="date"
+          autoComplete="bday"
+          min="1900-01-01"
+          max={deviceToday()}
+          error={form.formState.errors.birthDate?.message}
+          {...form.register('birthDate')}
         />
         <div className="flex flex-col gap-2">
           <PasswordField

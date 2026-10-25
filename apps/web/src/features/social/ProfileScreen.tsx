@@ -1,0 +1,93 @@
+import { useQuery } from '@tanstack/react-query';
+import { ApiError } from '@ph/api-client';
+import { ImageOff } from 'lucide-react';
+import { useState } from 'react';
+
+import { m } from '../../i18n';
+import { Button } from '../../ui/Button';
+import { EmptyState } from '../../ui/EmptyState';
+import { ErrorState } from '../../ui/ErrorState';
+import { Skeleton } from '../../ui/Skeleton';
+import { ProfileFormDialog } from './ProfileFormDialog';
+import { myProfileQuery, profileQuery, type Profile } from './queries';
+import { UserAvatar } from './UserAvatar';
+
+const t = m.social;
+
+function Stat({ value, label }: { value: number; label: string }) {
+  return (
+    <span className="flex flex-col items-center">
+      <span className="text-h2 font-bold">{value.toLocaleString()}</span>
+      <span className="text-small text-text-muted">{label}</span>
+    </span>
+  );
+}
+
+/** Đầu trang hồ sơ (F-02): ảnh, tên, @username, giới thiệu, số bài / theo dõi. */
+export function ProfileHeader({ profile, onEdit }: { profile: Profile; onEdit?: () => void }) {
+  return (
+    <section className="bg-surface shadow-card flex flex-col gap-4 rounded-lg p-4 md:p-6">
+      <div className="flex items-center gap-4 md:gap-8">
+        <UserAvatar profile={profile} size={96} />
+        <div className="flex flex-1 justify-around">
+          <Stat value={profile.postCount} label={t.posts} />
+          <Stat value={profile.followerCount} label={t.followers} />
+          <Stat value={profile.followingCount} label={t.following} />
+        </div>
+      </div>
+      <div>
+        <h1 className="text-h2 font-bold">{profile.displayName}</h1>
+        <p className="text-small text-text-muted">@{profile.username}</p>
+        {profile.bio && <p className="text-body mt-2 whitespace-pre-line">{profile.bio}</p>}
+      </div>
+      {profile.isMe && onEdit && (
+        <Button variant="secondary" fullWidth onClick={onEdit}>
+          {t.editProfile}
+        </Button>
+      )}
+    </section>
+  );
+}
+
+/** SCR hồ sơ công khai `/u/{username}`. Lưới ảnh có ở F-05. */
+export function ProfileScreen({ username }: { username: string }) {
+  const profile = useQuery(profileQuery(username));
+  const mine = useQuery({ ...myProfileQuery, enabled: profile.data?.isMe === true });
+  const [editing, setEditing] = useState(false);
+
+  if (profile.isPending) {
+    return (
+      <div aria-busy="true" className="flex flex-col gap-3">
+        <Skeleton className="h-48 rounded-lg" />
+      </div>
+    );
+  }
+  if (profile.isError) {
+    if (profile.error instanceof ApiError && profile.error.status === 404) {
+      return <EmptyState icon={<ImageOff size={48} aria-hidden />} title={t.notFound} />;
+    }
+    return <ErrorState kind="server" onRetry={() => void profile.refetch()} />;
+  }
+
+  return (
+    <div className="mx-auto flex w-full max-w-[760px] flex-col gap-4">
+      <ProfileHeader
+        profile={profile.data}
+        onEdit={() => {
+          setEditing(true);
+        }}
+      />
+      {profile.data.postCount === 0 && (
+        <p className="text-body text-text-muted py-8 text-center">{t.noPosts}</p>
+      )}
+      {editing && mine.data && (
+        <ProfileFormDialog
+          profile={mine.data}
+          onClose={() => {
+            setEditing(false);
+          }}
+        />
+      )}
+    </div>
+  );
+}

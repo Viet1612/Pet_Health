@@ -28,6 +28,7 @@ import {
   type MilestoneEvent,
   type SchedulingDeps,
 } from './scheduling/index.js';
+import { registerSocialRoutes, socialAvatarTargetResolver } from './social/index.js';
 import { SyncEventBus } from '../platform/events/sync-event-bus.js';
 import type { ClockPort } from '../platform/clock/clock.js';
 
@@ -72,11 +73,20 @@ export async function registerModules(api: FastifyInstance, deps: ModuleDeps): P
   await registerNotificationsRoutes(api, { ...deps.notifications, analytics });
   await registerRoutinesRoutes(api, deps.routines);
   await registerDashboardRoutes(api, { ...deps.dashboard, analytics }, deps.media);
+  await registerSocialRoutes(
+    api,
+    { clock: deps.identity.clock, rateLimiter: deps.identity.rateLimiter },
+    deps.media,
+  );
 }
 
 /** Nơi lưu và gắn ảnh theo loại mục tiêu; mô-đun sở hữu mục tiêu thêm vào (AVATAR ở S2-03). */
 export function mediaTargetResolvers(clock: ClockPort): TargetResolvers {
-  return { AVATAR: petAvatarTargetResolver(clock), VISIT_PHOTO: visitPhotoResolver() };
+  return {
+    AVATAR: petAvatarTargetResolver(clock),
+    VISIT_PHOTO: visitPhotoResolver(),
+    USER_AVATAR: socialAvatarTargetResolver(clock),
+  };
 }
 
 /** Route ở gốc (ngoài `/api/v1`) của các mô-đun. */

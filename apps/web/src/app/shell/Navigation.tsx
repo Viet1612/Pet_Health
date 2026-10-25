@@ -1,5 +1,5 @@
 import { Link, useRouterState } from '@tanstack/react-router';
-import { CalendarDays, Heart, House, LogOut, PawPrint, Settings } from 'lucide-react';
+import { CalendarDays, Heart, House, LogOut, Newspaper, PawPrint, Settings } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { useLogoutAction } from '../../features/session';
@@ -35,6 +35,13 @@ const ITEMS: NavItem[] = [
     icon: <Heart size={24} />,
     to: () => petPath('/health/weight'),
     isActive: (p) => /^\/pets\/[^/]+\/health/.test(p),
+  },
+  {
+    key: 'feed',
+    label: m.nav.feed,
+    icon: <Newspaper size={24} />,
+    to: () => '/feed',
+    isActive: (p) => p.startsWith('/feed') || p.startsWith('/u/'),
   },
   {
     key: 'calendar',

@@ -27,7 +27,15 @@ export type {
   UploadPresenters,
   UploadRecord,
 } from './application/ports.js';
-export { avatarKey, petPrefix, thumbKeyOf, userPrefix, visitPhotoKey } from './domain/media-key.js';
+export {
+  avatarKey,
+  petPrefix,
+  thumbKeyOf,
+  userAvatarKey,
+  userAvatarPrefix,
+  userPrefix,
+  visitPhotoKey,
+} from './domain/media-key.js';
 export { createMediaProcessHandler } from './adapters/jobs/media-process.job.js';
 export { createMediaPurgePrefixHandler } from './adapters/jobs/media-purge-prefix.job.js';
 export { kyselyUploadRepository } from './adapters/persistence/kysely-upload-repository.js';

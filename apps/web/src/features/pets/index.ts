@@ -16,5 +16,12 @@ export {
   type Pet,
   type PetValues,
 } from './queries';
-export { AvatarUploadError, pendingAvatarFiles, uploadAvatar } from './upload-avatar';
+export {
+  AVATAR_ACCEPT,
+  avatarFileError,
+  AvatarUploadError,
+  pendingAvatarFiles,
+  uploadAvatar,
+  uploadImageAt,
+} from './upload-avatar';
 export { useSelectedPet } from './use-selected-pet';

@@ -10,10 +10,20 @@ import {
   requestEmailChange,
   updateTimezone,
 } from '../../application/account.js';
+import { checkBirthDate } from '../../application/birth-date.js';
 import type { IdentityDeps } from '../../identity-deps.js';
 import { userRepository } from '../persistence/user-repository.js';
 import { clearSessionCookie } from './cookies.js';
-import { toUserDto, zEmail, zEmpty, zLocale, zNewPassword, zUser } from './schemas.js';
+import {
+  toUserDto,
+  zBirthDate,
+  zEmail,
+  zEmpty,
+  zLocale,
+  zNewPassword,
+  zNickname,
+  zUser,
+} from './schemas.js';
 
 const zMe = zUser.extend({
   pendingEmail: z.string().nullable().describe('Email mới đang chờ xác nhận (liên kết 60 phút)'),
@@ -50,14 +60,33 @@ export const meRoutes: FastifyPluginAsyncZod<IdentityDeps> = (app, deps) => {
     {
       schema: {
         tags: ['auth'],
-        summary: 'Đổi múi giờ',
-        body: z.strictObject({ timezone: z.string().describe('IANA, ví dụ Asia/Ho_Chi_Minh') }),
+        summary: 'Đổi múi giờ, nickname, ngày sinh (ít nhất một trường)',
+        body: z
+          .strictObject({
+            timezone: z.string().optional().describe('IANA, ví dụ Asia/Ho_Chi_Minh'),
+            nickname: zNickname.optional(),
+            birthDate: zBirthDate.optional(),
+          })
+          .refine((b) => Object.keys(b).length > 0, {
+            error: 'Cần ít nhất một trường',
+          }),
         response: { 200: z.object({ user: zUser }) },
       },
     },
-    async (req) => ({
-      user: toUserDto(await updateTimezone(deps, authOf(req).userId, req.body.timezone)),
-    }),
+    async (req) => {
+      const { userId } = authOf(req);
+      if (req.body.timezone !== undefined) await updateTimezone(deps, userId, req.body.timezone);
+      if (req.body.nickname !== undefined) {
+        await userRepository.setNickname(deps.db, userId, req.body.nickname);
+      }
+      if (req.body.birthDate !== undefined) {
+        const { user } = await getMe(deps, userId);
+        const birthDate = checkBirthDate(req.body.birthDate, user.timezone, deps.clock.now());
+        await userRepository.setBirthDate(deps.db, userId, birthDate);
+      }
+      const { user } = await getMe(deps, userId);
+      return { user: toUserDto(user) };
+    },
   );
 
   app.patch(

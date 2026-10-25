@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { SUMMARY_KEY } from '../../features/notifications';
 
 import { usePhotoUploadBridge } from '../../features/photos';
+import { CompleteAccountPrompt } from '../../features/social';
 import { OfflineBanner } from '../../ui/OfflineBanner';
 import { SkipLink } from '../../ui/SkipLink';
 import { Navigation } from './Navigation';
@@ -50,6 +51,7 @@ export function AppShell() {
       >
         <Outlet />
       </main>
+      <CompleteAccountPrompt />
     </div>
   );
 }

@@ -237,14 +237,28 @@ describe('meta: deny by default', () => {
   }
 });
 
+/** Bảng mạng xã hội đọc công khai (người đã đăng nhập) qua policy `social_read` thay cho owner_isolation. */
+const SOCIAL_PUBLIC_READ = ['posts', 'post_photos', 'post_comments'];
+const SOCIAL_TABLES = [
+  'profiles',
+  'posts',
+  'post_photos',
+  'follows',
+  'post_likes',
+  'post_comments',
+  'blocks',
+  'social_notifications',
+];
+
 describe('meta: RLS', () => {
-  it('mọi bảng public có owner_id bật RLS + FORCE + policy owner_isolation', async () => {
+  it('mọi bảng public có owner_id bật RLS + FORCE + policy owner_isolation (hoặc social_read)', async () => {
     const { rows } = await sql<{ table: string; rls: boolean; force: boolean; policy: boolean }>`
       SELECT c.relname AS table, c.relrowsecurity AS rls, c.relforcerowsecurity AS force,
              EXISTS (
                SELECT 1 FROM pg_policies p
                WHERE p.schemaname = 'public' AND p.tablename = c.relname
-                 AND p.policyname = 'owner_isolation'
+                 AND (p.policyname = 'owner_isolation'
+                      OR (c.relname = ANY(${SOCIAL_PUBLIC_READ}) AND p.policyname = 'social_read'))
              ) AS policy
       FROM information_schema.columns col
       JOIN pg_namespace n ON n.nspname = col.table_schema
@@ -254,6 +268,19 @@ describe('meta: RLS', () => {
     expect(rows.map((r) => r.table)).toContain('idor_probe');
     const bad = rows.filter((r) => !r.rls || !r.force || !r.policy).map((r) => r.table);
     expect(bad, `Bảng có owner_id thiếu RLS (enableOwnerRls): ${bad.join(', ')}`).toEqual([]);
+  });
+
+  it('bảng mạng xã hội (F-03) bật RLS + FORCE và có policy', async () => {
+    const { rows } = await sql<{ table: string; rls: boolean; force: boolean; policies: number }>`
+      SELECT c.relname AS table, c.relrowsecurity AS rls, c.relforcerowsecurity AS force,
+             (SELECT count(*)::int FROM pg_policies p
+              WHERE p.schemaname = 'public' AND p.tablename = c.relname) AS policies
+      FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+      WHERE n.nspname = 'public' AND c.relname = ANY(${SOCIAL_TABLES})
+      ORDER BY c.relname`.execute(env.ownerDb);
+    expect(rows.map((r) => r.table).sort()).toEqual([...SOCIAL_TABLES].sort());
+    const bad = rows.filter((r) => !r.rls || !r.force || r.policies === 0).map((r) => r.table);
+    expect(bad, `Bảng mạng xã hội thiếu RLS: ${bad.join(', ')}`).toEqual([]);
   });
 });
 

@@ -5,6 +5,13 @@
 
 import type { ColumnType } from 'kysely';
 
+export type Generated<T> =
+  T extends ColumnType<infer S, infer I, infer U>
+    ? ColumnType<S, I | undefined, U>
+    : ColumnType<T, T | undefined, T>;
+
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
+
 export type Json = JsonValue;
 
 export type JsonArray = JsonValue[];
@@ -16,11 +23,6 @@ export type JsonObject = {
 export type JsonPrimitive = boolean | number | string | null;
 
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
-
-export type Generated<T> =
-  T extends ColumnType<infer S, infer I, infer U>
-    ? ColumnType<S, I | undefined, U>
-    : ColumnType<T, T | undefined, T>;
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 
@@ -38,6 +40,27 @@ export interface AnalyticsEvents {
   viewport_w: number | null;
 }
 
+export interface AnalyticsFunnelActivation {
+  first_milestone_at: Timestamp | null;
+  first_pet_at: Timestamp | null;
+  opened_3_days: boolean | null;
+  signup_completed_at: Timestamp | null;
+  user_id_hash: string | null;
+}
+
+export interface AnalyticsFunnelDailyHabit {
+  day: string | null;
+  users_opened: Int8 | null;
+  users_opened_and_checked: Int8 | null;
+}
+
+export interface AnalyticsFunnelReminderLoop {
+  users_completed: Int8 | null;
+  users_notified: Int8 | null;
+  users_seen: Int8 | null;
+  week: Timestamp | null;
+}
+
 export interface AuthTokens {
   created_at: Generated<Timestamp>;
   expires_at: Timestamp;
@@ -47,6 +70,18 @@ export interface AuthTokens {
   token_hash: Buffer;
   used_at: Timestamp | null;
   user_id: string;
+}
+
+export interface Blocks {
+  blocked_id: string;
+  blocker_id: string;
+  created_at: Timestamp;
+}
+
+export interface Follows {
+  created_at: Timestamp;
+  followee_id: string;
+  follower_id: string;
 }
 
 export interface IdempotencyKeys {
@@ -105,6 +140,56 @@ export interface Pets {
   weight_target_kg: Numeric | null;
 }
 
+export interface PostComments {
+  body: string;
+  created_at: Timestamp;
+  id: string;
+  owner_id: string;
+  post_id: string;
+}
+
+export interface PostLikes {
+  created_at: Timestamp;
+  post_id: string;
+  user_id: string;
+}
+
+export interface PostPhotos {
+  created_at: Timestamp;
+  height: number | null;
+  id: string;
+  owner_id: string;
+  position: number;
+  post_id: string;
+  status: Generated<string>;
+  storage_key: string | null;
+  thumb_key: string | null;
+  width: number | null;
+}
+
+export interface Posts {
+  caption: string | null;
+  created_at: Timestamp;
+  id: string;
+  owner_id: string;
+  pet_ids: Generated<string[]>;
+  photo_count: number;
+  published_at: Timestamp | null;
+  status: Generated<string>;
+  updated_at: Timestamp;
+}
+
+export interface Profiles {
+  avatar_key: string | null;
+  bio: string | null;
+  created_at: Timestamp;
+  display_name: string;
+  updated_at: Timestamp;
+  user_id: string;
+  username: string;
+  username_changed_at: Timestamp | null;
+}
+
 export interface RateLimits {
   bucket: string;
   count: number;
@@ -140,6 +225,17 @@ export interface Sessions {
   user_id: string;
 }
 
+export interface SocialNotifications {
+  actor_id: string;
+  comment_id: string | null;
+  created_at: Timestamp;
+  id: string;
+  kind: string;
+  owner_id: string;
+  post_id: string | null;
+  read_at: Timestamp | null;
+}
+
 export interface Uploads {
   created_at: Generated<Timestamp>;
   fail_reason: string | null;
@@ -152,6 +248,7 @@ export interface Uploads {
 }
 
 export interface Users {
+  birth_date: string | null;
   created_at: Generated<Timestamp>;
   email: string;
   email_verified_at: Timestamp | null;
@@ -160,6 +257,7 @@ export interface Users {
   id: string;
   locale: Generated<string>;
   locked_until: Timestamp | null;
+  nickname: string | null;
   notifications_synced_on: string | null;
   password_hash: string;
   timezone: Generated<string>;
@@ -200,15 +298,26 @@ export interface WeightEntries {
 
 export interface DB {
   analytics_events: AnalyticsEvents;
+  analytics_funnel_activation: AnalyticsFunnelActivation;
+  analytics_funnel_daily_habit: AnalyticsFunnelDailyHabit;
+  analytics_funnel_reminder_loop: AnalyticsFunnelReminderLoop;
   auth_tokens: AuthTokens;
+  blocks: Blocks;
+  follows: Follows;
   idempotency_keys: IdempotencyKeys;
   milestones: Milestones;
   notifications: Notifications;
   pets: Pets;
+  post_comments: PostComments;
+  post_likes: PostLikes;
+  post_photos: PostPhotos;
+  posts: Posts;
+  profiles: Profiles;
   rate_limits: RateLimits;
   routine_completions: RoutineCompletions;
   routine_tasks: RoutineTasks;
   sessions: Sessions;
+  social_notifications: SocialNotifications;
   uploads: Uploads;
   users: Users;
   visit_photos: VisitPhotos;

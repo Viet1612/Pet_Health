@@ -41,6 +41,8 @@ export const userRepository = {
       passwordHash: string;
       timezone: string;
       locale: string;
+      nickname: string;
+      birthDate: string;
       createdAt: Date;
     },
   ): Promise<UserRow> {
@@ -52,6 +54,8 @@ export const userRepository = {
         password_hash: user.passwordHash,
         timezone: user.timezone,
         locale: user.locale,
+        nickname: user.nickname,
+        birth_date: user.birthDate,
         created_at: user.createdAt,
       })
       .returningAll()
@@ -96,6 +100,24 @@ export const userRepository = {
     return q
       .updateTable('users')
       .set({ timezone, notifications_synced_on: null })
+      .where('id', '=', id)
+      .returningAll()
+      .executeTakeFirst();
+  },
+
+  async setNickname(q: Q, id: string, nickname: string): Promise<UserRow | undefined> {
+    return q
+      .updateTable('users')
+      .set({ nickname })
+      .where('id', '=', id)
+      .returningAll()
+      .executeTakeFirst();
+  },
+
+  async setBirthDate(q: Q, id: string, birthDate: string): Promise<UserRow | undefined> {
+    return q
+      .updateTable('users')
+      .set({ birth_date: birthDate })
       .where('id', '=', id)
       .returningAll()
       .executeTakeFirst();

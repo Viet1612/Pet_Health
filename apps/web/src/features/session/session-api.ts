@@ -14,6 +14,9 @@ import { adoptAccountLocale, setLocale, type Locale } from '../../i18n/locale';
 export interface SessionUser {
   id: string;
   email: string;
+  /** `null`: tài khoản cũ chưa đặt (hỏi một lần sau đăng nhập, F-02). */
+  nickname: string | null;
+  birthDate: string | null;
   emailVerified: boolean;
   timezone: string;
   locale: Locale;
@@ -74,8 +77,13 @@ export function useRegister() {
   const queryClient = useQueryClient();
   return useMutation({
     // Gửi ngôn ngữ đang dùng để email xác minh đúng ngôn ngữ (S4-09).
-    mutationFn: async (body: { email: string; password: string; timezone: string }) =>
-      unwrap(await api.POST('/auth/register', { body: { ...body, locale } })),
+    mutationFn: async (body: {
+      email: string;
+      password: string;
+      nickname: string;
+      birthDate: string;
+      timezone: string;
+    }) => unwrap(await api.POST('/auth/register', { body: { ...body, locale } })),
     onSuccess: (session) => {
       storeSession(queryClient, session);
     },

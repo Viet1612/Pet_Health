@@ -18,7 +18,13 @@ export async function registerAccount(app: FastifyInstance, email: string): Prom
     method: 'POST',
     url: `${API_PREFIX}/auth/register`,
     headers: { origin: TEST_ORIGIN },
-    payload: { email, password: 'mat-khau-du-dai-1', timezone: 'Asia/Ho_Chi_Minh' },
+    payload: {
+      email,
+      password: 'mat-khau-du-dai-1',
+      timezone: 'Asia/Ho_Chi_Minh',
+      nickname: 'IDOR',
+      birthDate: '1990-05-20',
+    },
   });
   if (res.statusCode !== 201) {
     throw new Error(`Đăng ký ${email} thất bại: ${String(res.statusCode)} ${res.body}`);

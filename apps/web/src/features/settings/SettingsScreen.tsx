@@ -9,7 +9,8 @@ import { cx } from '../../ui/cx';
 import { ErrorState } from '../../ui/ErrorState';
 import { Skeleton } from '../../ui/Skeleton';
 import { useToast } from '../../ui/toast';
-import { petsQuery } from '../pets';
+import { formatLocalDate, petsQuery } from '../pets';
+import { myProfileQuery, PersonalInfoDialog, ProfileFormDialog } from '../social';
 import { useChangeLocale, useLogoutAction } from '../session';
 import {
   ChangeEmailDialog,
@@ -25,7 +26,7 @@ const t = m.settings;
 export const SETTINGS_SECTIONS = ['account', 'time', 'security', 'danger'] as const;
 export type SettingsSection = (typeof SETTINGS_SECTIONS)[number];
 
-type Dialog = 'email' | 'password' | 'timezone' | 'delete';
+type Dialog = 'email' | 'password' | 'timezone' | 'delete' | 'personal' | 'profile';
 
 const version = (): string => {
   const v: unknown = import.meta.env.VITE_APP_VERSION;
@@ -143,6 +144,7 @@ export function SettingsScreen({
 }) {
   const me = useQuery(meQuery);
   const pets = useQuery(petsQuery);
+  const profile = useQuery(myProfileQuery);
   const logout = useLogoutAction();
   const [dialog, setDialog] = useState<Dialog | null>(null);
   const close = () => {
@@ -182,6 +184,22 @@ export function SettingsScreen({
           title={t.changeEmail}
           onClick={() => {
             setDialog('email');
+          }}
+        />
+        <Row
+          title={t.personal}
+          detail={[user.nickname, user.birthDate && formatLocalDate(user.birthDate)]
+            .filter(Boolean)
+            .join(' · ')}
+          onClick={() => {
+            setDialog('personal');
+          }}
+        />
+        <Row
+          title={t.publicProfile}
+          detail={profile.data ? `@${profile.data.username}` : t.publicProfileNone}
+          onClick={() => {
+            setDialog('profile');
           }}
         />
         <li className="border-divider mt-1 border-t pt-2">
@@ -263,6 +281,10 @@ export function SettingsScreen({
       {dialog === 'email' && <ChangeEmailDialog onClose={close} />}
       {dialog === 'password' && <ChangePasswordDialog onClose={close} />}
       {dialog === 'timezone' && <TimezonePickerDialog current={user.timezone} onClose={close} />}
+      {dialog === 'personal' && <PersonalInfoDialog initial={user} onClose={close} />}
+      {dialog === 'profile' && profile.isSuccess && (
+        <ProfileFormDialog profile={profile.data} suggestedName={user.nickname} onClose={close} />
+      )}
       {dialog === 'delete' && (
         <DeleteAccountDialog petCount={pets.data?.length ?? 0} onClose={close} />
       )}

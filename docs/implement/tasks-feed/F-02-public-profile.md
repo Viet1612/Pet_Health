@@ -16,6 +16,7 @@ Mỗi tài khoản có một hồ sơ công khai để người khác tìm và t
 - Bảng `profiles`.
 - API `GET /profiles/{username}`, `GET /me/profile`, `PUT /me/profile`, ảnh đại diện người dùng (`USER_AVATAR`).
 - **Nickname khi đăng ký:** form đăng ký có thêm ô "Nickname" (bắt buộc); lưu `users.nickname` (1–50 ký tự sau trim). Tài khoản cũ chưa có nickname → hỏi một lần khi đăng nhập.
+- **Ngày sinh khi đăng ký:** ô "Ngày sinh" (bắt buộc); lưu `users.birth_date` (từ 1900-01-01 tới hôm nay theo múi giờ tài khoản). Không hiện trên hồ sơ công khai. Tài khoản cũ chưa có → hỏi cùng nickname.
 - Màn "Tạo hồ sơ" lần đầu vào Bản tin.
 - Màn sửa hồ sơ trong Cài đặt.
 
@@ -60,6 +61,7 @@ CREATE TABLE profiles (
 ## Tiêu chí chấp nhận
 
 - [ ] Đăng ký bắt buộc nhập nickname 1–50 ký tự; trống hoặc chỉ khoảng trắng → lỗi dưới trường. Nickname hiện ở menu tài khoản và điền sẵn tên hiển thị khi tạo hồ sơ.
+- [ ] Đăng ký bắt buộc nhập ngày sinh; ngày tương lai → `422 FUTURE_DATE`. Sửa được nickname và ngày sinh trong Cài đặt.
 - [ ] Tạo hồ sơ với username hợp lệ → mở được `/u/{username}` từ tài khoản khác; không có email hay dữ liệu sức khỏe trong phản hồi.
 - [ ] Username trùng (không phân biệt hoa thường) → `409`; sai quy tắc hoặc tên cấm → `422`.
 - [ ] Đổi username lần 2 trong 14 ngày → `429` kèm số ngày còn lại.

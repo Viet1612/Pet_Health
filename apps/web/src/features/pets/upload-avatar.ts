@@ -39,14 +39,23 @@ const sleep = (ms: number) =>
  * Tải ảnh đại diện (có %), rồi hỏi `GET /uploads/{id}` mỗi 1 s, tối đa 20 s. `READY` thì xong;
  * `FAILED` hoặc quá 20 s ném `AvatarUploadError`.
  */
-export async function uploadAvatar(
+export function uploadAvatar(
   petId: string,
+  file: File,
+  on: { progress: (percent: number) => void; processing: () => void },
+): Promise<void> {
+  return uploadImageAt(`/pets/${petId}/avatar`, file, on);
+}
+
+/** Như `uploadAvatar` nhưng cho đường dẫn bất kỳ (ảnh đại diện hồ sơ `/me/avatar`, F-02). */
+export async function uploadImageAt(
+  path: string,
   file: File,
   on: { progress: (percent: number) => void; processing: () => void },
 ): Promise<void> {
   const { uploadId } = await uploadFile<{ uploadId: string }>({
     method: 'PUT',
-    path: `/pets/${petId}/avatar`,
+    path,
     file,
     onProgress: on.progress,
   });

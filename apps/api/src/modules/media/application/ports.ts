@@ -4,7 +4,7 @@ import type { Database } from '../../../platform/db/kysely.js';
 
 export type Q = Kysely<Database> | Transaction<Database>;
 
-export type TargetKind = 'AVATAR' | 'VISIT_PHOTO';
+export type TargetKind = 'AVATAR' | 'VISIT_PHOTO' | 'USER_AVATAR' | 'POST_PHOTO';
 export type UploadStatus = 'PROCESSING' | 'READY' | 'FAILED';
 export type FailReason = 'UNSUPPORTED_FORMAT' | 'CORRUPT' | 'TOO_MANY_PIXELS' | 'PROCESSING_ERROR';
 

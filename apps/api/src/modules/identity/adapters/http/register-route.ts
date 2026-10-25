@@ -5,7 +5,15 @@ import { clientIp } from '../../../../platform/rate-limit/rate-limiter.js';
 import { registerUser } from '../../application/register-user.js';
 import type { IdentityDeps } from '../../identity-deps.js';
 import { setSessionCookie } from './cookies.js';
-import { toUserDto, zAuthResponse, zEmail, zLocale, zNewPassword } from './schemas.js';
+import {
+  toUserDto,
+  zAuthResponse,
+  zEmail,
+  zLocale,
+  zNewPassword,
+  zNickname,
+  zBirthDate,
+} from './schemas.js';
 
 /** POST /auth/register (US-001). Công khai; chống trùng bằng UNIQUE(email), không cần Idempotency-Key. */
 export const registerRoute: FastifyPluginAsyncZod<IdentityDeps> = (app, deps) => {
@@ -19,6 +27,8 @@ export const registerRoute: FastifyPluginAsyncZod<IdentityDeps> = (app, deps) =>
         body: z.object({
           email: zEmail,
           password: zNewPassword,
+          nickname: zNickname,
+          birthDate: zBirthDate,
           timezone: z.string().optional(),
           locale: zLocale.optional(),
         }),

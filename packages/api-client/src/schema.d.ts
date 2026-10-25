@@ -163,6 +163,9 @@ export interface paths {
           'application/json': {
             email: string;
             password: string;
+            nickname: string;
+            /** @description YYYY-MM-DD, từ 1900-01-01 tới hôm nay */
+            birthDate: string;
             timezone?: string;
             /** @enum {string} */
             locale?: 'vi' | 'en';
@@ -181,6 +184,10 @@ export interface paths {
                 /** Format: uuid */
                 id: string;
                 email: string;
+                /** @description null: tài khoản cũ chưa đặt nickname */
+                nickname: string | null;
+                /** @description null: tài khoản cũ chưa nhập ngày sinh */
+                birthDate: string | null;
                 emailVerified: boolean;
                 timezone: string;
                 /** @enum {string} */
@@ -237,6 +244,10 @@ export interface paths {
                 /** Format: uuid */
                 id: string;
                 email: string;
+                /** @description null: tài khoản cũ chưa đặt nickname */
+                nickname: string | null;
+                /** @description null: tài khoản cũ chưa nhập ngày sinh */
+                birthDate: string | null;
                 emailVerified: boolean;
                 timezone: string;
                 /** @enum {string} */
@@ -318,6 +329,10 @@ export interface paths {
                 /** Format: uuid */
                 id: string;
                 email: string;
+                /** @description null: tài khoản cũ chưa đặt nickname */
+                nickname: string | null;
+                /** @description null: tài khoản cũ chưa nhập ngày sinh */
+                birthDate: string | null;
                 emailVerified: boolean;
                 timezone: string;
                 /** @enum {string} */
@@ -376,6 +391,10 @@ export interface paths {
                 /** Format: uuid */
                 id: string;
                 email: string;
+                /** @description null: tài khoản cũ chưa đặt nickname */
+                nickname: string | null;
+                /** @description null: tài khoản cũ chưa nhập ngày sinh */
+                birthDate: string | null;
                 emailVerified: boolean;
                 timezone: string;
                 /** @enum {string} */
@@ -539,6 +558,10 @@ export interface paths {
                 /** Format: uuid */
                 id: string;
                 email: string;
+                /** @description null: tài khoản cũ chưa đặt nickname */
+                nickname: string | null;
+                /** @description null: tài khoản cũ chưa nhập ngày sinh */
+                birthDate: string | null;
                 emailVerified: boolean;
                 timezone: string;
                 /** @enum {string} */
@@ -582,7 +605,7 @@ export interface paths {
     };
     options?: never;
     head?: never;
-    /** Đổi múi giờ */
+    /** Đổi múi giờ, nickname, ngày sinh (ít nhất một trường) */
     patch: {
       parameters: {
         query?: never;
@@ -594,7 +617,10 @@ export interface paths {
         content: {
           'application/json': {
             /** @description IANA, ví dụ Asia/Ho_Chi_Minh */
-            timezone: string;
+            timezone?: string;
+            nickname?: string;
+            /** @description YYYY-MM-DD, từ 1900-01-01 tới hôm nay */
+            birthDate?: string;
           };
         };
       };
@@ -610,6 +636,10 @@ export interface paths {
                 /** Format: uuid */
                 id: string;
                 email: string;
+                /** @description null: tài khoản cũ chưa đặt nickname */
+                nickname: string | null;
+                /** @description null: tài khoản cũ chưa nhập ngày sinh */
+                birthDate: string | null;
                 emailVerified: boolean;
                 timezone: string;
                 /** @enum {string} */
@@ -2857,6 +2887,243 @@ export interface paths {
     put?: never;
     post?: never;
     delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/me/profile': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Hồ sơ công khai của tôi (404 PROFILE_NOT_SET nếu chưa tạo) */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              profile: {
+                username: string;
+                displayName: string;
+                bio: string | null;
+                avatarThumbUrl: string | null;
+                /** @description 0 = đổi username được ngay */
+                usernameChangeInDays: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    /** Tạo hoặc sửa hồ sơ công khai (đổi username tối đa 1 lần/14 ngày) */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description 3–30 ký tự a-z 0-9 . _ */
+            username: string;
+            displayName: string;
+            bio?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              profile: {
+                username: string;
+                displayName: string;
+                bio: string | null;
+                avatarThumbUrl: string | null;
+                /** @description 0 = đổi username được ngay */
+                usernameChangeInDays: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/profiles/check': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Kiểm username hợp lệ và còn trống */
+    get: {
+      parameters: {
+        query?: {
+          username?: string;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              valid: boolean;
+              available: boolean;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/profiles/{username}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Xem hồ sơ theo username (không có hoặc đã chặn nhau → 404) */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          username: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              profile: {
+                username: string;
+                displayName: string;
+                bio: string | null;
+                avatarUrl: string | null;
+                avatarThumbUrl: string | null;
+                postCount: number;
+                followerCount: number;
+                followingCount: number;
+                isMe: boolean;
+                followedByMe: boolean;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/me/avatar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Đặt / thay ảnh đại diện hồ sơ (multipart, field `file`, ≤ 5 MB)
+     * @description Cần có hồ sơ. Ảnh xử lý nền; hỏi trạng thái ở GET /uploads/{uploadId}.
+     */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        202: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              uploadId: string;
+              /** @enum {string} */
+              status: 'PROCESSING';
+            };
+          };
+        };
+      };
+    };
+    post?: never;
+    /** Gỡ ảnh đại diện hồ sơ */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
     options?: never;
     head?: never;
     patch?: never;

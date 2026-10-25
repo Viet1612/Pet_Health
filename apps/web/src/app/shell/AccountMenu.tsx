@@ -88,7 +88,18 @@ export function AccountMenu() {
         >
           {session && (
             <div className="border-divider border-b px-4 py-2">
-              <p className="text-body truncate font-semibold">{session.user.email}</p>
+              {session.user.nickname && (
+                <p className="text-body truncate font-semibold">{session.user.nickname}</p>
+              )}
+              <p
+                className={
+                  session.user.nickname
+                    ? 'text-small text-text-muted truncate'
+                    : 'text-body truncate font-semibold'
+                }
+              >
+                {session.user.email}
+              </p>
               <p className="text-small text-text-muted">
                 {m.settings.menu.timezone(offsetOf(session.user.timezone))}
               </p>

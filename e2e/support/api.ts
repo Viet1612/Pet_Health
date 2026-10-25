@@ -62,10 +62,18 @@ export class ApiSession {
   }
 
   /** Đăng ký tài khoản mới (Asia/Ho_Chi_Minh mặc định). */
-  static async register(opts: { email?: string; timezone?: string } = {}): Promise<ApiSession> {
+  static async register(
+    opts: { email?: string; timezone?: string; nickname?: string; birthDate?: string } = {},
+  ): Promise<ApiSession> {
     const s = await ApiSession.create(opts.email ?? newEmail());
     const res = await s.ctx.post(`${API_URL}/auth/register`, {
-      data: { email: s.email, password: PASSWORD, timezone: opts.timezone ?? 'Asia/Ho_Chi_Minh' },
+      data: {
+        email: s.email,
+        password: PASSWORD,
+        timezone: opts.timezone ?? 'Asia/Ho_Chi_Minh',
+        nickname: opts.nickname ?? 'Người thử E2E',
+        birthDate: opts.birthDate ?? '1990-05-20',
+      },
       headers: { 'cf-connecting-ip': fakeIp() },
     });
     const json = await toJson(res);

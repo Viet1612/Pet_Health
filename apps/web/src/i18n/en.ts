@@ -12,6 +12,7 @@ export const en: Messages = {
     home: 'Overview',
     health: 'Health',
     calendar: 'Calendar',
+    feed: 'Feed',
     pets: 'Pets',
     settings: 'Settings',
   },
@@ -410,6 +411,9 @@ export const en: Messages = {
       INVALID_CREDENTIALS: 'Incorrect email or password',
       ACCOUNT_LOCKED: 'Account temporarily locked after too many failed logins',
       EMAIL_TAKEN: 'This email is already in use',
+      USERNAME_TAKEN: 'Username is already taken',
+      USERNAME_CHANGE_TOO_SOON: 'You can only change your username once every 14 days',
+      PROFILE_NOT_SET: "You haven't created a public profile yet",
       WRONG_PASSWORD: 'Current password is incorrect',
       TOKEN_INVALID: 'This link is invalid',
       TOKEN_EXPIRED: 'This link has expired',
@@ -464,6 +468,12 @@ export const en: Messages = {
           if (max !== undefined) return `At most ${max}`;
           if (min !== undefined) return `At least ${min}`;
           return 'Value out of range';
+        case 'USERNAME_INVALID':
+          return 'Username must be 3–30 lowercase letters, digits, dots or underscores';
+        case 'USERNAME_RESERVED':
+          return "This username isn't available";
+        case 'USERNAME_TAKEN':
+          return 'Username is already taken';
         case 'SYMPTOMS_OR_DIAGNOSIS_REQUIRED':
           return 'Enter at least symptoms or a diagnosis';
         case 'NOT_ALLOWED_FOR_VACCINE':
@@ -508,6 +518,9 @@ export const en: Messages = {
       `${email} · ${verified ? 'verified' : 'not verified'}`,
     pendingEmail: (email: string) => `Waiting for verification: ${email}`,
     changeEmail: 'Change email',
+    personal: 'Nickname and date of birth',
+    publicProfile: 'Public profile',
+    publicProfileNone: 'Not created',
     timezone: 'Time zone',
     timezoneLine: (label: string, now: string) => `${label} · now ${now}`,
     changePassword: 'Change password',
@@ -645,6 +658,43 @@ export const en: Messages = {
       openSuffix: '. Change pet',
     },
   },
+  social: {
+    feedTitle: 'Feed',
+    profileTitle: 'Profile',
+    createTitle: 'Create public profile',
+    createLead:
+      "To post photos and see the feed you need a public profile. It only shows your name, username, bio and photo — never your email or your pets' health data.",
+    createSubmit: 'Create profile',
+    editTitle: 'Edit public profile',
+    editSubmit: 'Save profile',
+    saved: 'Profile saved',
+    username: 'Username',
+    usernameHint: '3–30 characters: lowercase letters, digits, dot, underscore',
+    usernameInvalid: 'Username must be 3–30 lowercase letters, digits, dots or underscores',
+    usernameChecking: 'Checking…',
+    usernameAvailable: 'Username is available',
+    usernameTaken: 'Username is already taken',
+    usernameLocked: (days: number) =>
+      `You can change your username in ${String(days)} day${days === 1 ? '' : 's'}`,
+    displayName: 'Display name',
+    displayNameTooLong: 'Display name must be at most 50 characters',
+    bio: 'Bio',
+    avatar: 'Profile photo',
+    posts: 'posts',
+    followers: 'followers',
+    following: 'following',
+    editProfile: 'Edit profile',
+    noPosts: 'No posts yet',
+    feedSoon: 'Posts will show up here.',
+    toMyProfile: 'View my profile',
+    notFound: 'Profile not found',
+    avatarAlt: (name: string) => `${name}'s profile photo`,
+    complete: {
+      title: 'Complete your account',
+      lead: "Your account doesn't have a nickname or date of birth yet. Add them to continue.",
+      submit: 'Save',
+    },
+  },
   auth: {
     tagline: "Your pet's health record",
     intro:
@@ -667,6 +717,11 @@ export const en: Messages = {
     required: 'Required',
     invalidEmail: 'Invalid email address',
     passwordLength: 'Password must be 8–128 characters',
+    nickname: 'Nickname',
+    nicknameHint: 'The name shown in the app · up to 50 characters',
+    nicknameTooLong: 'Nickname must be at most 50 characters',
+    birthDate: 'Date of birth',
+    futureBirthDate: 'Date of birth cannot be in the future',
     login: {
       title: 'Log in',
       submit: 'Log in',
