@@ -60,6 +60,7 @@ const stubDeps = {
   media: {},
   healthRecords: {},
   scheduling: {},
+  routines: {},
   notifications: {},
 } as unknown as ModuleDeps;
 
@@ -118,6 +119,7 @@ beforeAll(async () => {
     pets: { clock },
     healthRecords: { clock },
     scheduling: { clock },
+    routines: { clock },
     notifications: { clock },
     media: {
       storage: new LocalDiskStorage(mediaRoot),

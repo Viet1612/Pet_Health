@@ -20,6 +20,7 @@ import {
   type NotificationsDeps,
 } from './notifications/index.js';
 import { petAvatarTargetResolver, registerPetsRoutes, type PetsDeps } from './pets/index.js';
+import { registerRoutinesRoutes, type RoutinesDeps } from './routines/index.js';
 import {
   registerSchedulingRoutes,
   type MilestoneEvent,
@@ -35,6 +36,7 @@ export interface ModuleDeps {
   healthRecords: HealthRecordsDeps;
   scheduling: SchedulingDeps;
   notifications: NotificationsDeps;
+  routines: RoutinesDeps;
 }
 
 /** Đăng ký route của mọi mô-đun nghiệp vụ. Dùng chung cho main-api và sinh OpenAPI. */
@@ -52,6 +54,7 @@ export async function registerModules(api: FastifyInstance, deps: ModuleDeps): P
     notifications: notificationQuery,
   });
   await registerNotificationsRoutes(api, deps.notifications);
+  await registerRoutinesRoutes(api, deps.routines);
 }
 
 /** Nơi lưu và gắn ảnh theo loại mục tiêu; mô-đun sở hữu mục tiêu thêm vào (AVATAR ở S2-03). */

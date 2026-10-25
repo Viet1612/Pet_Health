@@ -2254,6 +2254,229 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/pets/{petId}/routines': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Checklist hôm nay của thú cưng (việc xong xuống cuối) */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: date */
+              today: string;
+              doneCount: number;
+              totalCount: number;
+              items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                petId: string;
+                name: string;
+                /** @description HH:MM, 24 giờ */
+                timeOfDay: string;
+                /** @description Đã xong trong ngày hôm nay của tài khoản */
+                done: boolean;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Tạo việc hằng ngày (tối đa 20 việc mỗi thú cưng) */
+    post: {
+      parameters: {
+        query?: never;
+        header?: {
+          'idempotency-key'?: string;
+        };
+        path: {
+          petId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description 1–100 ký tự sau khi bỏ khoảng trắng đầu/cuối */
+            name: string;
+            /** @description HH:MM, 24 giờ */
+            timeOfDay: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** Format: uuid */
+              petId: string;
+              name: string;
+              /** @description HH:MM, 24 giờ */
+              timeOfDay: string;
+              /** @description Đã xong trong ngày hôm nay của tài khoản */
+              done: boolean;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/routines/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Xóa việc (xóa mềm, giữ lịch sử) */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    /** Sửa tên hoặc giờ của việc */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            name?: string;
+            timeOfDay?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** Format: uuid */
+              petId: string;
+              name: string;
+              /** @description HH:MM, 24 giờ */
+              timeOfDay: string;
+              /** @description Đã xong trong ngày hôm nay của tài khoản */
+              done: boolean;
+            };
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
+  '/routines/{id}/completion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Đánh dấu xong / chưa xong cho hôm nay
+     * @description Idempotent: gửi lặp cùng giá trị vẫn 200. Ngày do server tính.
+     */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            done: boolean;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: date */
+              localDate: string;
+              done: boolean;
+            };
+          };
+        };
+      };
+    };
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {

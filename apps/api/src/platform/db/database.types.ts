@@ -99,6 +99,23 @@ export interface RateLimits {
   window_start: Timestamp;
 }
 
+export interface RoutineCompletions {
+  completed_at: Generated<Timestamp>;
+  local_date: string;
+  owner_id: string;
+  task_id: string;
+}
+
+export interface RoutineTasks {
+  created_at: Generated<Timestamp>;
+  deleted_at: Timestamp | null;
+  id: string;
+  name: string;
+  owner_id: string;
+  pet_id: string;
+  time_of_day: string;
+}
+
 export interface Sessions {
   client_type: Generated<string>;
   created_at: Generated<Timestamp>;
@@ -176,6 +193,8 @@ export interface DB {
   notifications: Notifications;
   pets: Pets;
   rate_limits: RateLimits;
+  routine_completions: RoutineCompletions;
+  routine_tasks: RoutineTasks;
   sessions: Sessions;
   uploads: Uploads;
   users: Users;

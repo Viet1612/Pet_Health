@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 37 / 54 task
+**Tiến độ:** 38 / 54 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -45,4 +45,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S4-06 | E2E luồng cốt lõi với `FakeClock`, test song song | Xong (bản chạy local), 17/17 Pass | 2026-10-25 | `ca9108c` | [S4-06](S4-06-e2e-core-flow.md) |
 | S4-07 | Hạ tầng đa ngôn ngữ web và bản tiếng Anh, chọn trong Cài đặt | Xong (code), chưa bấm thử bản tiếng Anh | 2026-10-25 | `075f03f` | [S4-07](S4-07-i18n-web.md) |
 | S4-08 | API trung lập ngôn ngữ: mã lỗi có params, `ageMonths`, `daysUntilDue` | Xong (code), chưa bấm thử lỗi ở bản tiếng Anh | 2026-10-25 | `6c32407` | [S4-08](S4-08-i18n-api.md) |
-| S4-09 | Ngôn ngữ theo tài khoản (`users.locale`, `PATCH /me/locale`) và email 2 ngôn ngữ | Xong, đã gọi thử trên server dev | 2026-10-25 | — | [S4-09](S4-09-user-locale-email.md) |
+| S4-09 | Ngôn ngữ theo tài khoản (`users.locale`, `PATCH /me/locale`) và email 2 ngôn ngữ | Xong, đã gọi thử trên server dev | 2026-10-25 | `8fc0129` | [S4-09](S4-09-user-locale-email.md) |
+| S5-01 | API việc hằng ngày: 2 bảng + RLS, 5 route, giới hạn 20, `RoutineQueryPort` | Xong, test E2E API Pass | 2026-10-25 | — | [S5-01](S5-01-routines-api.md) |

@@ -327,6 +327,7 @@ export const en: Messages = {
       TOKEN_EXPIRED: 'This link has expired',
       TOKEN_USED: 'This link has already been used',
       PET_LIMIT_REACHED: 'You have reached the limit of 10 pets',
+      ROUTINE_LIMIT_REACHED: 'Each pet can have at most 20 daily tasks',
       CONFIRM_NAME_MISMATCH: "Name doesn't match",
       TYPE_IMMUTABLE: "The milestone type can't be changed after creation",
       MILESTONE_NOT_PENDING: 'This milestone is already done or cancelled',
@@ -353,7 +354,7 @@ export const en: Messages = {
         case 'REQUIRED':
           return field === 'file' ? 'No photo selected' : 'Required';
         case 'INVALID_FORMAT':
-          return 'Invalid format';
+          return field === 'timeOfDay' ? 'Use HH:MM, 24-hour' : 'Invalid format';
         case 'INVALID_ENUM':
           return 'Invalid choice';
         case 'INVALID_DATE':

@@ -27,6 +27,7 @@ const moduleDeps: ModuleDeps = {
   pets: { clock: runtime.clock },
   healthRecords: { clock: runtime.clock },
   scheduling: { clock: runtime.clock },
+  routines: { clock: runtime.clock },
   notifications: { clock: runtime.clock },
   media: {
     // Container api chỉ ghi được `incoming/` (mount ro cho phần còn lại).

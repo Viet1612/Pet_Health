@@ -3231,5 +3231,239 @@ paths:
                 required:
                   - unreadCount
                 additionalProperties: false
+  /pets/{petId}/routines:
+    get:
+      summary: Checklist hôm nay của thú cưng (việc xong xuống cuối)
+      tags:
+        - routines
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: petId
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  today:
+                    type: string
+                    format: date
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                  doneCount:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  totalCount:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        petId:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        name:
+                          type: string
+                        timeOfDay:
+                          type: string
+                          description: HH:MM, 24 giờ
+                        done:
+                          type: boolean
+                          description: Đã xong trong ngày hôm nay của tài khoản
+                      required:
+                        - id
+                        - petId
+                        - name
+                        - timeOfDay
+                        - done
+                      additionalProperties: false
+                required:
+                  - today
+                  - doneCount
+                  - totalCount
+                  - items
+                additionalProperties: false
+    post:
+      summary: Tạo việc hằng ngày (tối đa 20 việc mỗi thú cưng)
+      tags:
+        - routines
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 1–100 ký tự sau khi bỏ khoảng trắng đầu/cuối
+                timeOfDay:
+                  type: string
+                  description: HH:MM, 24 giờ
+              required:
+                - name
+                - timeOfDay
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: petId
+          required: true
+        - schema:
+            type: string
+          in: header
+          name: idempotency-key
+          required: false
+      responses:
+        "201":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  petId:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  name:
+                    type: string
+                  timeOfDay:
+                    type: string
+                    description: HH:MM, 24 giờ
+                  done:
+                    type: boolean
+                    description: Đã xong trong ngày hôm nay của tài khoản
+                required:
+                  - id
+                  - petId
+                  - name
+                  - timeOfDay
+                  - done
+                additionalProperties: false
+  /routines/{id}:
+    patch:
+      summary: Sửa tên hoặc giờ của việc
+      tags:
+        - routines
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                timeOfDay:
+                  type: string
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  petId:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  name:
+                    type: string
+                  timeOfDay:
+                    type: string
+                    description: HH:MM, 24 giờ
+                  done:
+                    type: boolean
+                    description: Đã xong trong ngày hôm nay của tài khoản
+                required:
+                  - id
+                  - petId
+                  - name
+                  - timeOfDay
+                  - done
+                additionalProperties: false
+    delete:
+      summary: Xóa việc (xóa mềm, giữ lịch sử)
+      tags:
+        - routines
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "204":
+          description: Default Response
+  /routines/{id}/completion:
+    put:
+      summary: Đánh dấu xong / chưa xong cho hôm nay
+      tags:
+        - routines
+      description: "Idempotent: gửi lặp cùng giá trị vẫn 200. Ngày do server tính."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                done:
+                  type: boolean
+              required:
+                - done
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  localDate:
+                    type: string
+                    format: date
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                  done:
+                    type: boolean
+                required:
+                  - localDate
+                  - done
+                additionalProperties: false
 servers:
   - url: /api/v1

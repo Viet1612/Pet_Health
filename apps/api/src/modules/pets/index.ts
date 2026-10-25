@@ -41,6 +41,8 @@ export interface PetQueryPort {
     ownerId: string,
     petId: string,
   ): Promise<{ id: string; name: string; weightTargetKg: string | null } | null>;
+  /** Khóa dòng thú cưng (`FOR UPDATE`) để đếm giới hạn con không vượt khi song song (S5-01). */
+  lockOwnedPet(trx: Trx, ownerId: string, petId: string): Promise<boolean>;
   /** Múi giờ IANA của tài khoản (tính "hôm nay"). */
   ownerTimezone(trx: Trx, ownerId: string): Promise<string | undefined>;
   /** Tên thú cưng theo id (thông báo, dashboard). */
@@ -51,6 +53,9 @@ export const petQuery: PetQueryPort = {
   async getOwnedPet(trx, ownerId, petId) {
     const row = await kyselyPetRepository.findById(trx, ownerId, petId);
     return row ? { id: row.id, name: row.name, weightTargetKg: row.weight_target_kg } : null;
+  },
+  async lockOwnedPet(trx, ownerId, petId) {
+    return (await kyselyPetRepository.lockAvatarKey(trx, ownerId, petId)) !== undefined;
   },
   ownerTimezone: (trx, ownerId) => kyselyPetRepository.ownerTimezone(trx, ownerId),
   async getNames(trx, ownerId, ids) {
