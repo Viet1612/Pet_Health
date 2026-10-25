@@ -72,6 +72,9 @@ export const vi = {
     deleted: 'Đã xóa số đo',
     chartCaption: (name: string, target: string | null) =>
       target ? `Biểu đồ cân nặng ${name}, mục tiêu ${target}` : `Biểu đồ cân nặng ${name}`,
+    /** Văn bản thay thế cho biểu đồ (CMP-22, S6-04). */
+    chartSummary: (count: number, from: string, to: string, latest: string) =>
+      `${String(count)} số đo từ ${from} đến ${to}, gần nhất ${latest}`,
     tooltip: (date: string, kg: string, vsTarget: string | null) =>
       vsTarget ? `${date} · ${kg} · ${vsTarget} kg so với mục tiêu` : `${date} · ${kg}`,
     tableDate: 'Ngày đo',
@@ -371,7 +374,7 @@ export const vi = {
     bell: 'Thông báo',
     bellUnread: (n: number) => `Thông báo, ${String(n)} chưa xem`,
     markAll: 'Đánh dấu đã xem',
-    markAllLabel: 'Đánh dấu tất cả đã xem',
+    markAllLabel: 'Đánh dấu đã xem tất cả',
     today: 'Hôm nay',
     yesterday: 'Hôm qua',
     unread: 'Chưa xem',
@@ -406,6 +409,7 @@ export const vi = {
     ) => string | null,
   },
   password: { show: 'Hiện', hide: 'Ẩn' },
+  a11y: { skipToMain: 'Bỏ qua tới nội dung chính' },
   system: {
     offline: 'Mất kết nối — thay đổi chưa được lưu',
     offlineHint: 'Nội dung đang nhập được giữ nguyên. Nút Lưu bật lại khi có mạng.',
@@ -563,7 +567,9 @@ export const vi = {
     },
     switcher: {
       label: 'Chọn thú cưng',
-      open: (name: string) => `Thú cưng đang chọn: ${name}. Đổi thú cưng`,
+      // Tên đọc = tiền tố ẩn + tên đang hiện + hậu tố ẩn (WCAG 2.5.3: tên chứa chữ nhìn thấy).
+      openPrefix: 'Thú cưng đang chọn: ',
+      openSuffix: '. Đổi thú cưng',
     },
   },
   auth: {

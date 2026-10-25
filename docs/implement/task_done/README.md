@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 44 / 54 task
+**Tiến độ:** 45 / 54 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -52,4 +52,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S5-04 | Giao diện Dashboard SCR-06: banner nhắc, banner xác minh, 3 panel, lọc "Tất cả", QuickAdd 4 mục | Xong, E2E giao diện Pass; chưa đo Lighthouse | 2026-10-25 | `29a8722` | [S5-04](S5-04-dashboard-ui.md) |
 | S6-01 | API `/me`: múi giờ, đổi mật khẩu, đổi email có xác nhận, xóa tài khoản | Xong, test E2E API Pass | 2026-10-25 | `9565569` | [S6-01](S6-01-settings-api.md) |
 | S6-02 | Giao diện Cài đặt SCR-18 (email, múi giờ, mật khẩu, xóa tài khoản), menu tài khoản | Xong, E2E giao diện Pass | 2026-10-25 | `4f2399b` | [S6-02](S6-02-settings-ui.md) |
-| S6-03 | Mất mạng (banner, nút Lưu tắt), hết phiên giữ bản nháp, đồng bộ đa thiết bị | Xong, E2E Pass | 2026-10-25 | — | [S6-03](S6-03-system-states.md) |
+| S6-03 | Mất mạng (banner, nút Lưu tắt), hết phiên giữ bản nháp, đồng bộ đa thiết bị | Xong, E2E Pass | 2026-10-25 | `4e969b0` | [S6-03](S6-03-system-states.md) |
+| S6-04 | Rà soát trợ năng (axe 0 lỗi serious/critical, vùng chạm 44 px, skip link); dark mode không làm | Xong phần trợ năng; dark mode bỏ theo quyết định chỉ dùng giao diện sáng | 2026-10-26 | — | [S6-04](S6-04-dark-mode-a11y.md) |

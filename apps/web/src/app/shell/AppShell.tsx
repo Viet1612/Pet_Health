@@ -6,6 +6,7 @@ import { SUMMARY_KEY } from '../../features/notifications';
 
 import { usePhotoUploadBridge } from '../../features/photos';
 import { OfflineBanner } from '../../ui/OfflineBanner';
+import { SkipLink } from '../../ui/SkipLink';
 import { Navigation } from './Navigation';
 import { TopBar } from './TopBar';
 
@@ -25,6 +26,7 @@ export function AppShell() {
   );
   return (
     <div className="min-h-dvh">
+      <SkipLink />
       <TopBar />
       <div className="md:pl-22">
         <OfflineBanner />

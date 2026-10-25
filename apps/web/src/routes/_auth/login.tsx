@@ -124,7 +124,10 @@ function LoginPage() {
         <Button type="submit" fullWidth loading={login.isPending} disabled={locked}>
           {t.submit}
         </Button>
-        <Link to="/forgot-password" className="text-primary text-body self-center font-semibold">
+        <Link
+          to="/forgot-password"
+          className="text-primary text-body inline-flex min-h-11 items-center self-center font-semibold"
+        >
           {t.forgot}
         </Link>
       </form>

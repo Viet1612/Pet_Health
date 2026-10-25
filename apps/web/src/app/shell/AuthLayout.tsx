@@ -3,6 +3,7 @@ import { CalendarCheck, NotebookPen, PawPrint, TrendingUp } from 'lucide-react';
 
 import { m } from '../../i18n';
 import { OfflineBanner } from '../../ui/OfflineBanner';
+import { SkipLink } from '../../ui/SkipLink';
 import { cx } from '../../ui/cx';
 
 function Logo({ inverted = false }: { inverted?: boolean }) {
@@ -82,6 +83,7 @@ function IntroPanel() {
 export function AuthLayout() {
   return (
     <div className="md:bg-primary-soft min-h-dvh lg:flex">
+      <SkipLink />
       <IntroPanel />
       <main
         id="main"

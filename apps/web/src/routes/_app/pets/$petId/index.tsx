@@ -96,7 +96,7 @@ function PetProfilePage() {
         <Link
           to="/pets/$petId/edit"
           params={{ petId }}
-          className="text-primary text-body min-h-11 content-center px-2 font-semibold"
+          className="text-primary text-body min-h-11 min-w-11 content-center px-2 text-center font-semibold"
         >
           {t.edit}
         </Link>

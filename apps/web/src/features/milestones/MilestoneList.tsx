@@ -83,7 +83,7 @@ export function MilestoneList({
               onTabChange(key);
             }}
             className={cx(
-              'text-small min-h-10 flex-1 rounded-sm px-2 font-semibold whitespace-nowrap',
+              'text-small min-h-11 flex-1 rounded-sm px-2 font-semibold whitespace-nowrap',
               active === key ? 'bg-primary text-on-primary' : 'hover:bg-surface-2',
             )}
           >
@@ -111,17 +111,19 @@ export function MilestoneList({
           <p className="text-body text-text-muted py-8 text-center">{t.emptyOther}</p>
         )
       ) : (
-        <ul role="tabpanel" className="flex flex-col gap-2">
-          {items.map((m) => (
-            <li key={m.id}>
-              <MilestoneItem
-                milestone={m}
-                selected={m.id === selectedId}
-                onComplete={setCompleting}
-              />
-            </li>
-          ))}
-        </ul>
+        <div role="tabpanel">
+          <ul className="flex flex-col gap-2">
+            {items.map((m) => (
+              <li key={m.id}>
+                <MilestoneItem
+                  milestone={m}
+                  selected={m.id === selectedId}
+                  onComplete={setCompleting}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       {creating && (

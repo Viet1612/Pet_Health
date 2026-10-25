@@ -67,7 +67,7 @@ function SexSegmented({
           <label
             key={o.value}
             className={cx(
-              'text-body flex min-h-10 flex-1 cursor-pointer items-center justify-center rounded-sm font-semibold',
+              'text-body flex min-h-11 flex-1 cursor-pointer items-center justify-center rounded-sm font-semibold',
               'has-focus-visible:outline-focus has-focus-visible:outline-2',
               value === o.value ? 'bg-primary text-on-primary' : 'text-text hover:bg-surface-2',
             )}

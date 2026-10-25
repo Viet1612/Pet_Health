@@ -13,7 +13,7 @@ function HealthLayout() {
   const { petId } = Route.useParams();
   const { data: pet } = useSuspenseQuery(petQuery(petId));
   const tab =
-    'text-body flex min-h-10 flex-1 items-center justify-center rounded-sm px-3 font-semibold';
+    'text-body flex min-h-11 flex-1 items-center justify-center rounded-sm px-3 font-semibold';
 
   return (
     <>

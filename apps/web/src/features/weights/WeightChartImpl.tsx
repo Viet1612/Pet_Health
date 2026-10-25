@@ -132,6 +132,8 @@ export default function WeightChartImpl({
   const vsTarget = (y: number) =>
     target === null ? null : formatSignedTenths(Math.round(y * 10) - Math.round(target * 10));
   const activePoint = active === null ? undefined : points[active];
+  const first = points[0];
+  const last = points.at(-1);
 
   return (
     <figure
@@ -142,7 +144,20 @@ export default function WeightChartImpl({
       }}
       className="focus-visible:outline-focus relative m-0 rounded-md"
     >
-      <figcaption className="sr-only">{caption}</figcaption>
+      <figcaption className="sr-only">
+        {caption}
+        {first && last && (
+          <>
+            {'. '}
+            {m.weights.chartSummary(
+              points.length,
+              formatDate(first.measuredOn),
+              formatDate(last.measuredOn),
+              formatKg(last.weightKg),
+            )}
+          </>
+        )}
+      </figcaption>
       <p aria-live="polite" className="text-small text-text-muted min-h-5">
         {activePoint &&
           m.weights.tooltip(

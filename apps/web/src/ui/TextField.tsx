@@ -38,7 +38,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
           id={id}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy || undefined}
-          className="text-body min-w-0 flex-1 bg-transparent px-3 py-2 outline-none"
+          className="text-body min-w-0 flex-1 self-stretch bg-transparent px-3 py-2 outline-none"
           {...rest}
         />
         {trailing}

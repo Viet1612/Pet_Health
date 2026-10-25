@@ -99,7 +99,6 @@ export function PetSwitcher() {
       <button
         type="button"
         aria-haspopup="listbox"
-        aria-label={t.switcher.open(allSelected ? m.dashboard.all : current.name)}
         onClick={() => {
           const index = Math.max(0, options.indexOf(selectedId));
           // Ở Dashboard: tải trước dữ liệu các lựa chọn khác để chọn là hiện ngay.
@@ -116,7 +115,9 @@ export function PetSwitcher() {
           <PetAvatar pet={current} size={24} />
         )}
         <span className="text-body min-w-0 truncate font-semibold">
+          <span className="sr-only">{t.switcher.openPrefix}</span>
           {allSelected ? m.dashboard.all : current.name}
+          <span className="sr-only">{t.switcher.openSuffix}</span>
         </span>
         <ChevronDown size={18} aria-hidden className="shrink-0" />
       </button>

@@ -77,6 +77,8 @@ export const en: Messages = {
     deleted: 'Weight deleted',
     chartCaption: (name: string, target: string | null) =>
       target ? `${name}'s weight chart, target ${target}` : `${name}'s weight chart`,
+    chartSummary: (count: number, from: string, to: string, latest: string) =>
+      `${plural(count, 'weight', 'weights')} from ${from} to ${to}, latest ${latest}`,
     tooltip: (date: string, kg: string, vsTarget: string | null) =>
       vsTarget ? `${date} · ${kg} · ${vsTarget} kg vs target` : `${date} · ${kg}`,
     tableDate: 'Date',
@@ -377,7 +379,7 @@ export const en: Messages = {
     bell: 'Notifications',
     bellUnread: (n: number) => `Notifications, ${String(n)} unread`,
     markAll: 'Mark as read',
-    markAllLabel: 'Mark all as read',
+    markAllLabel: 'Mark as read: all',
     today: 'Today',
     yesterday: 'Yesterday',
     unread: 'Unread',
@@ -480,6 +482,7 @@ export const en: Messages = {
     },
   },
   password: { show: 'Show', hide: 'Hide' },
+  a11y: { skipToMain: 'Skip to main content' },
   system: {
     offline: 'Offline — changes are not saved',
     offlineHint: "What you've typed is kept. Save turns back on when you're online.",
@@ -638,7 +641,8 @@ export const en: Messages = {
     },
     switcher: {
       label: 'Choose pet',
-      open: (name: string) => `Selected pet: ${name}. Change pet`,
+      openPrefix: 'Selected pet: ',
+      openSuffix: '. Change pet',
     },
   },
   auth: {
