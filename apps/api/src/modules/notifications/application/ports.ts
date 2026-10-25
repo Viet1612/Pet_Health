@@ -1,5 +1,6 @@
 import type { Transaction } from 'kysely';
 
+import type { AnalyticsPort } from '../../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../../platform/clock/clock.js';
 import type { Database } from '../../../platform/db/kysely.js';
 import type { PetQueryPort } from '../../pets/index.js';
@@ -17,6 +18,8 @@ export interface NotificationsAppDeps {
   clock: ClockPort;
   pets: PetQueryPort;
   milestones: MilestoneQueryPort;
+  /** Event `notification_created` (S6-05); không có thì bỏ qua. */
+  analytics?: AnalyticsPort;
   /** Chạy `fn` trong một transaction có `app.user_id` của chủ (đồng bộ và đọc tách transaction). */
   withTx: <T>(fn: (trx: Trx) => Promise<T>) => Promise<T>;
 }

@@ -10,6 +10,7 @@ let online = typeof navigator === 'undefined' ? true : navigator.onLine;
 const listeners = new Set<() => void>();
 let timer: ReturnType<typeof setInterval> | null = null;
 let onReconnect: (() => void) | null = null;
+let onOffline: (() => void) | null = null;
 
 function set(next: boolean): void {
   if (online === next) return;
@@ -20,6 +21,7 @@ function set(next: boolean): void {
     onReconnect?.();
   } else {
     startPolling();
+    onOffline?.();
   }
 }
 
@@ -45,9 +47,14 @@ export function markOffline(): void {
 }
 
 /** Gắn sự kiện trình duyệt; gọi một lần ở `main.tsx` (`probe` gọi `/healthz` qua src/api/). */
-export function watchConnection(probeFn: () => Promise<boolean>, reconnect: () => void): void {
+export function watchConnection(
+  probeFn: () => Promise<boolean>,
+  reconnect: () => void,
+  offline?: () => void,
+): void {
   check = probeFn;
   onReconnect = reconnect;
+  onOffline = offline ?? null;
   window.addEventListener('offline', () => {
     set(false);
   });

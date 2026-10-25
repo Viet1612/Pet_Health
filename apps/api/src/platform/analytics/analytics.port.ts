@@ -10,7 +10,9 @@ export interface AnalyticsPort {
   track(
     trx: Transaction<Database>,
     event: string,
-    props?: Record<string, string | number | boolean>,
+    props?: Record<string, string | number | boolean | null>,
+    /** Chủ tài khoản; lưu dạng `user_id_hash`. */
+    userId?: string,
   ): Promise<void>;
 }
 

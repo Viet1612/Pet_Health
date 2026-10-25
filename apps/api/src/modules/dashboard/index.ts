@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
+import type { AnalyticsPort } from '../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../platform/clock/clock.js';
 import { latestWeightsForPets, weightQuery } from '../health-records/index.js';
 import type { MediaDeps } from '../media/index.js';
@@ -11,6 +12,7 @@ import { dashboardRoute } from './adapters/http/dashboard.route.js';
 
 export interface DashboardDeps {
   clock: ClockPort;
+  analytics?: AnalyticsPort;
 }
 
 /** Route `GET /dashboard` dưới `/api/v1`; ghép query port của các mô-đun khác. */
@@ -25,7 +27,7 @@ export async function registerDashboardRoutes(
     ownerTimezone: (trx, ownerId) => petQuery.ownerTimezone(trx, ownerId),
     listPets: (trx, ownerId) => pets.listForOwner(trx, ownerId),
     notificationSummary: (withTx, ownerId, pet) =>
-      notificationSummaryFor(deps.clock, withTx, ownerId, pet),
+      notificationSummaryFor(deps, withTx, ownerId, pet),
     checklistForToday: (trx, ownerId, petIds, today) =>
       routineQuery.checklistForToday(trx, ownerId, petIds, today),
     upcomingMilestones: (trx, ownerId, petIds, today) =>

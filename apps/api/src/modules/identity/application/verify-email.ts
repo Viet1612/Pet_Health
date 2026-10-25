@@ -29,6 +29,17 @@ export async function verifyEmail(
       await consumeToken(trx, row, now);
       const user = await userRepository.markEmailVerified(trx, row.user_id, now);
       if (!user) throw tokenUsed();
+      await deps.analytics?.track(
+        trx,
+        'email_verified',
+        {
+          hours_since_signup: Math.max(
+            0,
+            Math.floor((now.getTime() - user.created_at.getTime()) / 3_600_000),
+          ),
+        },
+        user.id,
+      );
       return { user, purpose: 'VERIFY_EMAIL' as const };
     });
   }

@@ -11,12 +11,20 @@ import { watchConnection } from './lib/online';
 import { probeHealth } from './api/health';
 import { routeTree } from './routeTree.gen';
 import { ToastProvider } from './ui/toast';
+import { screenOf, startAnalytics, track } from './api/analytics';
 
 document.documentElement.lang = locale;
 
 const queryClient = createQueryClient();
 // Có mạng lại → làm mới dữ liệu đang hiện (ST-01).
-watchConnection(probeHealth, () => void queryClient.invalidateQueries({ type: 'active' }));
+watchConnection(
+  probeHealth,
+  () => void queryClient.invalidateQueries({ type: 'active' }),
+  () => {
+    track('offline_banner_shown', { screen: screenOf(window.location.pathname) });
+  },
+);
+startAnalytics();
 
 const router = createRouter({
   routeTree,

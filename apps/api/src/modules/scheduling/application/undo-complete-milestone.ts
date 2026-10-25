@@ -46,6 +46,11 @@ export async function undoCompleteMilestone(
     at: now,
     completedAt,
   });
-  await deps.analytics.track(trx, 'milestone_undone');
+  await deps.analytics.track(
+    trx,
+    'milestone_completed_undone',
+    { type: row.type.toLowerCase() },
+    ownerId,
+  );
   return { milestone: toMilestoneView(row, today) };
 }

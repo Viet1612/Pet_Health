@@ -6,6 +6,7 @@ import { cx } from '../../ui/cx';
 import { MilestoneTypeIcon, typeLabel } from '../milestones';
 import { formatDate } from './group-by-day';
 import type { AppNotification } from './queries';
+import { track } from '../../api/analytics';
 
 const t = m.notifications;
 
@@ -29,6 +30,12 @@ export function NotificationItem({
       params={{ milestoneId: n.milestoneId }}
       search={{ from: 'notification' }}
       onClick={() => {
+        track('notification_opened', {
+          level: n.level.toLowerCase(),
+          type: n.type.toLowerCase(),
+          days_until_due: n.daysUntilDue ?? 0,
+          entry_point: 'list',
+        });
         onOpen(n);
       }}
       className={cx(

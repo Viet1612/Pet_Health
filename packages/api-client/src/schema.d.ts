@@ -94,6 +94,53 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/analytics/events': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Ghi event sản phẩm (danh sách trắng, không dữ liệu cá nhân) */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            viewportW: number;
+            events: {
+              name: string;
+              props?: {
+                [key: string]: unknown;
+              };
+              occurredAt?: string;
+            }[];
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/auth/register': {
     parameters: {
       query?: never;

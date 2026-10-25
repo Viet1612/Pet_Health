@@ -6,6 +6,7 @@ import { m } from '../../i18n';
 import { ChecklistItem } from '../../ui/ChecklistItem';
 import { useToast } from '../../ui/toast';
 import { sortRoutines, useToggleRoutine, type Routine } from './queries';
+import { track } from '../../api/analytics';
 
 const t = m.routines;
 /** Giữ dòng ở chỗ cũ một lúc rồi mới sắp lại, để mắt kịp thấy (FLW-05). */
@@ -29,6 +30,13 @@ function RoutineRow({
   const run = (done: boolean) => {
     onTouched(item.id, !done);
     toggle.mutate(done, {
+      onSuccess: () => {
+        const [h = 0, mm = 0] = item.timeOfDay.split(':').map(Number);
+        const now = new Date();
+        track(done ? 'routine_checked' : 'routine_unchecked', {
+          minutes_from_scheduled: now.getHours() * 60 + now.getMinutes() - (h * 60 + mm),
+        });
+      },
       onError: (err) => {
         setError(true);
         setTimeout(() => {

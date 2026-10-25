@@ -11,6 +11,7 @@ import { m } from '../../../../../i18n';
 import { ConfirmDialog } from '../../../../../ui/ConfirmDialog';
 import { IconButton } from '../../../../../ui/IconButton';
 import { useToast } from '../../../../../ui/toast';
+import { track } from '../../../../../api/analytics';
 
 const t = m.visits.form;
 
@@ -55,6 +56,10 @@ function NewVisitPage() {
           idempotency.reset();
           const files = photos.filter((p) => !p.error).map((p) => p.file);
           if (files.length) enqueuePhotos(visit.id, files, 0);
+          track('visit_created', {
+            has_prescription: Boolean(values.prescription),
+            photo_count: Math.min(5, files.length),
+          });
           toast.show({ kind: 'success', message: m.toast.saved });
           await navigate({ to: '/visits/$visitId', params: { visitId: visit.id } });
         }}

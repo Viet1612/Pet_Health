@@ -2,6 +2,7 @@ import type { FastifyRequest } from 'fastify';
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 
+import type { AnalyticsPort } from '../../../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../../../platform/clock/clock.js';
 import { NotFoundError, UnauthenticatedError } from '../../../../platform/errors/app-error.js';
 import { zUuid } from '../../../../platform/http/user-tx.js';
@@ -34,6 +35,7 @@ export interface NotificationsRouteDeps {
   clock: ClockPort;
   pets: PetQueryPort;
   milestones: MilestoneQueryPort;
+  analytics?: AnalyticsPort;
 }
 
 function ownerOf(req: FastifyRequest): string {

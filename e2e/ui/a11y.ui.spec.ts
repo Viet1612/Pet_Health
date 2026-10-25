@@ -107,7 +107,7 @@ test('axe + vùng chạm trên các màn chính', async ({ page }) => {
   await check(`/pets/${petId}/health/weight`, visible('9,3 kg'));
   await check(`/pets/${petId}/health/visits`, heading(/Sức khỏe/));
   await check(`/pets/${petId}/milestones`, visible('Tiêm vaccine'));
-  await check(`/milestones/${milestone.id as string}`, visible('Tiêm vaccine'));
+  await check(`/milestones/${milestone.id as string}`, heading('Tiêm vaccine'));
   await check(`/pets/${petId}/routines`, visible('Cho ăn sáng'));
   await check('/notifications', heading('Thông báo'));
   await check('/settings', heading('Cài đặt'));

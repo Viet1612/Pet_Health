@@ -26,6 +26,18 @@ export type Numeric = ColumnType<string, number | string, number | string>;
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export interface AnalyticsEvents {
+  device_class: string;
+  id: string;
+  name: string;
+  occurred_at: Timestamp;
+  platform: Generated<string>;
+  props: Generated<Json>;
+  received_at: Generated<Timestamp>;
+  user_id_hash: string | null;
+  viewport_w: number | null;
+}
+
 export interface AuthTokens {
   created_at: Generated<Timestamp>;
   expires_at: Timestamp;
@@ -187,6 +199,7 @@ export interface WeightEntries {
 }
 
 export interface DB {
+  analytics_events: AnalyticsEvents;
   auth_tokens: AuthTokens;
   idempotency_keys: IdempotencyKeys;
   milestones: Milestones;

@@ -15,6 +15,7 @@ import {
 } from '../../../features/pets';
 import { m } from '../../../i18n';
 import { useToast } from '../../../ui/toast';
+import { track } from '../../../api/analytics';
 
 const t = m.pets.form;
 
@@ -26,7 +27,7 @@ function NewPetPage() {
   const navigate = useNavigate();
   const toast = useToast();
   const create = useCreatePet();
-  const { select } = useSelectedPet();
+  const { select, pets } = useSelectedPet();
   const idempotency = useIdempotencyKey();
   const [file, setFile] = useState<File | null>(null);
 
@@ -49,6 +50,10 @@ function NewPetPage() {
         onSubmit={async (values) => {
           const pet = await create.mutateAsync({ values, key: idempotency.key });
           idempotency.reset();
+          track('pet_created', {
+            pet_count_after: Math.min(10, (pets?.length ?? 0) + 1),
+            has_photo: Boolean(file),
+          });
           select(pet.id);
           if (file) {
             try {

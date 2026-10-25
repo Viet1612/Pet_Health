@@ -1,4 +1,5 @@
 import { NotFoundError, ValidationError } from '../../../platform/errors/app-error.js';
+import { diffDays, type LocalDate } from '../../../platform/calendar/local-date.js';
 import { newId } from '../../../platform/ids.js';
 import { validateNewMilestone } from '../domain/milestone.js';
 import { todayForOwner, toMilestoneView, type MilestoneView } from './milestone-view.js';
@@ -41,6 +42,17 @@ export async function createMilestone(
     created_at: now,
     updated_at: now,
   });
+  await deps.analytics.track(
+    trx,
+    'milestone_created',
+    {
+      type: row.type.toLowerCase(),
+      days_until_due: diffDays(row.due_on as LocalDate, today),
+      has_cycle: row.cycle_months !== null || row.type === 'VACCINE',
+      auto_generated: false,
+    },
+    ownerId,
+  );
   await deps.events.publish(trx, {
     type: 'MilestoneCreated',
     milestoneId: row.id,

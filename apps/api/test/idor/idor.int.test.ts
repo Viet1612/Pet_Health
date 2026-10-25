@@ -51,6 +51,8 @@ const PUBLIC_ALLOWLIST = new Set([
   'GET /readyz',
   'GET /media/*',
   'POST /__test/clock',
+  // S6-05: phiên không bắt buộc; luôn 204, không trả dữ liệu.
+  'POST /analytics/events',
 ]);
 
 // Chỉ để liệt kê route khi thu thập ca test; handler không chạy nên deps để trống.

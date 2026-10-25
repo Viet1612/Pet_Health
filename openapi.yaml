@@ -59,6 +59,48 @@ paths:
                 required:
                   - status
                 additionalProperties: false
+  /analytics/events:
+    post:
+      summary: Ghi event sản phẩm (danh sách trắng, không dữ liệu cá nhân)
+      tags:
+        - analytics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                viewportW:
+                  type: integer
+                  minimum: 0
+                  maximum: 10000
+                events:
+                  minItems: 1
+                  maxItems: 20
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        maxLength: 64
+                      props:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      occurredAt:
+                        type: string
+                        maxLength: 40
+                    required:
+                      - name
+              required:
+                - viewportW
+                - events
+      responses:
+        "204":
+          description: Default Response
   /auth/register:
     post:
       summary: Đăng ký tài khoản

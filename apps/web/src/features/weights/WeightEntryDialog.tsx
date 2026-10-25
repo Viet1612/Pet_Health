@@ -9,6 +9,7 @@ import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
 import { formatKg, parseKgInput } from './format';
 import { useAddWeight, useUpdateWeight, type WeightEntry } from './queries';
+import { track } from '../../api/analytics';
 
 const t = m.weights.entry;
 
@@ -56,6 +57,11 @@ export function WeightEntryDialog({
       } else {
         await add.mutateAsync({ weightKg: parsed.value, measuredOn: date, key: idempotency.key });
         idempotency.reset();
+        track('weight_logged', {
+          has_target: target !== null,
+          days_since_last_log: null,
+          entry_point: window.location.pathname === '/' ? 'dashboard' : 'weight_page',
+        });
       }
       toast.show({ kind: 'success', message: m.toast.saved });
       onClose();

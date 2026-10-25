@@ -1,5 +1,6 @@
 import type { Kysely } from 'kysely';
 
+import type { AnalyticsPort } from '../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../platform/clock/clock.js';
 import type { Database } from '../../platform/db/kysely.js';
 import type { JobQueuePort } from '../../platform/queue/job-queue.port.js';
@@ -16,4 +17,6 @@ export interface IdentityDeps {
   trustCfConnectingIp: boolean;
   /** Khóa HMAC cho `userIdHash` (analytics). */
   analyticsHmacKey: string;
+  /** Event phía server (`email_verified`, S6-05); gắn ở `registerModules`. */
+  analytics?: AnalyticsPort;
 }

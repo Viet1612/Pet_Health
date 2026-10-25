@@ -76,15 +76,19 @@ export async function completeMilestone(
       created_at: now,
       updated_at: now,
     });
-    await deps.analytics.track(trx, 'milestone_auto_created', {
-      type,
-      months: done.cycle_months ?? 12,
-    });
+    await deps.analytics.track(
+      trx,
+      'milestone_auto_created',
+      { type: type.toLowerCase(), cycle_months: done.cycle_months ?? 12 },
+      ownerId,
+    );
   }
-  await deps.analytics.track(trx, 'milestone_completed', {
-    type,
-    daysFromDue: diffDays(doneOn, done.due_on as LocalDate),
-  });
+  await deps.analytics.track(
+    trx,
+    'milestone_completed',
+    { type: type.toLowerCase(), days_from_due: diffDays(doneOn, done.due_on as LocalDate) },
+    ownerId,
+  );
   return resultOf(deps, trx, ownerId, done, today);
 }
 

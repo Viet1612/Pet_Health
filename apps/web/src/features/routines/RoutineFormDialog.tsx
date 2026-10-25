@@ -18,6 +18,7 @@ import {
   useUpdateRoutine,
   type Routine,
 } from './queries';
+import { track } from '../../api/analytics';
 
 const t = m.routines.form;
 const NAME_MAX = 100;
@@ -116,8 +117,10 @@ export function RoutineFormDialog({
           ...(timeOfDay !== routine.timeOfDay ? { timeOfDay } : {}),
         });
       } else {
+        const before = queryClient.getQueryData<{ totalCount: number }>(['routines', petId]);
         await create.mutateAsync({ input: { name: trimmed, timeOfDay }, key: idempotency.key });
         idempotency.reset();
+        track('routine_created', { task_count_after: Math.min(20, (before?.totalCount ?? 0) + 1) });
       }
       toast.show({ kind: 'success', message: m.toast.saved });
       onClose();

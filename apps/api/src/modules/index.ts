@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
+import { createAnalyticsPort, registerAnalyticsRoutes } from './analytics/index.js';
 import { registerDashboardRoutes, type DashboardDeps } from './dashboard/index.js';
 import {
   registerHealthRecordsRoutes,
@@ -43,7 +44,19 @@ export interface ModuleDeps {
 
 /** Đăng ký route của mọi mô-đun nghiệp vụ. Dùng chung cho main-api và sinh OpenAPI. */
 export async function registerModules(api: FastifyInstance, deps: ModuleDeps): Promise<void> {
-  await registerIdentityRoutes(api, deps.identity);
+  // Analytics (S6-05) dùng chung db, rate limiter, khóa HMAC của identity.
+  const analytics = createAnalyticsPort({
+    clock: deps.identity.clock,
+    hmacKey: deps.identity.analyticsHmacKey,
+  });
+  await registerAnalyticsRoutes(api, {
+    db: deps.identity.db,
+    clock: deps.identity.clock,
+    rateLimiter: deps.identity.rateLimiter,
+    hmacKey: deps.identity.analyticsHmacKey,
+    trustCfConnectingIp: deps.identity.trustCfConnectingIp,
+  });
+  await registerIdentityRoutes(api, { ...deps.identity, analytics });
   await registerPetsRoutes(api, deps.pets, deps.media);
   await registerMediaApiRoutes(api, { VISIT_PHOTO: visitPhotoPresenter(deps.media) });
   await registerHealthRecordsRoutes(api, deps.healthRecords, deps.media);
@@ -54,10 +67,11 @@ export async function registerModules(api: FastifyInstance, deps: ModuleDeps): P
   await registerSchedulingRoutes(api, deps.scheduling, {
     events: milestoneEvents,
     notifications: notificationQuery,
+    analytics,
   });
-  await registerNotificationsRoutes(api, deps.notifications);
+  await registerNotificationsRoutes(api, { ...deps.notifications, analytics });
   await registerRoutinesRoutes(api, deps.routines);
-  await registerDashboardRoutes(api, deps.dashboard, deps.media);
+  await registerDashboardRoutes(api, { ...deps.dashboard, analytics }, deps.media);
 }
 
 /** Nơi lưu và gắn ảnh theo loại mục tiêu; mô-đun sở hữu mục tiêu thêm vào (AVATAR ở S2-03). */

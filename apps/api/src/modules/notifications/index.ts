@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import type { Transaction } from 'kysely';
 
+import type { AnalyticsPort } from '../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../platform/clock/clock.js';
 import type { Database } from '../../platform/db/kysely.js';
 import { petQuery } from '../pets/index.js';
@@ -18,6 +19,7 @@ export type { NotificationSummary } from './application/get-summary.js';
 /** Phụ thuộc của mô-đun notifications, tiêm từ composition root. */
 export interface NotificationsDeps {
   clock: ClockPort;
+  analytics?: AnalyticsPort;
 }
 
 /** Route của mô-đun notifications dưới `/api/v1`. */
@@ -29,6 +31,7 @@ export async function registerNotificationsRoutes(
     clock: deps.clock,
     pets: petQuery,
     milestones: milestoneQuery,
+    ...(deps.analytics ? { analytics: deps.analytics } : {}),
   });
 }
 
@@ -37,13 +40,19 @@ export async function registerNotificationsRoutes(
  * `GET /notifications/summary`.
  */
 export function notificationSummaryFor(
-  clock: ClockPort,
+  deps: NotificationsDeps,
   withTx: <T>(fn: (trx: Transaction<Database>) => Promise<T>) => Promise<T>,
   ownerId: string,
   pet: string,
 ) {
   return getNotificationSummary(
-    { clock, pets: petQuery, milestones: milestoneQuery, withTx },
+    {
+      clock: deps.clock,
+      pets: petQuery,
+      milestones: milestoneQuery,
+      withTx,
+      ...(deps.analytics ? { analytics: deps.analytics } : {}),
+    },
     ownerId,
     pet,
   );

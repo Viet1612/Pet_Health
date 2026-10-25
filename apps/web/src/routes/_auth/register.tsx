@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ApiError } from '@ph/api-client';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 import { problemText, toUserMessage } from '../../api/to-user-message';
@@ -12,6 +12,7 @@ import { cx } from '../../ui/cx';
 import { PasswordField } from '../../ui/PasswordField';
 import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
+import { track } from '../../api/analytics';
 
 const t = m.auth.register;
 const DEFAULT_TZ = 'Asia/Ho_Chi_Minh';
@@ -42,9 +43,16 @@ function RegisterPage() {
   });
   const passwordLength = Array.from(useWatch({ control: form.control, name: 'password' })).length;
 
+  useEffect(() => {
+    track('signup_started', {
+      source: document.referrer.includes('/login') ? 'login_page' : 'direct',
+    });
+  }, []);
+
   const onSubmit = form.handleSubmit(async (values) => {
     try {
       await register.mutateAsync(values);
+      track('signup_completed');
       await navigate({ to: '/' });
     } catch (err) {
       const message = toUserMessage(err);

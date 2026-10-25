@@ -19,6 +19,7 @@ import { Button } from '../../ui/Button';
 import { PasswordField } from '../../ui/PasswordField';
 import { TextField } from '../../ui/TextField';
 import { useToast } from '../../ui/toast';
+import { deviceClass, track } from '../../api/analytics';
 
 const t = m.auth.login;
 
@@ -70,6 +71,7 @@ function LoginPage() {
     setError(null);
     try {
       await login.mutateAsync(values);
+      track('login', { device_class: deviceClass() });
       await navigate({ to: safeNext(next) });
     } catch (err) {
       if (err instanceof ApiError && err.code === 'INVALID_CREDENTIALS') {

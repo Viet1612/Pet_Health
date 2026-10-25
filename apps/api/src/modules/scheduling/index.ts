@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 
 import { addDays, type LocalDate } from '../../platform/calendar/local-date.js';
 
-import { noopAnalytics } from '../../platform/analytics/analytics.port.js';
+import type { AnalyticsPort } from '../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../platform/clock/clock.js';
 import type { EventPublisher } from '../../platform/events/sync-event-bus.js';
 import { petQuery } from '../pets/index.js';
@@ -25,7 +25,11 @@ export interface SchedulingDeps {
 export async function registerSchedulingRoutes(
   api: FastifyInstance,
   deps: SchedulingDeps,
-  wiring: { events: EventPublisher<MilestoneEvent>; notifications: NotificationQueryPort },
+  wiring: {
+    events: EventPublisher<MilestoneEvent>;
+    notifications: NotificationQueryPort;
+    analytics: AnalyticsPort;
+  },
 ): Promise<void> {
   await api.register(milestonesRoutes, {
     clock: deps.clock,
@@ -33,7 +37,7 @@ export async function registerSchedulingRoutes(
     milestones: milestoneRepository,
     events: wiring.events,
     notifications: wiring.notifications,
-    analytics: noopAnalytics,
+    analytics: wiring.analytics,
   });
 }
 

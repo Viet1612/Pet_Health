@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { AlertCircle, Clock, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { api } from '../../api/client';
 import { m } from '../../i18n';
@@ -11,8 +11,11 @@ import { IconButton } from '../../ui/IconButton';
 import { useToast } from '../../ui/toast';
 import { typeLabel } from '../milestones';
 import type { DashboardBanner } from './queries';
+import { track } from '../../api/analytics';
 
 const t = m.dashboard.banner;
+/** Mỗi bộ nhắc chỉ ghi `banner_shown` một lần mỗi lần tải trang. */
+const shownBanners = new Set<string>();
 
 /** Câu chính của banner theo mức nhắc khẩn cấp nhất (FR-NTF-009). */
 export function bannerText(top: DashboardBanner['top']): string {
@@ -39,6 +42,14 @@ export function ReminderBanner({
   // Ẩn lạc quan theo đúng bộ nhắc đang hiện; banner đổi (nhắc khác) thì hiện lại.
   const [hiddenFor, setHiddenFor] = useState<string | null>(null);
   const key = banner.notificationIds.join(',');
+  useEffect(() => {
+    if (shownBanners.has(key)) return;
+    shownBanners.add(key);
+    track('banner_shown', {
+      level: banner.top.level.toLowerCase(),
+      unread_count: banner.moreCount + 1,
+    });
+  }, [key, banner]);
   if (hiddenFor === key) return null;
 
   const { top } = banner;
@@ -47,6 +58,7 @@ export function ReminderBanner({
 
   const dismiss = async () => {
     setHiddenFor(key);
+    track('banner_dismissed', { unread_count: banner.moreCount + 1 });
     try {
       await api.POST('/notifications/read', {
         body: { ids: banner.notificationIds, reason: 'BANNER' },

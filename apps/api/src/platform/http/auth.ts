@@ -46,7 +46,14 @@ export function registerAuthGuard(
 
   app.addHook('preHandler', async (request, reply) => {
     // Đường dẫn không tồn tại: để not-found handler trả 404.
-    if (request.is404 || request.routeOptions.config.public === true) return;
+    if (request.is404) return;
+    if (request.routeOptions.config.public === true) {
+      if (request.routeOptions.config.optionalAuth === true) {
+        const optional = await resolver.resolve(request, reply);
+        if (optional) request.auth = optional;
+      }
+      return;
+    }
     const auth = await resolver.resolve(request, reply);
     if (!auth) throw new UnauthenticatedError();
     request.auth = auth;

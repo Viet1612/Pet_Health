@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { ArrowLeft, BellOff } from 'lucide-react';
 import { useEffect, useRef } from 'react';
@@ -13,6 +13,8 @@ import { useToast } from '../../ui/toast';
 import { groupByDay } from './group-by-day';
 import { NotificationItem } from './NotificationItem';
 import { listQuery, useMarkRead, type AppNotification } from './queries';
+import { track } from '../../api/analytics';
+import { SUMMARY_KEY } from './queries';
 
 const t = m.notifications;
 
@@ -24,6 +26,12 @@ export function NotificationsScreen() {
   const query = useInfiniteQuery(listQuery);
   const sentinel = useRef<HTMLDivElement>(null);
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = query;
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const summary = queryClient.getQueryData<{ unreadCount: number }>(SUMMARY_KEY);
+    track('notification_center_opened', { unread_count: summary?.unreadCount ?? 0 });
+  }, [queryClient]);
 
   useEffect(() => {
     const el = sentinel.current;

@@ -1,4 +1,4 @@
-import { addDays, type LocalDate } from '../../../platform/calendar/local-date.js';
+import { addDays, diffDays, type LocalDate } from '../../../platform/calendar/local-date.js';
 import { appearOn, dueLevel } from '../../../platform/calendar/reminder-level.js';
 import { todayIn } from '../../../platform/calendar/today.js';
 import { UnauthenticatedError } from '../../../platform/errors/app-error.js';
@@ -51,6 +51,23 @@ export async function syncNotifications(
     });
 
     const inserted = await repo.insertMany(trx, rows);
+    // Chỉ dòng thực sự chèn (ON CONFLICT DO NOTHING): gọi đồng bộ lặp không ghi trùng event.
+    const byMilestone = new Map(candidates.map((m) => [m.id, m]));
+    const levelOf = new Map(rows.map((r) => [r.id, r.level]));
+    for (const r of inserted) {
+      const m = byMilestone.get(r.milestone_id);
+      if (!m) continue;
+      await deps.analytics?.track(
+        trx,
+        'notification_created',
+        {
+          level: (levelOf.get(r.id) ?? '').toLowerCase(),
+          type: m.type.toLowerCase(),
+          days_until_due: diffDays(m.dueOn as LocalDate, today),
+        },
+        ownerId,
+      );
+    }
     await repo.supersede(
       trx,
       ownerId,

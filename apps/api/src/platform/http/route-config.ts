@@ -4,6 +4,8 @@ declare module 'fastify' {
   interface FastifyContextConfig {
     /** Route không cần đăng nhập. Mặc định mọi route yêu cầu phiên (deny-by-default). */
     public?: boolean;
+    /** Route public nhưng nếu có phiên thì gắn `request.auth` (và kiểm CSRF), ví dụ analytics. */
+    optionalAuth?: boolean;
     /** Bắt buộc header Idempotency-Key (POST tạo mới, FR-GEN-005). */
     idempotent?: boolean;
   }
