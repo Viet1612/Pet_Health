@@ -13,9 +13,19 @@ import {
 } from './ports.js';
 
 export const MAX_INPUT_PIXELS = 50_000_000;
-const MAIN_EDGE = 2048;
-const THUMB_EDGE = 320;
 const JPEG_QUALITY = 82;
+
+/**
+ * Kích thước đầu ra. Mặc định (ảnh thú cưng, ảnh khám): cạnh dài ≤ 2048, thumbnail ≤ 320. Ảnh bài
+ * đăng (F-04): cạnh dài ≤ 1080, thumbnail vuông 360 cắt giữa cho lưới hồ sơ.
+ */
+export interface ImageVariant {
+  mainEdge: number;
+  thumbEdge: number;
+  squareThumb: boolean;
+}
+export const DEFAULT_VARIANT: ImageVariant = { mainEdge: 2048, thumbEdge: 320, squareThumb: false };
+export const POST_VARIANT: ImageVariant = { mainEdge: 1080, thumbEdge: 360, squareThumb: true };
 
 /** Ảnh hỏng hoặc quá lớn: đánh dấu FAILED, không thử lại. */
 export class ImageRejectedError extends Error {
@@ -26,21 +36,33 @@ export class ImageRejectedError extends Error {
 }
 
 /**
- * HEIC/PNG/JPEG → JPEG q82 cạnh dài ≤ 2048 (không phóng to) + thumbnail ≤ 320. Xoay theo EXIF
- * Orientation rồi bỏ toàn bộ metadata (sharp mặc định không ghi EXIF/XMP/IPTC/GPS, SD-007).
+ * HEIC/PNG/JPEG → JPEG q82 theo `variant` (không phóng to). Xoay theo EXIF Orientation rồi bỏ
+ * toàn bộ metadata (sharp mặc định không ghi EXIF/XMP/IPTC/GPS, SD-007).
  */
 export async function transformImage(
   input: Buffer,
   limitInputPixels = MAX_INPUT_PIXELS,
-): Promise<{ main: Buffer; thumb: Buffer }> {
-  const render = (edge: number) =>
+  variant: ImageVariant = DEFAULT_VARIANT,
+): Promise<{ main: Buffer; thumb: Buffer; width: number; height: number }> {
+  const render = (edge: number, square: boolean) =>
     sharp(input, { limitInputPixels, failOn: 'error' })
       .rotate()
-      .resize({ width: edge, height: edge, fit: 'inside', withoutEnlargement: true })
+      .resize(
+        square
+          ? { width: edge, height: edge, fit: 'cover', position: 'centre' }
+          : { width: edge, height: edge, fit: 'inside', withoutEnlargement: true },
+      )
       .jpeg({ quality: JPEG_QUALITY })
-      .toBuffer();
+      .toBuffer({ resolveWithObject: true });
   try {
-    return { main: await render(MAIN_EDGE), thumb: await render(THUMB_EDGE) };
+    const main = await render(variant.mainEdge, false);
+    const thumb = await render(variant.thumbEdge, variant.squareThumb);
+    return {
+      main: main.data,
+      thumb: thumb.data,
+      width: main.info.width,
+      height: main.info.height,
+    };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new ImageRejectedError(/pixel limit/i.test(message) ? 'TOO_MANY_PIXELS' : 'CORRUPT');
@@ -90,9 +112,13 @@ export async function processImage(
       return;
     }
 
-    let output: { main: Buffer; thumb: Buffer };
+    let output: Awaited<ReturnType<typeof transformImage>>;
     try {
-      output = await transformImage(input);
+      output = await transformImage(
+        input,
+        MAX_INPUT_PIXELS,
+        upload.targetKind === 'POST_PHOTO' ? POST_VARIANT : DEFAULT_VARIANT,
+      );
     } catch (error) {
       if (error instanceof ImageRejectedError) {
         await fail(error.reason);
@@ -107,7 +133,11 @@ export async function processImage(
     try {
       staleKeys = await deps.db.transaction().execute(async (trx) => {
         await deps.uploads.markReady(trx, upload.id);
-        return resolver.onReady(trx, upload, finalKey, { bytes: output.main.length });
+        return resolver.onReady(trx, upload, finalKey, {
+          bytes: output.main.length,
+          width: output.width,
+          height: output.height,
+        });
       });
     } catch (error) {
       if (!(error instanceof TargetGoneError)) throw error;

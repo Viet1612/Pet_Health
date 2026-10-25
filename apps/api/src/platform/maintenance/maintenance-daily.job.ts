@@ -102,6 +102,35 @@ export const STEPS: Record<string, Step> = {
     }
   },
 
+  /** Bài nháp (F-04) hơn 24 giờ: xóa tệp ảnh đã xử lý rồi xóa bài (ảnh theo CASCADE). */
+  post_drafts: async ({ db, storage }, now) => {
+    const cutoff = new Date(now.getTime() - DAY_MS);
+    let total = 0;
+    for (;;) {
+      const posts = await db
+        .selectFrom('posts')
+        .select('id')
+        .where('status', '=', 'DRAFT')
+        .where('created_at', '<', cutoff)
+        .limit(BATCH)
+        .execute();
+      if (posts.length === 0) return total;
+      const ids = posts.map((p) => p.id);
+      const photos = await db
+        .selectFrom('post_photos')
+        .select(['storage_key', 'thumb_key'])
+        .where('post_id', 'in', ids)
+        .execute();
+      for (const ph of photos) {
+        if (ph.storage_key) await storage.delete(ph.storage_key);
+        if (ph.thumb_key) await storage.delete(ph.thumb_key);
+      }
+      await db.deleteFrom('posts').where('id', 'in', ids).where('status', '=', 'DRAFT').execute();
+      total += posts.length;
+      if (posts.length < BATCH) return total;
+    }
+  },
+
   /** Tệp `incoming/` hơn 1 ngày không còn dòng `uploads` tương ứng. */
   incoming_orphans: async ({ db, storage }, now) => {
     const cutoff = now.getTime() - DAY_MS;

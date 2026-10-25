@@ -4395,5 +4395,515 @@ paths:
       responses:
         "204":
           description: Default Response
+  /posts:
+    post:
+      summary: Tạo bài nháp (bước 1); tải ảnh ở POST /posts/{id}/photos
+      tags:
+        - social
+      description: Bắt buộc Idempotency-Key. Tối đa 30 bài/ngày → 429 POST_LIMIT_REACHED.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caption:
+                  description: ≤ 2200 ký tự
+                  type:
+                    - string
+                    - "null"
+                petIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  description: 0–5 thú cưng của mình; bỏ trống = không gắn
+                photoCount:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+              required:
+                - photoCount
+              additionalProperties: false
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: idempotency-key
+          required: false
+      responses:
+        "201":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                      - DRAFT
+                required:
+                  - id
+                  - status
+                additionalProperties: false
+  /posts/{id}/photos:
+    post:
+      summary: Tải một ảnh của bài nháp (multipart, field `file`, ≤ 5 MB)
+      tags:
+        - social
+      description: Bắt buộc Idempotency-Key. `position` 0..photoCount−1; vị trí có ảnh
+        lỗi thì được thay. Ảnh cuối READY → bài PUBLISHED.
+      parameters:
+        - schema:
+            default: 0
+            type: integer
+            minimum: 0
+            maximum: 4
+          in: query
+          name: position
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+        - schema:
+            type: string
+          in: header
+          name: idempotency-key
+          required: false
+      responses:
+        "202":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  photoId:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  uploadId:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                      - PROCESSING
+                required:
+                  - photoId
+                  - uploadId
+                  - status
+                additionalProperties: false
+  /post-photos/{id}:
+    delete:
+      summary: Bỏ một ảnh (thường là ảnh lỗi) khỏi bài nháp rồi đăng với số ảnh còn lại
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "204":
+          description: Default Response
+  /posts/{id}:
+    get:
+      summary: Xem một bài (bài nháp chỉ chủ thấy)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  post:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      status:
+                        type: string
+                        enum:
+                          - DRAFT
+                          - PUBLISHED
+                      author:
+                        type: object
+                        properties:
+                          username:
+                            type: string
+                          displayName:
+                            type: string
+                          avatarThumbUrl:
+                            type:
+                              - string
+                              - "null"
+                        required:
+                          - username
+                          - displayName
+                          - avatarThumbUrl
+                        additionalProperties: false
+                      caption:
+                        type:
+                          - string
+                          - "null"
+                      pets:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                            name:
+                              type: string
+                          required:
+                            - id
+                            - name
+                          additionalProperties: false
+                      photos:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                            position:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                            status:
+                              type: string
+                              enum:
+                                - PROCESSING
+                                - READY
+                                - FAILED
+                            url:
+                              type:
+                                - string
+                                - "null"
+                            thumbUrl:
+                              type:
+                                - string
+                                - "null"
+                            width:
+                              anyOf:
+                                - type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                - type: "null"
+                            height:
+                              anyOf:
+                                - type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                - type: "null"
+                          required:
+                            - id
+                            - position
+                            - status
+                            - url
+                            - thumbUrl
+                            - width
+                            - height
+                          additionalProperties: false
+                      photoCount:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      likeCount:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      commentCount:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      likedByMe:
+                        type: boolean
+                      createdAt:
+                        type: string
+                        format: date-time
+                        pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                      isMine:
+                        type: boolean
+                    required:
+                      - id
+                      - status
+                      - author
+                      - caption
+                      - pets
+                      - photos
+                      - photoCount
+                      - likeCount
+                      - commentCount
+                      - likedByMe
+                      - createdAt
+                      - isMine
+                    additionalProperties: false
+                required:
+                  - post
+                additionalProperties: false
+    patch:
+      summary: Sửa chú thích và/hoặc thú cưng gắn kèm (không đổi ảnh)
+      tags:
+        - social
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type:
+                    - string
+                    - "null"
+                petIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  description: 0–5 thú cưng của mình; bỏ trống = không gắn
+              additionalProperties: false
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  post:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      status:
+                        type: string
+                        enum:
+                          - DRAFT
+                          - PUBLISHED
+                      author:
+                        type: object
+                        properties:
+                          username:
+                            type: string
+                          displayName:
+                            type: string
+                          avatarThumbUrl:
+                            type:
+                              - string
+                              - "null"
+                        required:
+                          - username
+                          - displayName
+                          - avatarThumbUrl
+                        additionalProperties: false
+                      caption:
+                        type:
+                          - string
+                          - "null"
+                      pets:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                            name:
+                              type: string
+                          required:
+                            - id
+                            - name
+                          additionalProperties: false
+                      photos:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                            position:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                            status:
+                              type: string
+                              enum:
+                                - PROCESSING
+                                - READY
+                                - FAILED
+                            url:
+                              type:
+                                - string
+                                - "null"
+                            thumbUrl:
+                              type:
+                                - string
+                                - "null"
+                            width:
+                              anyOf:
+                                - type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                - type: "null"
+                            height:
+                              anyOf:
+                                - type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                - type: "null"
+                          required:
+                            - id
+                            - position
+                            - status
+                            - url
+                            - thumbUrl
+                            - width
+                            - height
+                          additionalProperties: false
+                      photoCount:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      likeCount:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      commentCount:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      likedByMe:
+                        type: boolean
+                      createdAt:
+                        type: string
+                        format: date-time
+                        pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                      isMine:
+                        type: boolean
+                    required:
+                      - id
+                      - status
+                      - author
+                      - caption
+                      - pets
+                      - photos
+                      - photoCount
+                      - likeCount
+                      - commentCount
+                      - likedByMe
+                      - createdAt
+                      - isMine
+                    additionalProperties: false
+                required:
+                  - post
+                additionalProperties: false
+    delete:
+      summary: Xóa bài (kèm ảnh, tim, bình luận)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "204":
+          description: Default Response
+  /profiles/{username}/posts:
+    get:
+      summary: Lưới bài đã đăng của một hồ sơ (18 bài/trang, mới nhất trước)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: cursor
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: username
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        thumbUrl:
+                          type:
+                            - string
+                            - "null"
+                        photoCount:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                      required:
+                        - id
+                        - thumbUrl
+                        - photoCount
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                required:
+                  - items
+                  - nextCursor
+                additionalProperties: false
 servers:
   - url: /api/v1

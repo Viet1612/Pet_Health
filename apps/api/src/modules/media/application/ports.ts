@@ -46,7 +46,7 @@ export interface TargetResolver {
     trx: Transaction<Database>,
     upload: UploadRecord,
     key: string,
-    output: { bytes: number },
+    output: { bytes: number; width: number; height: number },
   ): Promise<string[]>;
   onFailed?(q: Q, upload: UploadRecord, reason: FailReason): Promise<void>;
 }

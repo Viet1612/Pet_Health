@@ -7,6 +7,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import {
   ImageRejectedError,
+  MAX_INPUT_PIXELS,
+  POST_VARIANT,
   transformImage,
 } from '../src/modules/media/application/process-image.js';
 import { detectImageFormat } from '../src/modules/media/domain/magic-bytes.js';
@@ -137,6 +139,20 @@ describe('transformImage', () => {
     const { main } = await transformImage(input);
     const m = await sharp(main).metadata();
     expect([m.width, m.height, m.orientation, m.exif]).toEqual([200, 400, undefined, undefined]);
+  });
+
+  it('ảnh bài đăng (F-04): cạnh dài 1080, thumbnail vuông 360, trả kích thước', async () => {
+    const input = await sharp({
+      create: { width: 3000, height: 1000, channels: 3, background: '#2e7d32' },
+    })
+      .jpeg()
+      .withExif({ IFD0: { Make: 'Test' } })
+      .toBuffer();
+    const out = await transformImage(input, MAX_INPUT_PIXELS, POST_VARIANT);
+    const t = await sharp(out.thumb).metadata();
+    expect([out.width, out.height]).toEqual([1080, 360]);
+    expect([t.width, t.height]).toEqual([360, 360]);
+    expect((await sharp(out.main).metadata()).exif).toBeUndefined();
   });
 
   it('vượt giới hạn pixel → TOO_MANY_PIXELS; dữ liệu hỏng → CORRUPT', async () => {

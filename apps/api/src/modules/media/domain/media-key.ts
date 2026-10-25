@@ -3,16 +3,18 @@ const UUID = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
 
 /** Khóa được phục vụ qua `GET /media/{key}`: ảnh thú cưng, ảnh khám, ảnh đại diện người dùng (F-02). */
 export const MEDIA_KEY_RE = new RegExp(
-  `^u/${UUID}/(p/${UUID}/(avatar|v/${UUID})|profile/avatar)/${UUID}(_thumb)?\\.jpg$`,
+  `^u/${UUID}/(p/${UUID}/(avatar|v/${UUID})|profile/avatar|posts/${UUID})/${UUID}(_thumb)?\\.jpg$`,
 );
 
 /** Prefix hợp lệ cho `media.purge-prefix`: cả user, một thú cưng, ảnh đại diện hoặc một lần khám. */
 export const PURGE_PREFIX_RE = new RegExp(
-  `^u/${UUID}/((p/${UUID}/((avatar|v/${UUID})/)?)|profile/avatar/)?$`,
+  `^u/${UUID}/((p/${UUID}/((avatar|v/${UUID})/)?)|profile/avatar/|posts/${UUID}/)?$`,
 );
 
 /** Một ảnh (bỏ đuôi): `…/v/{visit}/{photoId}` → xóa `{photoId}.jpg` và `{photoId}_thumb.jpg`. */
-export const PURGE_FILE_RE = new RegExp(`^u/${UUID}/p/${UUID}/(avatar|v/${UUID})/${UUID}$`);
+export const PURGE_FILE_RE = new RegExp(
+  `^u/${UUID}/(p/${UUID}/(avatar|v/${UUID})|posts/${UUID})/${UUID}$`,
+);
 
 export const isMediaKey = (key: string): boolean => MEDIA_KEY_RE.test(key);
 export const isPurgePrefix = (prefix: string): boolean =>
@@ -30,6 +32,14 @@ export function userAvatarKey(ownerId: string, imageId: string): string {
 }
 
 export const userAvatarPrefix = (ownerId: string): string => `u/${ownerId}/profile/avatar/`;
+
+/** Ảnh bài đăng (F-04): `u/{user}/posts/{post}/{photo}.jpg`. */
+export function postPhotoKey(ownerId: string, postId: string, photoId: string): string {
+  return `u/${ownerId}/posts/${postId}/${photoId}.jpg`;
+}
+
+export const postPrefix = (ownerId: string, postId: string): string =>
+  `u/${ownerId}/posts/${postId}/`;
 
 export function visitPhotoKey(
   ownerId: string,

@@ -3129,6 +3129,358 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/posts': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Tạo bài nháp (bước 1); tải ảnh ở POST /posts/{id}/photos
+     * @description Bắt buộc Idempotency-Key. Tối đa 30 bài/ngày → 429 POST_LIMIT_REACHED.
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: {
+          'idempotency-key'?: string;
+        };
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @description ≤ 2200 ký tự */
+            caption?: string | null;
+            /** @description 0–5 thú cưng của mình; bỏ trống = không gắn */
+            petIds?: string[];
+            photoCount: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              id: string;
+              /** @enum {string} */
+              status: 'DRAFT';
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/posts/{id}/photos': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Tải một ảnh của bài nháp (multipart, field `file`, ≤ 5 MB)
+     * @description Bắt buộc Idempotency-Key. `position` 0..photoCount−1; vị trí có ảnh lỗi thì được thay. Ảnh cuối READY → bài PUBLISHED.
+     */
+    post: {
+      parameters: {
+        query?: {
+          position?: number;
+        };
+        header?: {
+          'idempotency-key'?: string;
+        };
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        202: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** Format: uuid */
+              photoId: string;
+              /** Format: uuid */
+              uploadId: string;
+              /** @enum {string} */
+              status: 'PROCESSING';
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/post-photos/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Bỏ một ảnh (thường là ảnh lỗi) khỏi bài nháp rồi đăng với số ảnh còn lại */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/posts/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Xem một bài (bài nháp chỉ chủ thấy) */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              post: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                status: 'DRAFT' | 'PUBLISHED';
+                author: {
+                  username: string;
+                  displayName: string;
+                  avatarThumbUrl: string | null;
+                };
+                caption: string | null;
+                pets: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
+                }[];
+                photos: {
+                  /** Format: uuid */
+                  id: string;
+                  position: number;
+                  /** @enum {string} */
+                  status: 'PROCESSING' | 'READY' | 'FAILED';
+                  url: string | null;
+                  thumbUrl: string | null;
+                  width: number | null;
+                  height: number | null;
+                }[];
+                photoCount: number;
+                likeCount: number;
+                commentCount: number;
+                likedByMe: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                isMine: boolean;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    /** Xóa bài (kèm ảnh, tim, bình luận) */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    /** Sửa chú thích và/hoặc thú cưng gắn kèm (không đổi ảnh) */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            caption?: string | null;
+            /** @description 0–5 thú cưng của mình; bỏ trống = không gắn */
+            petIds?: string[];
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              post: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                status: 'DRAFT' | 'PUBLISHED';
+                author: {
+                  username: string;
+                  displayName: string;
+                  avatarThumbUrl: string | null;
+                };
+                caption: string | null;
+                pets: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
+                }[];
+                photos: {
+                  /** Format: uuid */
+                  id: string;
+                  position: number;
+                  /** @enum {string} */
+                  status: 'PROCESSING' | 'READY' | 'FAILED';
+                  url: string | null;
+                  thumbUrl: string | null;
+                  width: number | null;
+                  height: number | null;
+                }[];
+                photoCount: number;
+                likeCount: number;
+                commentCount: number;
+                likedByMe: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                isMine: boolean;
+              };
+            };
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
+  '/profiles/{username}/posts': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Lưới bài đã đăng của một hồ sơ (18 bài/trang, mới nhất trước) */
+    get: {
+      parameters: {
+        query?: {
+          cursor?: string;
+        };
+        header?: never;
+        path: {
+          username: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                /** Format: uuid */
+                id: string;
+                thumbUrl: string | null;
+                photoCount: number;
+              }[];
+              nextCursor: string | null;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {

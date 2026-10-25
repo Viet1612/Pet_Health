@@ -28,7 +28,11 @@ import {
   type MilestoneEvent,
   type SchedulingDeps,
 } from './scheduling/index.js';
-import { registerSocialRoutes, socialAvatarTargetResolver } from './social/index.js';
+import {
+  registerSocialRoutes,
+  socialAvatarTargetResolver,
+  socialPostPhotoTargetResolver,
+} from './social/index.js';
 import { SyncEventBus } from '../platform/events/sync-event-bus.js';
 import type { ClockPort } from '../platform/clock/clock.js';
 
@@ -86,6 +90,7 @@ export function mediaTargetResolvers(clock: ClockPort): TargetResolvers {
     AVATAR: petAvatarTargetResolver(clock),
     VISIT_PHOTO: visitPhotoResolver(),
     USER_AVATAR: socialAvatarTargetResolver(clock),
+    POST_PHOTO: socialPostPhotoTargetResolver(clock),
   };
 }
 

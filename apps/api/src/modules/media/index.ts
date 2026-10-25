@@ -30,6 +30,8 @@ export type {
 export {
   avatarKey,
   petPrefix,
+  postPhotoKey,
+  postPrefix,
   thumbKeyOf,
   userAvatarKey,
   userAvatarPrefix,

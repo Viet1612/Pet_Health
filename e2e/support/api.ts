@@ -112,6 +112,22 @@ export class ApiSession {
     return toJson(res);
   }
 
+  /** Gửi một ảnh (multipart, field `file`) kèm Idempotency-Key mới. */
+  async upload(
+    method: 'POST' | 'PUT',
+    path: string,
+    file: { name: string; mimeType: string; buffer: Buffer },
+  ): Promise<Json> {
+    const headers: Record<string, string> = { 'idempotency-key': randomUUID() };
+    if (this.csrf) headers['x-csrf-token'] = this.csrf;
+    const res = await this.ctx.fetch(`${API_URL}${path}`, {
+      method,
+      headers,
+      multipart: { file },
+    });
+    return toJson(res);
+  }
+
   /** Mở app: đồng bộ thông báo (summary) rồi đọc danh sách, như client làm. */
   async openApp(): Promise<{ summary: any; items: any[] }> {
     const summary = await this.call('GET', '/notifications/summary');

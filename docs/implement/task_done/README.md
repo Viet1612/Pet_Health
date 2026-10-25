@@ -61,9 +61,10 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 
 Task ở [../tasks-feed/](../tasks-feed/README.md). Làm trên máy dev trước; F-01 (R2) làm cùng đợt triển khai production.
 
-**Tiến độ:** 2 / 13 task
+**Tiến độ:** 3 / 13 task
 
 | Task | Tên | Trạng thái | Ngày | Commit | Kết quả |
 |---|---|---|---|---|---|
-| F-02 | Hồ sơ công khai, nickname và ngày sinh khi đăng ký | Xong, E2E API + IDOR Pass | 2026-10-26 | — | [F-02](F-02-public-profile.md) |
-| F-03 | Schema mạng xã hội và RLS "đọc công khai, ghi chỉ chủ", chặn nhau | Xong, test tích hợp RLS Pass | 2026-10-26 | — | [F-03](F-03-social-schema.md) |
+| F-02 | Hồ sơ công khai, nickname và ngày sinh khi đăng ký | Xong, E2E API + IDOR Pass | 2026-10-26 | `302bc46` | [F-02](F-02-public-profile.md) |
+| F-03 | Schema mạng xã hội và RLS "đọc công khai, ghi chỉ chủ", chặn nhau | Xong, test tích hợp RLS Pass | 2026-10-26 | `302bc46` | [F-03](F-03-social-schema.md) |
+| F-04 | API bài đăng: nháp → ảnh → tự đăng, sửa, xóa, xem, lưới hồ sơ | Xong, E2E API + IDOR Pass | 2026-10-26 | — | [F-04](F-04-posts-api.md) |
