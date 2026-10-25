@@ -47,6 +47,14 @@ export interface MilestoneRepository {
   /** Mốc PENDING đến hạn trước `dueBy` (đồng bộ thông báo, S4-03). */
   listPendingDueBy(q: Q, ownerId: string, dueBy: string): Promise<MilestoneRow[]>;
   findMany(q: Q, ownerId: string, ids: string[]): Promise<MilestoneRow[]>;
+  /** Tối đa `limit` mốc PENDING hạn ≤ `dueBy` của các thú cưng; quá hạn tự đứng trước (S5-03). */
+  upcoming(
+    q: Q,
+    ownerId: string,
+    petIds: string[],
+    dueBy: string,
+    limit: number,
+  ): Promise<MilestoneRow[]>;
 }
 
 /** Trạng thái thông báo của một mốc (cho dòng "Nhắc nhở" ở chi tiết), do `notifications` cung cấp. */

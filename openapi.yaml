@@ -3465,5 +3465,336 @@ paths:
                   - localDate
                   - done
                 additionalProperties: false
+  /dashboard:
+    get:
+      summary: "Dữ liệu Dashboard: banner, checklist hôm nay, mốc sắp tới, cân nặng"
+      tags:
+        - dashboard
+      parameters:
+        - schema:
+            default: all
+            anyOf:
+              - type: string
+                enum:
+                  - all
+              - type: string
+                format: uuid
+                pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+          in: query
+          name: pet
+          required: false
+          description: all hoặc petId
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  today:
+                    type: string
+                    format: date
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                  account:
+                    type: object
+                    properties:
+                      emailVerified:
+                        type: boolean
+                    required:
+                      - emailVerified
+                    additionalProperties: false
+                  notifications:
+                    type: object
+                    properties:
+                      unreadCount:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                        description: Chưa xem trong phạm vi lọc
+                      banner:
+                        anyOf:
+                          - type: object
+                            properties:
+                              top:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                    format: uuid
+                                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                                  level:
+                                    type: string
+                                    enum:
+                                      - D7
+                                      - D1
+                                      - OVERDUE
+                                  label:
+                                    type:
+                                      - string
+                                      - "null"
+                                  daysUntilDue:
+                                    anyOf:
+                                      - type: integer
+                                        minimum: -9007199254740991
+                                        maximum: 9007199254740991
+                                      - type: "null"
+                                  milestoneId:
+                                    type: string
+                                    format: uuid
+                                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                                  petId:
+                                    type: string
+                                    format: uuid
+                                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                                  petName:
+                                    type: string
+                                  type:
+                                    type: string
+                                    enum:
+                                      - VACCINE
+                                      - FLEA
+                                      - DEWORM
+                                  note:
+                                    type:
+                                      - string
+                                      - "null"
+                                  dueOn:
+                                    type: string
+                                    format: date
+                                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                                  appearOn:
+                                    type: string
+                                    format: date
+                                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                                  unread:
+                                    type: boolean
+                                  resolution:
+                                    anyOf:
+                                      - type: string
+                                        enum:
+                                          - DONE
+                                          - CANCELLED
+                                          - RESCHEDULED
+                                      - type: "null"
+                                  createdAt:
+                                    type: string
+                                    format: date-time
+                                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                                required:
+                                  - id
+                                  - level
+                                  - label
+                                  - daysUntilDue
+                                  - milestoneId
+                                  - petId
+                                  - petName
+                                  - type
+                                  - note
+                                  - dueOn
+                                  - appearOn
+                                  - unread
+                                  - resolution
+                                  - createdAt
+                                additionalProperties: false
+                              moreCount:
+                                type: integer
+                                minimum: -9007199254740991
+                                maximum: 9007199254740991
+                              notificationIds:
+                                type: array
+                                items:
+                                  type: string
+                                  format: uuid
+                                  pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                            required:
+                              - top
+                              - moreCount
+                              - notificationIds
+                            additionalProperties: false
+                          - type: "null"
+                    required:
+                      - unreadCount
+                      - banner
+                    additionalProperties: false
+                  pets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        name:
+                          type: string
+                        avatarThumbUrl:
+                          type:
+                            - string
+                            - "null"
+                      required:
+                        - id
+                        - name
+                        - avatarThumbUrl
+                      additionalProperties: false
+                  routines:
+                    type: object
+                    properties:
+                      doneCount:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      totalCount:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                            petId:
+                              type: string
+                              format: uuid
+                              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                            name:
+                              type: string
+                            timeOfDay:
+                              type: string
+                            done:
+                              type: boolean
+                            petName:
+                              type: string
+                          required:
+                            - id
+                            - petId
+                            - name
+                            - timeOfDay
+                            - done
+                            - petName
+                          additionalProperties: false
+                    required:
+                      - doneCount
+                      - totalCount
+                      - items
+                    additionalProperties: false
+                  upcomingMilestones:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        petId:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        type:
+                          type: string
+                          enum:
+                            - VACCINE
+                            - FLEA
+                            - DEWORM
+                        note:
+                          type:
+                            - string
+                            - "null"
+                        dueOn:
+                          type: string
+                          format: date
+                          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                        displayStatus:
+                          type: string
+                          enum:
+                            - UPCOMING
+                            - OVERDUE
+                        daysUntilDue:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        petName:
+                          type: string
+                      required:
+                        - id
+                        - petId
+                        - type
+                        - note
+                        - dueOn
+                        - displayStatus
+                        - daysUntilDue
+                        - petName
+                      additionalProperties: false
+                  weight:
+                    anyOf:
+                      - type: object
+                        properties:
+                          petId:
+                            type: string
+                            format: uuid
+                            pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                          petName:
+                            type: string
+                          target:
+                            type:
+                              - string
+                              - "null"
+                          latest:
+                            anyOf:
+                              - type: object
+                                properties:
+                                  measuredOn:
+                                    type: string
+                                    format: date
+                                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                                  weightKg:
+                                    type: string
+                                  delta:
+                                    type:
+                                      - string
+                                      - "null"
+                                required:
+                                  - measuredOn
+                                  - weightKg
+                                  - delta
+                                additionalProperties: false
+                              - type: "null"
+                          series:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                measuredOn:
+                                  type: string
+                                  format: date
+                                  pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+                                weightKg:
+                                  type: string
+                              required:
+                                - measuredOn
+                                - weightKg
+                              additionalProperties: false
+                        required:
+                          - petId
+                          - petName
+                          - target
+                          - latest
+                          - series
+                        additionalProperties: false
+                      - type: "null"
+                required:
+                  - today
+                  - account
+                  - notifications
+                  - pets
+                  - routines
+                  - upcomingMilestones
+                  - weight
+                additionalProperties: false
 servers:
   - url: /api/v1

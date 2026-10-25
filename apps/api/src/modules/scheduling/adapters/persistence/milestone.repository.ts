@@ -95,6 +95,23 @@ export const milestoneRepository: MilestoneRepository = {
     return rows.length;
   },
 
+  async upcoming(q, ownerId, petIds, dueBy, limit) {
+    if (petIds.length === 0) return [];
+    // Partial index (owner_id, due_on) WHERE status = 'PENDING'.
+    return q
+      .selectFrom('milestones')
+      .selectAll()
+      .where('owner_id', '=', ownerId)
+      .where('status', '=', 'PENDING')
+      .where('pet_id', 'in', petIds)
+      .where('due_on', '<=', dueBy)
+      .orderBy('due_on')
+      .orderBy('created_at')
+      .orderBy('id')
+      .limit(limit)
+      .execute();
+  },
+
   listPendingDueBy(q, ownerId, dueBy) {
     return q
       .selectFrom('milestones')

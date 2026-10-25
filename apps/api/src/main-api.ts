@@ -28,6 +28,7 @@ const moduleDeps: ModuleDeps = {
   healthRecords: { clock: runtime.clock },
   scheduling: { clock: runtime.clock },
   routines: { clock: runtime.clock },
+  dashboard: { clock: runtime.clock },
   notifications: { clock: runtime.clock },
   media: {
     // Container api chỉ ghi được `incoming/` (mount ro cho phần còn lại).

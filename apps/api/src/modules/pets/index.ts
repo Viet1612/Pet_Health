@@ -1,7 +1,12 @@
 import type { FastifyInstance } from 'fastify';
 
 import type { ClockPort } from '../../platform/clock/clock.js';
-import { createMediaService, type MediaDeps, type TargetResolver } from '../media/index.js';
+import {
+  createMediaService,
+  thumbKeyOf,
+  type MediaDeps,
+  type TargetResolver,
+} from '../media/index.js';
 import { petAvatarRoutes } from './adapters/http/pet-avatar.routes.js';
 import { petsRoutes } from './adapters/http/pets.routes.js';
 import { weightTargetRoutes } from './adapters/http/weight-target.routes.js';
@@ -69,6 +74,29 @@ export const petQuery: PetQueryPort = {
     return new Map(rows.map((r) => [r.id, r.name]));
   },
 };
+
+export interface PetListItem {
+  id: string;
+  name: string;
+  avatarThumbUrl: string | null;
+  weightTargetKg: string | null;
+}
+
+/** Danh sách thú cưng cho Dashboard (S5-03), cùng thứ tự `GET /pets`, URL thumbnail đã ký. */
+export function createPetListQuery(mediaDeps: MediaDeps) {
+  const media = createMediaService(mediaDeps);
+  return {
+    async listForOwner(trx: Trx, ownerId: string): Promise<PetListItem[]> {
+      const rows = await kyselyPetRepository.listByOwner(trx, ownerId);
+      return rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        avatarThumbUrl: r.avatar_key ? media.signUrl(thumbKeyOf(r.avatar_key)) : null,
+        weightTargetKg: r.weight_target_kg,
+      }));
+    },
+  };
+}
 
 /** `TargetResolver` cho ảnh đại diện (đăng ký vào worker ảnh). */
 export function petAvatarTargetResolver(clock: ClockPort): TargetResolver {

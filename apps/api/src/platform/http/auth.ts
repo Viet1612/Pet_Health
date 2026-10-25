@@ -7,6 +7,8 @@ export interface AuthContext {
   sessionId: string;
   /** Bí mật CSRF của phiên web; header X-CSRF-Token phải bằng base64url của giá trị này. */
   csrfSecret: Buffer | null;
+  /** Email đã xác minh (Dashboard nhắc xác minh, FR-DSH-007); không có → coi như chưa. */
+  emailVerified?: boolean;
 }
 
 /**

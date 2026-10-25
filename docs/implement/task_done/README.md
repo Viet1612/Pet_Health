@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 39 / 54 task
+**Tiến độ:** 40 / 54 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -47,4 +47,5 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S4-08 | API trung lập ngôn ngữ: mã lỗi có params, `ageMonths`, `daysUntilDue` | Xong (code), chưa bấm thử lỗi ở bản tiếng Anh | 2026-10-25 | `6c32407` | [S4-08](S4-08-i18n-api.md) |
 | S4-09 | Ngôn ngữ theo tài khoản (`users.locale`, `PATCH /me/locale`) và email 2 ngôn ngữ | Xong, đã gọi thử trên server dev | 2026-10-25 | `8fc0129` | [S4-09](S4-09-user-locale-email.md) |
 | S5-01 | API việc hằng ngày: 2 bảng + RLS, 5 route, giới hạn 20, `RoutineQueryPort` | Xong, test E2E API Pass | 2026-10-25 | `4265bee` | [S5-01](S5-01-routines-api.md) |
-| S5-02 | Giao diện SCR-16 Việc hằng ngày, ChecklistItem, sheet Thêm/Sửa, xóa có xác nhận | Xong, E2E giao diện Pass | 2026-10-25 | — | [S5-02](S5-02-routines-ui.md) |
+| S5-02 | Giao diện SCR-16 Việc hằng ngày, ChecklistItem, sheet Thêm/Sửa, xóa có xác nhận | Xong, E2E giao diện Pass | 2026-10-25 | `acbedff` | [S5-02](S5-02-routines-ui.md) |
+| S5-03 | `GET /dashboard`: banner, checklist, 5 mốc sắp tới, cân nặng, lọc theo thú cưng | Xong, test E2E API Pass; chưa đo hiệu năng | 2026-10-25 | — | [S5-03](S5-03-dashboard-api.md) |

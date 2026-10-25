@@ -13,6 +13,7 @@ const stubDeps = {
   healthRecords: {},
   scheduling: {},
   routines: {},
+  dashboard: {},
   notifications: {},
 } as unknown as ModuleDeps;
 

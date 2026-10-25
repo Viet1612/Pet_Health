@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
+import { registerDashboardRoutes, type DashboardDeps } from './dashboard/index.js';
 import {
   registerHealthRecordsRoutes,
   visitPhotoPresenter,
@@ -37,6 +38,7 @@ export interface ModuleDeps {
   scheduling: SchedulingDeps;
   notifications: NotificationsDeps;
   routines: RoutinesDeps;
+  dashboard: DashboardDeps;
 }
 
 /** Đăng ký route của mọi mô-đun nghiệp vụ. Dùng chung cho main-api và sinh OpenAPI. */
@@ -55,6 +57,7 @@ export async function registerModules(api: FastifyInstance, deps: ModuleDeps): P
   });
   await registerNotificationsRoutes(api, deps.notifications);
   await registerRoutinesRoutes(api, deps.routines);
+  await registerDashboardRoutes(api, deps.dashboard, deps.media);
 }
 
 /** Nơi lưu và gắn ảnh theo loại mục tiêu; mô-đun sở hữu mục tiêu thêm vào (AVATAR ở S2-03). */

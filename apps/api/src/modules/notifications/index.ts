@@ -7,10 +7,13 @@ import { petQuery } from '../pets/index.js';
 import { milestoneQuery } from '../scheduling/index.js';
 import { notificationsRoutes } from './adapters/http/notifications.routes.js';
 import { notificationRepository } from './adapters/persistence/notification.repository.js';
+import { getNotificationSummary } from './application/get-summary.js';
 
 export { onMilestoneEvent, type MilestoneEventInput } from './application/on-milestone-event.js';
 export { getNotificationSummary } from './application/get-summary.js';
 export type { NotificationsAppDeps } from './application/ports.js';
+export { zNotification } from './adapters/http/notifications.routes.js';
+export type { NotificationSummary } from './application/get-summary.js';
 
 /** Phụ thuộc của mô-đun notifications, tiêm từ composition root. */
 export interface NotificationsDeps {
@@ -27,6 +30,23 @@ export async function registerNotificationsRoutes(
     pets: petQuery,
     milestones: milestoneQuery,
   });
+}
+
+/**
+ * Đồng bộ rồi đọc chuông + banner trong phạm vi `pet` (Dashboard, S5-03); cùng hàm của
+ * `GET /notifications/summary`.
+ */
+export function notificationSummaryFor(
+  clock: ClockPort,
+  withTx: <T>(fn: (trx: Transaction<Database>) => Promise<T>) => Promise<T>,
+  ownerId: string,
+  pet: string,
+) {
+  return getNotificationSummary(
+    { clock, pets: petQuery, milestones: milestoneQuery, withTx },
+    ownerId,
+    pet,
+  );
 }
 
 /** Trạng thái thông báo của một mốc, cho chi tiết mốc (`scheduling`). */

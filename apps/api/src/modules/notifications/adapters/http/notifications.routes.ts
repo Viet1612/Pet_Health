@@ -11,7 +11,7 @@ import { markAllRead, markRead } from '../../application/mark-read.js';
 import type { MilestoneQueryPort, NotificationsAppDeps } from '../../application/ports.js';
 import type { PetQueryPort } from '../../../pets/index.js';
 
-const zNotification = z.object({
+export const zNotification = z.object({
   id: z.uuid(),
   level: z.enum(['D7', 'D1', 'OVERDUE']),
   label: z.string().nullable(),
