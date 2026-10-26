@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-08",
+  "name": "Hồ sơ thú cưng",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/pets/01a17752-ae65-71de-8713-bcf70932e767",
+  "title": "Hồ sơ thú cưng · Pet Health",
+  "startedAt": "2026-10-26T09:44:27.911Z",
+  "finishedAt": "2026-10-26T09:44:40.014Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 21,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-08-tablet.png"
+}

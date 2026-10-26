@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-09",
+  "name": "Tạo thú cưng",
+  "viewport": "phone",
+  "viewportSize": "390×844",
+  "url": "https://pet.vietdeptrai.io.vn/pets/new",
+  "title": "Thêm thú cưng · Pet Health",
+  "startedAt": "2026-10-26T09:42:39.424Z",
+  "finishedAt": "2026-10-26T09:42:44.266Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 24,
+  "incomplete": 1,
+  "screenshot": "screenshots/SCR-09-phone.png"
+}

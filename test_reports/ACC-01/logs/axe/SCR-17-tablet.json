@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-17",
+  "name": "Thông báo — Nhắc lịch",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/notifications",
+  "title": "Thông báo · Pet Health",
+  "startedAt": "2026-10-26T09:45:37.973Z",
+  "finishedAt": "2026-10-26T09:45:46.619Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 23,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-17-tablet.png"
+}

@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-25",
+  "name": "Thông báo — Hoạt động",
+  "viewport": "phone",
+  "viewportSize": "390×844",
+  "url": "https://pet.vietdeptrai.io.vn/notifications?tab=activity",
+  "title": "Thông báo · Pet Health",
+  "startedAt": "2026-10-26T09:43:59.496Z",
+  "finishedAt": "2026-10-26T09:44:04.011Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 25,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-25-phone.png"
+}

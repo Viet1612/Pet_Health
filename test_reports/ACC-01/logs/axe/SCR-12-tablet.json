@@ -1,0 +1,44 @@
+{
+  "screen": "SCR-12",
+  "name": "Chi tiết bản ghi khám",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/visits/01a17793-47e3-76d3-85a0-29301aa78d5f",
+  "title": "Chi tiết lần khám · Pet Health",
+  "startedAt": "2026-10-26T09:45:04.011Z",
+  "finishedAt": "2026-10-26T09:45:09.264Z",
+  "axeError": null,
+  "violations": [
+    {
+      "id": "button-name",
+      "impact": "critical",
+      "help": "Buttons must have discernible text",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/button-name?application=playwright",
+      "nodes": [
+        {
+          "target": [
+            ".size-\\[76px\\].overflow-hidden.xl\\:size-\\[96px\\]:nth-child(1) > .size-full"
+          ],
+          "html": "<button type=\"button\" class=\"size-full\">",
+          "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+        },
+        {
+          "target": [
+            ".size-\\[76px\\].overflow-hidden.xl\\:size-\\[96px\\]:nth-child(2) > .size-full"
+          ],
+          "html": "<button type=\"button\" class=\"size-full\">",
+          "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "critical": 1,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 23,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-12-tablet.png"
+}

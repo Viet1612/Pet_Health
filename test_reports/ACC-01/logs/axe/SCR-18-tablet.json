@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-18",
+  "name": "Cài đặt tài khoản",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/settings",
+  "title": "Cài đặt · Pet Health",
+  "startedAt": "2026-10-26T09:45:46.620Z",
+  "finishedAt": "2026-10-26T09:45:51.048Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 27,
+  "incomplete": 1,
+  "screenshot": "screenshots/SCR-18-tablet.png"
+}

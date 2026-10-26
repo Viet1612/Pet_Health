@@ -1,0 +1,45 @@
+{
+  "screen": "SCR-23",
+  "name": "Chi tiết bài",
+  "viewport": "phone",
+  "viewportSize": "390×844",
+  "url": "https://pet.vietdeptrai.io.vn/p/01a17758-db38-782e-9a77-6ebbef3ca761",
+  "title": "Bản tin · Pet Health",
+  "startedAt": "2026-10-26T09:43:50.581Z",
+  "finishedAt": "2026-10-26T09:43:55.219Z",
+  "axeError": null,
+  "violations": [
+    {
+      "id": "link-name",
+      "impact": "serious",
+      "help": "Links must have discernible text",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=playwright",
+      "nodes": [
+        {
+          "target": [".gap-x-3.flex-wrap:nth-child(1) > .shrink-0[href$=\"melody1\"]"],
+          "html": "<a class=\"shrink-0\" href=\"/u/melody1\"><span aria-hidden=\"true\" class=\"bg-primary-soft text-primary-soft-fg inline-flex shrink-0 items-center justify-center rounded-full size-8 text-small font-bold\">M</span></a>",
+          "summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+        },
+        {
+          "target": [".gap-x-3.flex-wrap:nth-child(2) > .shrink-0[href$=\"melody1\"]"],
+          "html": "<a class=\"shrink-0\" href=\"/u/melody1\"><span aria-hidden=\"true\" class=\"bg-primary-soft text-primary-soft-fg inline-flex shrink-0 items-center justify-center rounded-full size-8 text-small font-bold\">M</span></a>",
+          "summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+        },
+        {
+          "target": [".gap-x-3.flex-wrap:nth-child(3) > .shrink-0[href$=\"melody1\"]"],
+          "html": "<a class=\"shrink-0\" href=\"/u/melody1\"><span aria-hidden=\"true\" class=\"bg-primary-soft text-primary-soft-fg inline-flex shrink-0 items-center justify-center rounded-full size-8 text-small font-bold\">M</span></a>",
+          "summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "critical": 0,
+    "serious": 1,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 27,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-23-phone.png"
+}

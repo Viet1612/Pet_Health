@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-19",
+  "name": "Bản tin",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/feed",
+  "title": "Bản tin · Pet Health",
+  "startedAt": "2026-10-26T09:45:51.049Z",
+  "finishedAt": "2026-10-26T09:46:08.469Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 24,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-19-tablet.png"
+}

@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-24",
+  "name": "Danh sách theo dõi",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/u/melody/followers",
+  "title": "Người theo dõi · Pet Health",
+  "startedAt": "2026-10-26T09:46:40.416Z",
+  "finishedAt": "2026-10-26T09:46:46.497Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 23,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-24-tablet.png"
+}

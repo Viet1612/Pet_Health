@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-14",
+  "name": "Lịch mốc y tế",
+  "viewport": "phone",
+  "viewportSize": "390×844",
+  "url": "https://pet.vietdeptrai.io.vn/pets/01a17752-ae65-71de-8713-bcf70932e767/milestones",
+  "title": "Lịch mốc y tế · Pet Health",
+  "startedAt": "2026-10-26T09:43:07.950Z",
+  "finishedAt": "2026-10-26T09:43:12.587Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 25,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-14-phone.png"
+}

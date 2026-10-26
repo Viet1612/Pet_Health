@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-15",
+  "name": "Chi tiết mốc",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/milestones/01a17793-5e4a-7738-89f0-e4342ac9eb44",
+  "title": "Chi tiết mốc · Pet Health",
+  "startedAt": "2026-10-26T09:45:24.849Z",
+  "finishedAt": "2026-10-26T09:45:33.303Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 27,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-15-tablet.png"
+}

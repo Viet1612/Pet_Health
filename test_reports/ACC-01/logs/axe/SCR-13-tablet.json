@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-13",
+  "name": "Tạo bản ghi khám",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/pets/01a17752-ae65-71de-8713-bcf70932e767/visits/new",
+  "title": "Thêm lần khám · Pet Health",
+  "startedAt": "2026-10-26T09:45:09.265Z",
+  "finishedAt": "2026-10-26T09:45:15.143Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 23,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-13-tablet.png"
+}

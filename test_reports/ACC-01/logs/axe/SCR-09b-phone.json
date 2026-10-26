@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-09b",
+  "name": "Sửa thú cưng (cùng màn SCR-09)",
+  "viewport": "phone",
+  "viewportSize": "390×844",
+  "url": "https://pet.vietdeptrai.io.vn/pets/01a17752-ae65-71de-8713-bcf70932e767/edit",
+  "title": "Sửa hồ sơ · Pet Health",
+  "startedAt": "2026-10-26T09:42:44.267Z",
+  "finishedAt": "2026-10-26T09:42:48.848Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 24,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-09b-phone.png"
+}

@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-04",
+  "name": "Đặt lại mật khẩu (token không hợp lệ)",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/reset-password",
+  "title": "Đặt mật khẩu mới · Pet Health",
+  "startedAt": "2026-10-26T09:44:12.837Z",
+  "finishedAt": "2026-10-26T09:44:15.639Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 23,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-04-tablet.png"
+}

@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-05",
+  "name": "Xác minh email (token không hợp lệ)",
+  "viewport": "phone",
+  "viewportSize": "390×844",
+  "url": "https://pet.vietdeptrai.io.vn/verify-email",
+  "title": "Xác minh email · Pet Health",
+  "startedAt": "2026-10-26T09:42:09.755Z",
+  "finishedAt": "2026-10-26T09:42:13.476Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 19,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-05-phone.png"
+}

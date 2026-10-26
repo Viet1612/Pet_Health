@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-01",
+  "name": "Đăng nhập",
+  "viewport": "phone",
+  "viewportSize": "390×844",
+  "url": "https://pet.vietdeptrai.io.vn/login",
+  "title": "Đăng nhập · Pet Health",
+  "startedAt": "2026-10-26T09:41:53.520Z",
+  "finishedAt": "2026-10-26T09:41:59.452Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 24,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-01-phone.png"
+}

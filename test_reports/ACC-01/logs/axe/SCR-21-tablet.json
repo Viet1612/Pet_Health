@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-21",
+  "name": "Tìm người",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/search",
+  "title": "Tìm người · Pet Health",
+  "startedAt": "2026-10-26T09:46:17.996Z",
+  "finishedAt": "2026-10-26T09:46:25.327Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 23,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-21-tablet.png"
+}

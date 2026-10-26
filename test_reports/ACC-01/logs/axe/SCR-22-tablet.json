@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-22",
+  "name": "Hồ sơ công khai",
+  "viewport": "tablet",
+  "viewportSize": "834×1112",
+  "url": "https://pet.vietdeptrai.io.vn/u/melody1",
+  "title": "Hồ sơ · Pet Health",
+  "startedAt": "2026-10-26T09:46:25.328Z",
+  "finishedAt": "2026-10-26T09:46:33.068Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 23,
+  "incomplete": 0,
+  "screenshot": "screenshots/SCR-22-tablet.png"
+}

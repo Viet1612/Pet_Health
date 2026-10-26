@@ -1,0 +1,21 @@
+{
+  "screen": "SCR-16",
+  "name": "Việc hằng ngày",
+  "viewport": "phone",
+  "viewportSize": "390×844",
+  "url": "https://pet.vietdeptrai.io.vn/pets/01a17752-ae65-71de-8713-bcf70932e767/routines",
+  "title": "Việc hằng ngày · Pet Health",
+  "startedAt": "2026-10-26T09:43:17.122Z",
+  "finishedAt": "2026-10-26T09:43:21.111Z",
+  "axeError": null,
+  "violations": [],
+  "counts": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "passes": 24,
+  "incomplete": 1,
+  "screenshot": "screenshots/SCR-16-phone.png"
+}

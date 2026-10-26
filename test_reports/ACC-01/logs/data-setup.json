@@ -1,0 +1,31 @@
+{
+  "capturedAt": "2026-10-26T09:38:40.248Z",
+  "env": "ENV-05",
+  "today": "2026-10-26",
+  "petId": "01a17752-ae65-71de-8713-bcf70932e767",
+  "petName": "Kem",
+  "visitId": "01a17793-47e3-76d3-85a0-29301aa78d5f",
+  "visitCount": 1,
+  "visitPhotoCount": 2,
+  "milestoneOverdueId": "01a17793-5e4a-7738-89f0-e4342ac9eb44",
+  "milestoneUpcomingId": "01a17753-f626-7260-9b61-a6cf8d65ec0c",
+  "milestoneDoneId": "01a17793-6212-78a8-976d-be03bc17ff86",
+  "milestones": {
+    "upcoming": 2,
+    "overdue": 1,
+    "done": 1,
+    "cancelled": 0
+  },
+  "routineCount": 2,
+  "weightTarget": "15.0",
+  "usernameA": "melody",
+  "usernameB": "melody1",
+  "postA": "01a17758-db38-782e-9a77-6ebbef3ca761",
+  "postB": "01a17793-6e7d-7751-9d04-b23321166c59",
+  "notifications": {
+    "reminderCount": 0,
+    "reminderUnread": 0,
+    "activityCount": 5,
+    "activityUnread": 1
+  }
+}
