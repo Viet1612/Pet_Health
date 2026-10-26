@@ -3,10 +3,10 @@
 | Trường | Giá trị |
 |---|---|
 | Mã tài liệu | PH-PRD-001 |
-| Phiên bản | **1.3 (Baselined)**. v0.2: thêm lộ trình app (§1.3). v1.0: Việt duyệt PD-001→008, GAP-001→004, ưu tiên và OKR (BRD DEC-012→DEC-015). v1.1: bỏ email nhắc, chuyển nhắc nhở vào web app (banner + mục Thông báo), bỏ launch gate giám sát (BRD DEC-016→DEC-018). v1.2: duyệt PD-009, bỏ gate sao lưu G-13 (BRD DEC-019, DEC-020). v1.3: thêm US-008 đổi email tài khoản (BRD DEC-022) |
-| Ngày | 2026-10-22 |
+| Phiên bản | **1.4**. v1.4 (2026-10-26): thêm Giai đoạn 2 — Bản tin ảnh thú cưng (§8, E8, US-070→US-079 + mở rộng US-001; BRD DEC-023→DEC-030); phần Giai đoạn 1 không đổi. **1.3 (Baselined)**. v0.2: thêm lộ trình app (§1.3). v1.0: Việt duyệt PD-001→008, GAP-001→004, ưu tiên và OKR (BRD DEC-012→DEC-015). v1.1: bỏ email nhắc, chuyển nhắc nhở vào web app (banner + mục Thông báo), bỏ launch gate giám sát (BRD DEC-016→DEC-018). v1.2: duyệt PD-009, bỏ gate sao lưu G-13 (BRD DEC-019, DEC-020). v1.3: thêm US-008 đổi email tài khoản (BRD DEC-022) |
+| Ngày | 2026-10-22 (cập nhật 2026-10-26) |
 | Product Owner / Người phê duyệt | Việt |
-| Tài liệu nguồn | [BRD.md](BRD.md) v1.3 (PH-BRD-001) |
+| Tài liệu nguồn | [BRD.md](BRD.md) v1.4 (PH-BRD-001) |
 | Chuẩn áp dụng | IEEE 29148-2018 (truy vết BR → User Story → AC) |
 | Prompt nguồn | `docs/requirements/PRD_Prompt_IEEE_standard.md` |
 
@@ -67,7 +67,7 @@
 
 > **Không chủ nuôi nào phải nhớ lịch y tế của thú cưng bằng trí nhớ.** Pet Health trở thành "sổ sức khỏe" duy nhất của mỗi thú cưng: ghi một lần, được nhắc đúng lúc, và luôn có đủ lịch sử để mang theo khi đi khám.
 
-Giai đoạn 1 xây nền tảng ghi chép và nhắc nhở trên web. Giai đoạn 2 mang sản phẩm lên **app điện thoại** (BRD DEC-011), xem §1.3.
+Giai đoạn 1 xây nền tảng ghi chép và nhắc nhở trên web. Giai đoạn 2 mang sản phẩm lên **app điện thoại** (BRD DEC-011), xem §1.3. Trước app điện thoại, Giai đoạn 2 làm **Bản tin ảnh thú cưng** trên web (BRD DEC-023), xem §8.
 
 ### 1.2 OKRs
 
@@ -104,9 +104,10 @@ BRD (DEC-004) không đặt target nghiệp vụ. Các OKR dưới đây là **m
 | Giai đoạn | Nền tảng | Phạm vi chính | Kênh nhắc nhở | Thời điểm |
 |---|---|---|---|---|
 | **1 — Web** (PRD này) | Web responsive (tablet 10,5" + điện thoại qua trình duyệt) | E1→E7 | Thông báo trong web app (banner + mục Thông báo) | [TBD: BRD OQ-003] |
+| **2a — Bản tin** (§8) | Web responsive (như Giai đoạn 1) | E8: hồ sơ công khai, bài đăng, theo dõi, bản tin, tim, bình luận, chặn | Thông báo hoạt động trong app (chuông + tab "Hoạt động") | Đã làm xong trên dev; lên production cùng Giai đoạn 1 (S7) |
 | **2 — App điện thoại** | App iOS và Android | Toàn bộ chức năng Giai đoạn 1, dùng chung tài khoản và dữ liệu với web | **Push notification** + thông báo trong app | Sau khi Giai đoạn 1 ra mắt và ổn định. Ngày cụ thể: **Deferred** (OQ-P01) |
 
-**Phạm vi dự kiến của Giai đoạn 2** (sẽ có PRD riêng):
+**Phạm vi dự kiến của app điện thoại** (sẽ có PRD riêng; chưa làm):
 - Push notification cho mốc y tế (trước 7 ngày, trước 1 ngày) và nhắc việc hằng ngày đúng giờ. Đây là lý do chính để làm app, vì web không đẩy được push ổn định (BRD SRC-001).
 - Chụp ảnh đơn thuốc trực tiếp bằng camera trong app.
 - Đăng nhập bằng sinh trắc học (Face ID, vân tay).
@@ -197,6 +198,7 @@ journey
 | E5 | Mốc y tế và nhắc nhở | BR-015→BR-020, BR-032→BR-034, BR-041, BR-042 | 9 | 6 | 3 | 0 |
 | E6 | Việc chăm sóc hằng ngày | BR-021→BR-024 | 5 | 0 | 5 | 0 |
 | E7 | Dashboard | BR-022, BR-028, BR-043 | 3 | 2 | 1 | 0 |
+| E8 | Bản tin (Giai đoạn 2, §8.3) | BR-045→BR-054 | 13 | 8 | 5 | 0 |
 
 > Theo BRD, toàn bộ E6 là *Should* nên ở PRD là P1. Tuy vậy E6 là lý do người dùng mở app mỗi ngày (O2), nên **E6 được đưa vào bản ra mắt** (BRD DEC-014), dù không chặn launch gate.
 
@@ -238,6 +240,8 @@ journey
 **AC — US-007 (Nhất quán đa thiết bị)** ↔ BRD AC-027
 - **Given** người dùng đã đăng nhập trên điện thoại và máy tính bảng, **When** lưu một số đo trên điện thoại và nhận thông báo "Đã lưu", rồi tải lại màn hình cân nặng trên máy tính bảng, **Then** số đo hiển thị trên máy tính bảng.
 
+
+**Giai đoạn 2 — US-001:** form đăng ký có thêm nickname, ngày sinh và ô nhập lại mật khẩu (BR-045, §8.3).
 
 **Ghi chú P1 — US-008:** mở từ Cài đặt tài khoản; nhập email mới + mật khẩu hiện tại; email mới nhận liên kết xác minh (60 phút, dùng 1 lần) và chỉ có hiệu lực sau khi xác minh; email cũ nhận thư thông báo "Email tài khoản vừa được đổi". Kiểm chứng bằng BRD AC-044.
 ---
@@ -691,6 +695,7 @@ Việt đã duyệt toàn bộ đề xuất. Mọi quyết định được ghi 
 | 7 | **Bỏ G-16** (không xây hệ thống giám sát); G-14 chuyển sang email tài khoản qua SMTP Gmail | ✅ | DEC-017, DEC-018 |
 | 8 | **Bỏ G-13** (chưa sao lưu ở Giai đoạn 1) | ✅ Chấp nhận rủi ro RSK-006 | DEC-020 |
 | 9 | **Thêm US-008** (đổi email tài khoản, P1) | ✅ | DEC-022 |
+| 10 | **Giai đoạn 2 — Bản tin** (§8): E8, US-070→US-079 (+ mở rộng US-001), quyết định ở §8.8 | ✅ | DEC-023→DEC-030 |
 
 **Phạm vi ra mắt Giai đoạn 1:** toàn bộ P0 (gồm nhắc trong app US-041, US-049, US-062) (bắt buộc qua launch gate) + toàn bộ E6. Các story P1 khác được làm theo thứ tự backlog. P2 (US-005) làm nếu còn thời gian.
 
@@ -699,3 +704,151 @@ Việt đã duyệt toàn bộ đề xuất. Mọi quyết định được ghi 
 **Hạng mục hoãn**
 
 - **Lộ trình app điện thoại** (§1.3): **OQ-P01** (thời điểm) và **OQ-P02** (công nghệ) đều **Deferred**. Việt quyết định ngày 2026-10-22: tập trung phát triển web trước, xem xét app sau khi Giai đoạn 1 ra mắt. Hai câu hỏi này không chặn Giai đoạn 1. MR-1→MR-8 vẫn giữ để không phải viết lại backend khi làm app.
+
+---
+
+## 8. Giai đoạn 2 — Bản tin ảnh thú cưng
+
+Bổ sung ở v1.4 (2026-10-26). Nguồn: BRD mục 16 (BR-045→BR-054, DEC-023→DEC-030), [Phase2-ideas](Phase2-ideas.md) §2. Task và kết quả: [tasks-feed/](../implement/tasks-feed/README.md), [Implement_plan §10](../implement/Implement_plan.md#10-giai-đoạn-2--bản-tin-ảnh-thú-cưng).
+
+**Trạng thái:** đã làm xong trên máy dev (12/13 task). Task còn lại là chuyển ảnh sang Cloudflare R2, làm cùng đợt triển khai production (S7).
+
+### 8.1 Mục tiêu
+
+> Chủ nuôi có thêm lý do mở Pet Health mỗi ngày: xem ảnh thú cưng của bạn bè và chia sẻ khoảnh khắc của bé nhà mình, **mà dữ liệu sức khỏe vẫn hoàn toàn riêng tư**.
+
+**O4 — Bản tin an toàn và dễ dùng** (mục tiêu chất lượng, không phải target nghiệp vụ, theo DEC-004)
+
+| KR | Chỉ số | Target | Cách đo |
+|---|---|---|---|
+| KR4.1 | Phản hồi đọc của bản tin không chứa email hay dữ liệu sức khỏe | 0 trường bị lộ | Test quét rò rỉ chéo tài khoản (AC-054) |
+| KR4.2 | Số bước để đăng một bài | Một màn: chọn ảnh, viết chú thích, gắn bé (tùy chọn), bấm Đăng | Kiểm thử E2E |
+| KR4.3 | Tỷ lệ người tạo hồ sơ có đăng bài đầu tiên | Theo dõi, không phải gate | Funnel bản tin (§8.6) |
+
+### 8.2 Persona và hành trình
+
+Persona như §2.1 (chủ nuôi nhiều thú cưng, dùng điện thoại và máy tính bảng). Hành trình chính:
+
+1. Mở **Bản tin** lần đầu → tạo hồ sơ công khai (tên hiển thị điền sẵn bằng nickname).
+2. Bấm **"+"** → chọn tối đa 5 ảnh, viết chú thích, gắn bé nếu muốn → **Đăng**.
+3. Tìm bạn bằng username hoặc tên (không cần dấu) → **Theo dõi**.
+4. Cuộn bản tin, nhấn đúp ảnh để thả tim, bình luận.
+5. Nhận thông báo ở chuông (tab **Hoạt động**) khi có người thích, bình luận hoặc theo dõi.
+6. Gặp người làm phiền → **Chặn**.
+
+### 8.3 Epic E8 — Bản tin
+
+Số story khớp với [User Stories](../design/User_Stories.md) E8. Đăng ký có nickname và ngày sinh (BR-045) là phần mở rộng của **US-001**; giới hạn chống spam (BR-053) nằm trong AC của **US-079**; không lộ dữ liệu (BR-054) là yêu cầu xuyên suốt, kiểm chứng bằng ca quét rò rỉ IDOR (SRS NFR-SEC-013).
+
+| ID | User story | Ưu tiên | BR |
+|---|---|---|---|
+| US-001 *(mở rộng)* | Là chủ nuôi, tôi muốn đăng ký kèm nickname và ngày sinh, nhập lại mật khẩu để không gõ sai. | P0 | BR-045 |
+| US-070 | Là chủ nuôi, tôi muốn có hồ sơ công khai với username, tên hiển thị, giới thiệu và ảnh đại diện, để người khác nhận ra tôi mà không thấy email. | P0 | BR-046 |
+| US-071 | Là chủ nuôi, tôi muốn đăng bài 1–5 ảnh kèm chú thích và (nếu muốn) gắn bé, để chia sẻ khoảnh khắc của thú cưng. | P0 | BR-047 |
+| US-072 | Là chủ nuôi, tôi muốn xem hồ sơ của một người dạng lưới 3 cột và mở từng bài để vuốt qua các ảnh. | P0 | BR-046, BR-047 |
+| US-073 | Là chủ nuôi, tôi muốn sửa chú thích, đổi bé gắn kèm hoặc xóa bài của mình. | P0 | BR-047 |
+| US-074 | Là chủ nuôi, tôi muốn tìm người theo username hoặc tên và theo dõi ngay, không cần chờ duyệt. | P0 | BR-048 |
+| US-075 | Là chủ nuôi, tôi muốn xem bản tin gồm bài của mình và người mình theo dõi, mới nhất trước. | P0 | BR-049 |
+| US-076 | Là chủ nuôi, tôi muốn thả tim bài (kể cả nhấn đúp vào ảnh) và xem ai đã thích. | P1 | BR-050 |
+| US-077 | Là chủ nuôi, tôi muốn bình luận và xóa bình luận của mình hoặc bình luận trên bài của mình. | P1 | BR-050 |
+| US-078 | Là chủ nuôi, tôi muốn được báo khi có người thích, bình luận bài của tôi hoặc theo dõi tôi, mà không lẫn với nhắc lịch y tế. | P1 | BR-051 |
+| US-079 | Là chủ nuôi, tôi muốn chặn và bỏ chặn một người để không thấy nhau nữa, và hệ thống chặn người spam hàng loạt. | P1 | BR-052, BR-053 |
+| *(xuyên suốt)* | Người khác không bao giờ thấy email hay dữ liệu sức khỏe của bé qua bản tin. | P0 | BR-054 |
+
+**AC — US-001 mở rộng (Đăng ký có nickname, ngày sinh)**
+- **Given** khách ở trang đăng ký, **When** bỏ trống nickname hoặc ngày sinh, hoặc ô "Nhập lại mật khẩu" không khớp, **Then** lỗi hiện dưới trường tương ứng và không tạo tài khoản.
+- **Given** tài khoản tạo trước Giai đoạn 2 chưa có nickname hoặc ngày sinh, **When** mở app, **Then** hiện hộp "Bổ sung thông tin tài khoản".
+
+**AC — US-071 (Đăng bài)**
+- **Given** chủ nuôi đã có hồ sơ công khai, **When** chọn 6 ảnh, **Then** chỉ nhận 5 ảnh và báo "Tối đa 5 ảnh".
+- **Given** ảnh lớn hơn 5 MB, **When** đăng, **Then** ảnh được nén trên thiết bị rồi tải lên bình thường.
+- **Given** đang tải ảnh, **When** một ảnh lỗi, **Then** ảnh đó có "Thử lại" hoặc "Bỏ ảnh lỗi rồi đăng"; bài chỉ hiện với người khác khi mọi ảnh đã xử lý xong.
+
+**AC — US-075 (Bản tin)**
+- **Given** A theo dõi B và không theo dõi D, **When** A mở bản tin, **Then** có bài của A và B mới nhất trước, không có bài của D.
+- **Given** có bài mới trong lúc A đang xem, **When** tối đa 60 giây sau, **Then** hiện nút "Có bài mới".
+
+**AC — US-078 (Thông báo hoạt động)**
+- **Given** B và C cùng thích bài của A, **When** A mở tab "Hoạt động", **Then** có một dòng gộp "B và 1 người khác đã thích bài của bạn".
+- **Given** A tự thích bài của mình, **Then** không có thông báo.
+- **Given** app đang mở, **When** có hoạt động mới, **Then** số trên chuông cập nhật trong vòng 30 giây mà không cần tải lại.
+
+**AC — US-079 (Chặn, chống spam)**
+- **Given** C chặn A, **When** C tìm A, **Then** không thấy A; **When** A mở hồ sơ C, **Then** báo không tìm thấy.
+- **Given** C bỏ chặn A, **Then** hai bên tìm thấy nhau lại; theo dõi trước đó không tự khôi phục.
+- **Given** một tài khoản vượt ngưỡng (ví dụ bình luận thứ 31 trong 10 phút), **Then** bị từ chối kèm "Bạn thao tác quá nhanh, thử lại sau N phút"; tài khoản tạo chưa đủ 24 giờ có ngưỡng đăng bài và bình luận bằng 1/3.
+
+**AC — Không lộ dữ liệu (xuyên suốt)** ↔ BRD AC-054
+- **Given** tài khoản B, **When** gọi mọi chức năng đọc của bản tin trên dữ liệu của A, **Then** phản hồi không có email, giống, ngày sinh, cân nặng, nội dung sổ y tế hay ảnh sổ y tế; bé gắn trong bài chỉ hiện tên.
+
+Đủ AC Given/When/Then của từng story ở [User Stories](../design/User_Stories.md) E8; BRD AC-046→AC-053 là tiêu chí nghiệp vụ tương ứng.
+
+### 8.4 Yêu cầu UX
+
+- **Thanh điều hướng 6 mục:** Tổng quan, Sức khỏe, Bản tin, Lịch, Thú cưng, Hồ sơ. Mục "Hồ sơ" mở hồ sơ công khai của mình (chưa có thì tới màn tạo hồ sơ).
+- **Đầu Bản tin trên điện thoại:** ô "Tìm người" dạng viên thuốc + nút tròn "+" để đăng bài; không có tiêu đề hiện ra.
+- **Soạn bài trên một màn:** ảnh, chú thích, gắn bé cùng lúc. Không có bước "Tiếp".
+- **Hồ sơ:** lưới 3 cột vuông, không giật bố cục khi tải.
+- **Chi tiết bài:** ảnh vuốt ngang, phím ←/→, chấm vị trí.
+- **Thời gian tương đối** theo ngôn ngữ ("3 giờ trước" / "3 hours ago").
+- **Màn Thông báo:** 2 tab "Nhắc lịch" (giữ nguyên Giai đoạn 1) và "Hoạt động".
+- **Cài đặt** có thêm: "Nickname và ngày sinh", "Hồ sơ công khai", "Đã chặn".
+- **Vượt giới hạn chống spam:** một câu chung "Bạn thao tác quá nhanh, thử lại sau N phút".
+
+### 8.5 Tiêu chí phát hành bản tin
+
+| # | Tiêu chí | Kết quả trên dev (2026-10-26) |
+|---|---|---|
+| FG-1 | IDOR 100% Pass, gồm ca quét rò rỉ dữ liệu sức khỏe (AC-054) | Đạt (136/136) |
+| FG-2 | E2E nhiều tài khoản Pass ở phone 390 px và tablet 834 px: đăng → theo dõi → bản tin → tim, bình luận → thông báo → chặn → xóa bài → xóa tài khoản | Đạt (72/72 toàn bộ E2E) |
+| FG-3 | axe 0 lỗi serious/critical trên mọi màn bản tin; vùng chạm ≥ 44 px trên phone | Đạt |
+| FG-4 | Đủ chuỗi vi/en cho mọi màn và mã lỗi mới | Đạt |
+| FG-5 | Analytics bản tin không chứa email hay nội dung | Đạt |
+| FG-6 | Ảnh lưu trên Cloudflare R2 trước khi mở production | Chưa (làm cùng S7) |
+
+Các gate G-6→G-12, G-14, G-17 của Giai đoạn 1 áp dụng chung khi triển khai production.
+
+### 8.6 Analytics
+
+| Event | Kích hoạt khi | Thuộc tính |
+|---|---|---|
+| `profile_created` | Tạo hồ sơ công khai | — |
+| `post_created` | Tạo bài | `photo_count`, `has_caption`, `pet_count` |
+| `post_liked` | Thả tim | — |
+| `post_like_received` | Bài của mình nhận tim (ghi cho chủ bài) | — |
+| `post_commented` | Bình luận | `length_bucket` (short/medium/long) |
+| `user_followed` | Theo dõi một người | — |
+| `user_blocked` | Chặn một người | — |
+| `feed_viewed` | Rời bản tin | `items_seen_bucket` (0 / 1–10 / 11–30 / 31+) |
+
+**Funnel bản tin:** `profile_created` → `post_created` → `post_like_received` → `user_followed` ≥ 3 lần. Nguyên tắc như §5.2: không gửi chú thích, bình luận, tên thú cưng hay email.
+
+### 8.7 Truy vết BRD → PRD (Giai đoạn 2)
+
+| BR | User story |
+|---|---|
+| BR-045 | US-001 (mở rộng Giai đoạn 2) |
+| BR-046 | US-070, US-072 |
+| BR-047 | US-071, US-072, US-073 |
+| BR-048 | US-074 |
+| BR-049 | US-075 |
+| BR-050 | US-076, US-077 |
+| BR-051 | US-078 |
+| BR-052 | US-079 |
+| BR-053 | US-079 |
+| BR-054 | Xuyên suốt E8 (SRS NFR-SEC-013, ca quét rò rỉ IDOR) |
+
+**Độ phủ:** 10/10 BR Giai đoạn 2 có story hoặc yêu cầu xuyên suốt; 10/10 story E8 truy vết về BR.
+
+### 8.8 Quyết định
+
+| # | Hạng mục | Kết quả | BRD |
+|---|---|---|---|
+| 1 | Làm bản tin trước app điện thoại; làm trên dev trước, production sau | ✅ | DEC-023 |
+| 2 | Bài công khai với mọi tài khoản đã đăng nhập | ✅ | DEC-024 |
+| 3 | Không có báo cáo nội dung; chặn + giới hạn chống spam | ✅ | DEC-025 |
+| 4 | 5 ảnh/bài, 30 bài/ngày; nén ảnh > 5 MB trên thiết bị (mọi chỗ tải ảnh) | ✅ | DEC-026 |
+| 5 | Dữ liệu sức khỏe giữ phân quyền theo chủ | ✅ | DEC-027 |
+| 6 | Bài hiện tên người dùng; gắn thú cưng tùy chọn; một hồ sơ chứa mọi ảnh | ✅ | DEC-028 |
+| 7 | Thông báo hoạt động tách khỏi nhắc lịch, chuông chung, tự cập nhật 30 giây | ✅ | DEC-029 |
+| 8 | Đăng ký có nickname, ngày sinh, nhập lại mật khẩu | ✅ | DEC-030 |

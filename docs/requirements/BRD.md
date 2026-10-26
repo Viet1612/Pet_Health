@@ -36,8 +36,8 @@
 |---|---|
 | Tiêu đề | BRD — Pet Health & Schedule Diary (Web Version) |
 | Mã tài liệu | PH-BRD-001 |
-| Phiên bản | **1.3** |
-| Trạng thái | **Baselined** (v1.0 phê duyệt 2026-10-22, DEC-015; v1.1 theo DEC-016→DEC-018; v1.2 theo DEC-019→DEC-021; v1.3 theo DEC-022) |
+| Phiên bản | **1.4** |
+| Trạng thái | **Baselined** (v1.0 phê duyệt 2026-10-22, DEC-015; v1.1 theo DEC-016→DEC-018; v1.2 theo DEC-019→DEC-021; v1.3 theo DEC-022; v1.4 theo DEC-023→DEC-030) |
 | Loại dự án | Dự án tự học, cá nhân. Việt đảm nhiệm mọi vai trò: nhà tài trợ, chủ sở hữu nghiệp vụ, Product Owner, Business Analyst, người phê duyệt (DEC-001) |
 | Tác giả | Việt (soạn với Claude) |
 | Người đóng góp | Việt |
@@ -58,6 +58,7 @@
 | **1.1** | 2026-10-22 | Việt | **Bỏ email nhắc** (DEC-016): nhắc mốc y tế chỉ hiển thị trong web app. Sửa BR-016, BR-017, BR-019, BR-036, BRU-005, CON-002, ASM-001, DEP-001, RSK-002 và AC liên quan. Thêm BR-041→BR-043, AC-041→AC-043. Không xây hệ thống giám sát vận hành (DEC-017). Hạ tầng tự dựng, email tài khoản qua SMTP Gmail (DEC-018): sửa CON-003, DEP-002 |
 | **1.2** | 2026-10-22 | Việt | Duyệt quy tắc nhắc trong app PD-009 và kiến trúc SAD (DEC-019). Chưa làm sao lưu dữ liệu ở Giai đoạn 1 (DEC-020): sửa DEP-002, thêm RSK-006. Dùng tên miền ví dụ `pethealth.example` tới khi có tên miền thật (DEC-021). Không thay đổi BR |
 | **1.3** | 2026-10-23 | Việt | Duyệt SRS v1.0 kèm đề xuất OQ-S01 (DEC-022): thêm BR-044 (đổi email tài khoản), AC-044 |
+| **1.4** | 2026-10-26 | Việt | **Giai đoạn 2 — Bản tin ảnh thú cưng** (DEC-023→DEC-030): thêm mục 16 gồm BO-006, BR-045→BR-054, AC-045→AC-054, BRU-013→BRU-017, RSK-007→RSK-009. Sửa mục 5.3 (bản tin làm trước app điện thoại), ghi chú BR-035 |
 
 > **Kiểm soát thay đổi:** từ v1.0, mọi thay đổi yêu cầu phải tăng phiên bản (1.x), ghi một DEC mới ở mục 12.1 và cập nhật PRD tương ứng. ID đã cấp không bao giờ đánh lại; yêu cầu bị bỏ được đánh dấu *Withdrawn*.
 
@@ -191,7 +192,8 @@ SRC-001 nêu bối cảnh thú cưng "bước vào độ tuổi trung niên, đ�
 
 | Hạng mục | Ghi chú |
 |---|---|
-| App điện thoại (iOS, Android) và push notification | **Giai đoạn 2** (DEC-011). Dùng chung tài khoản và dữ liệu với web. Thời điểm và công nghệ: xem PRD §1.3 |
+| App điện thoại (iOS, Android) và push notification | **Giai đoạn 2** (DEC-011). Dùng chung tài khoản và dữ liệu với web. Thời điểm và công nghệ: xem PRD §1.3. Chưa làm |
+| Bản tin ảnh thú cưng (đăng ảnh, theo dõi, thả tim, bình luận, chặn) | **Giai đoạn 2**, làm trước app điện thoại (DEC-023). Đã làm xong trên máy dev, xem mục 16 |
 
 ### 5.4 Ranh giới
 
@@ -307,7 +309,7 @@ Phương pháp kiểm chứng: **T** = Test, **D** = Demonstration, **I** = Insp
 | BR-027 | Khi chủ nuôi mở hoặc tải lại một màn hình trên bất kỳ thiết bị nào, hệ thống **phải** hiển thị mọi dữ liệu đã được lưu thành công trước thời điểm đó, kể cả dữ liệu lưu từ thiết bị khác (BRU-008). | Dùng dữ liệu nhất quán trên nhiều thiết bị; không yêu cầu cập nhật tức thời (DEC-002) | BO-005 / SN-007 | Must | AC-027 | T |
 | BR-028 | Mọi chức năng ở mục 7.1–7.5 **phải** dùng được trên trình duyệt máy tính bảng 10,5 inch và trên trình duyệt điện thoại, không cần cuộn ngang. | Truy cập đa thiết bị | BO-005 / SN-007 | Must | AC-028 | D |
 | BR-029 | Một tài khoản chủ nuôi **phải** quản lý được tối đa 10 thú cưng (BRU-009). | Chủ nuôi có thể nuôi nhiều con | SN-001 | Must | AC-029 | T |
-| BR-035 | Chủ nuôi **phải** tự tạo được tài khoản cá nhân bằng địa chỉ email. | Điều kiện để có tài khoản đăng nhập (BR-025) | SN-007 (DEC-013) | Must | AC-035 | T |
+| BR-035 | Chủ nuôi **phải** tự tạo được tài khoản cá nhân bằng địa chỉ email. *(Giai đoạn 2: đăng ký thêm nickname, ngày sinh và nhập lại mật khẩu, xem BR-045.)* | Điều kiện để có tài khoản đăng nhập (BR-025) | SN-007 (DEC-013) | Must | AC-035 | T |
 | BR-036 | Hệ thống **phải** cho chủ nuôi xác minh quyền sở hữu địa chỉ email của tài khoản. *(Sửa theo DEC-016: không còn email nhắc nên xác minh chỉ phục vụ khôi phục tài khoản, hạ từ Must xuống Should.)* | Bảo đảm email khôi phục mật khẩu (BR-037) đến đúng người, phát hiện sớm email gõ sai | SN-007 (DEC-012, DEC-013, DEC-016) | Should | AC-036 | T |
 | BR-037 | Chủ nuôi **phải** lấy lại được quyền truy cập tài khoản khi quên mật khẩu, thông qua email đã xác minh. | Không mất toàn bộ dữ liệu vì quên mật khẩu | SN-007 (DEC-013) | Should | AC-037 | T |
 | BR-038 | Chủ nuôi **được phép** xóa vĩnh viễn tài khoản cùng toàn bộ dữ liệu của mình. | Quyền kiểm soát dữ liệu cá nhân (RSK-004) | SN-007 (DEC-013) | Could | AC-038 | T |
@@ -532,6 +534,14 @@ Phương pháp kiểm chứng: **T** = Test, **D** = Demonstration, **I** = Insp
 | DEC-020 | **Chưa làm sao lưu dữ liệu** ở Giai đoạn 1 | — | Việt | 2026-10-22 | Chưa cần ở giai đoạn tự dùng | PRD G-13 (Withdrawn); SRS NFR-REL-002 (Withdrawn), SD-012; RSK-006 |
 | DEC-021 | Dùng tên miền ví dụ `pethealth.example` (`app.pethealth.example`, `staging.pethealth.example`) trong tài liệu; thay bằng tên miền thật trên Cloudflare khi triển khai | — | Việt | 2026-10-22 | Tên miền thật cung cấp sau | SAD (đóng OQ-A01) |
 | DEC-022 | **Phê duyệt SRS v1.0 làm baseline**, gồm SD-001→SD-014 và đề xuất của OQ-S01: cho đổi email tài khoản (Should) | OQ-S01 (SRS) | Việt | 2026-10-23 | Chấp nhận đề xuất | BR-044, AC-044; PRD US-008; SRS FR-AUTH-015 |
+| DEC-023 | **Giai đoạn 2 làm Bản tin ảnh thú cưng trước app điện thoại.** Làm trên máy dev trước, triển khai production một thể cùng S7 (kèm chuyển ảnh sang Cloudflare R2) | — | Việt | 2026-10-26 | Muốn có tính năng xã hội; app điện thoại để sau | Mục 5.3, mục 16; PRD §1.3, §8 |
+| DEC-024 | Bài đăng công khai với **mọi tài khoản đã đăng nhập**; khách chưa đăng nhập không xem được, không có trang công khai | — | Việt | 2026-10-26 | Đơn giản, ít rủi ro lộ dữ liệu | Mục 16.2, BR-046→BR-049 |
+| DEC-025 | **Không có báo cáo nội dung** (không báo cáo, không tự ẩn, không kiểm duyệt). Người dùng tự bảo vệ bằng chặn và giới hạn chống spam | — | Việt | 2026-10-26 | Không cần ở quy mô cá nhân | BR-052, BR-053, BRU-015, RSK-007 |
+| DEC-026 | Tối đa 5 ảnh mỗi bài, 30 bài mỗi ngày. Ảnh lớn hơn 5 MB được nén trên thiết bị trước khi gửi, áp dụng cho **mọi** chỗ tải ảnh (kể cả ảnh đại diện thú cưng và ảnh sổ y tế) | — | Việt | 2026-10-26 | Không bắt người dùng tự thu nhỏ ảnh | BR-047, BRU-014, BRU-017; nới BRU-010 ở phía người dùng (server vẫn nhận ≤ 5 MB) |
+| DEC-027 | Dữ liệu sức khỏe **giữ nguyên phân quyền theo chủ tài khoản**; bản tin dùng phân quyền riêng "đọc công khai, ghi chỉ chủ" | — | Việt | 2026-10-26 | Không để tính năng công khai làm lộ dữ liệu sức khỏe | BR-054, RSK-008 |
+| DEC-028 | Bài hiện tên người dùng (avatar, tên hiển thị, username). **Gắn thú cưng là tùy chọn** (0–5 bé), chỉ hiện tên bé. Mỗi tài khoản có một bản tin và một hồ sơ chứa mọi ảnh, không chia theo từng bé | — | Việt | 2026-10-26 | Đơn giản như Instagram | BR-046, BR-047, BRU-013 |
+| DEC-029 | Thông báo hoạt động lưu riêng với nhắc mốc y tế; chuông dùng chung, đếm cả hai loại; mục Thông báo có 2 tab. Chuông tự cập nhật mỗi 30 giây khi app đang mở | — | Việt | 2026-10-26 | Không lẫn nhắc lịch; thấy tương tác mới mà không phải tải lại | BR-051, BRU-016 |
+| DEC-030 | Đăng ký bắt buộc **nickname, ngày sinh** và **nhập lại mật khẩu**; tài khoản cũ được hỏi bổ sung một lần. Ngày sinh không hiện trên hồ sơ công khai | — | Việt | 2026-10-26 | Có tên gọi cho bản tin; tránh gõ sai mật khẩu | BR-045, BR-035 |
 
 ### 12.2 Câu hỏi còn mở sau baseline
 
@@ -615,4 +625,82 @@ Các câu dưới đây không chặn Giai đoạn 1 và được giữ để xe
 
 ### 15.2 Tuyên bố mức sẵn sàng
 
+**v1.4, cập nhật 2026-10-26:** thêm Giai đoạn 2 — Bản tin (mục 16, BR-045→BR-054, DEC-023→DEC-030). Phần Giai đoạn 1 không đổi.
+
 **Baselined — v1.3, cập nhật 2026-10-23 (DEC-016→DEC-022).** 44 yêu cầu nghiệp vụ (25 Must, 18 Should, 1 Could) đều đạt checklist chất lượng và có tiêu chí chấp nhận quyết định được. Tài liệu là đầu vào chính thức cho SRS và SAD. Mọi thay đổi tiếp theo đi qua quy trình kiểm soát thay đổi ở mục 1.
+
+---
+
+## 16. Giai đoạn 2 — Bản tin ảnh thú cưng
+
+Bổ sung ở v1.4 (2026-10-26, DEC-023→DEC-030). Bản tin là tính năng xã hội: chủ nuôi đăng ảnh thú cưng, theo dõi nhau, thả tim, bình luận và chặn người khác. Phạm vi lấy từ [Phase2-ideas](Phase2-ideas.md) §2. Đặc tả sản phẩm ở [PRD §8](PRD.md#8-giai-đoạn-2--bản-tin-ảnh-thú-cưng), kế hoạch và kết quả triển khai ở [Implement_plan §10](../implement/Implement_plan.md#10-giai-đoạn-2--bản-tin-ảnh-thú-cưng).
+
+**Trạng thái:** đã làm xong trên máy dev (12/13 task). Task còn lại là lưu ảnh lên Cloudflare R2, làm cùng đợt triển khai production.
+
+### 16.1 Mục tiêu nghiệp vụ
+
+| ID | Mục tiêu | Ghi chú |
+|---|---|---|
+| BO-006 | Tạo lý do để chủ nuôi mở app thường xuyên ngoài việc ghi chép: xem và chia sẻ khoảnh khắc của thú cưng với người khác | Bổ trợ ASM-001, RSK-002 (chủ nuôi không mở app nên lỡ nhắc). Không đặt target (DEC-004) |
+
+### 16.2 Phạm vi
+
+**Trong phạm vi:** hồ sơ công khai, bài đăng 1–5 ảnh có gắn thú cưng tùy chọn, theo dõi không cần duyệt, tìm người, bản tin xếp theo thời gian, thả tim, bình luận một cấp, thông báo hoạt động, chặn, giới hạn chống spam.
+
+**Ngoài phạm vi:**
+
+| Hạng mục | Lý do |
+|---|---|
+| Story, video, nhắn tin, hashtag, trang khám phá, chia sẻ, lưu bài | Giữ bản tin gọn (Phase2-ideas §2) |
+| Tài khoản riêng tư cần duyệt theo dõi | DEC-024: bài công khai với mọi tài khoản đã đăng nhập |
+| Báo cáo nội dung, tự ẩn bài, kiểm duyệt | DEC-025 |
+| Xếp hạng bản tin theo tương tác | Bản tin chỉ xếp theo thời gian |
+| Push notification cho hoạt động | Cần app điện thoại (DEC-011) |
+
+### 16.3 Yêu cầu nghiệp vụ
+
+| ID | Yêu cầu | Lý do | Nguồn | Ưu tiên | AC | Kiểm chứng |
+|---|---|---|---|---|---|---|
+| BR-045 | Khi đăng ký, chủ nuôi **phải** nhập nickname, ngày sinh và nhập lại mật khẩu. Tài khoản tạo trước đó **phải** được hỏi bổ sung nickname và ngày sinh khi mở app. | Có tên gọi để hiển thị và gợi ý tên hồ sơ; tránh gõ sai mật khẩu | DEC-030 | Must | AC-045 | T |
+| BR-046 | Chủ nuôi **phải** tạo được một hồ sơ công khai gồm username duy nhất, tên hiển thị, giới thiệu và ảnh đại diện; người khác xem được hồ sơ này. | Định danh trên bản tin mà không lộ email | DEC-028 | Must | AC-046 | T |
+| BR-047 | Chủ nuôi **phải** đăng được bài gồm 1–5 ảnh và chú thích, **được phép** gắn 0–5 thú cưng của mình; sửa được chú thích và thú cưng gắn kèm; xóa được bài cùng toàn bộ ảnh. | Chia sẻ khoảnh khắc của thú cưng | DEC-026, DEC-028 | Must | AC-047 | T |
+| BR-048 | Chủ nuôi **phải** theo dõi và bỏ theo dõi được người khác mà không cần người đó duyệt, và tìm được người khác theo username hoặc tên hiển thị. | Kết nối người dùng | Phase2-ideas §2 | Must | AC-048 | T |
+| BR-049 | Hệ thống **phải** hiển thị bản tin gồm bài của chính chủ nuôi và người họ theo dõi, mới nhất trước, không xếp hạng theo tương tác. | Xem bài của người mình quan tâm | Phase2-ideas §2 | Must | AC-049 | T |
+| BR-050 | Chủ nuôi **phải** thả tim và bình luận (một cấp) được trên bài của người khác. Người viết bình luận và chủ bài **phải** xóa được bình luận đó. | Tương tác, tự kiểm soát bài của mình | Phase2-ideas §2 | Should | AC-050 | T |
+| BR-051 | Hệ thống **phải** báo cho chủ nuôi khi có người thích, bình luận bài của họ hoặc theo dõi họ, tách khỏi nhắc mốc y tế. | Biết có tương tác mà không làm lẫn nhắc lịch | DEC-029 | Should | AC-051 | T |
+| BR-052 | Chủ nuôi **phải** chặn và bỏ chặn được người khác. Khi chặn, hai bên không thấy bài, hồ sơ, bình luận của nhau; theo dõi hai chiều, tim và bình luận của người bị chặn trên bài người chặn bị gỡ. | Tự bảo vệ khi không có kiểm duyệt (DEC-025) | DEC-025 | Should | AC-052 | T |
+| BR-053 | Hệ thống **phải** giới hạn số lần đăng bài, bình luận, thích, theo dõi, chặn và tìm kiếm của mỗi tài khoản theo BRU-015. | Chống spam khi không có kiểm duyệt | DEC-025 | Should | AC-053 | T |
+| BR-054 | Bản tin **không được** làm lộ email hay bất kỳ dữ liệu sức khỏe nào (giống, ngày sinh, cân nặng, sổ y tế, lịch mốc, thông báo nhắc) cho người khác. Thú cưng gắn trong bài chỉ hiện tên. | Giữ BR-026 khi có dữ liệu công khai | DEC-027 | Must | AC-054 | T |
+
+**Tiêu chí chấp nhận**
+
+| AC | Cho BR | Tiêu chí |
+|---|---|---|
+| AC-045 | BR-045 | Đăng ký thiếu nickname, ngày sinh, hoặc mật khẩu nhập lại không khớp → bị từ chối kèm lỗi dưới trường. Ngày sinh ở tương lai → bị từ chối. Tài khoản cũ thiếu nickname hoặc ngày sinh thấy hộp bổ sung khi mở app |
+| AC-046 | BR-046 | Username trùng (không phân biệt hoa thường) → bị từ chối. Tài khoản khác mở được hồ sơ; phản hồi không chứa email hay ngày sinh |
+| AC-047 | BR-047 | Bài 6 ảnh → chỉ nhận 5. Gắn thú cưng của người khác → bị từ chối. Bài không gắn thú cưng → đăng được. Xóa bài → ảnh bị xóa khỏi kho |
+| AC-048 | BR-048 | Theo dõi hai lần chỉ tạo một quan hệ. Tìm "ho" ra người tên "Hồ …"; không tìm được theo email |
+| AC-049 | BR-049 | A theo dõi B, không theo dõi D → bản tin của A có bài của A và B, không có bài của D, mới nhất trước; cuộn không trùng, không sót |
+| AC-050 | BR-050 | 10 lần thích song song → 1 lượt thích. Chủ bài xóa được bình luận của người khác; người thứ ba không xóa được |
+| AC-051 | BR-051 | B thích bài A → A thấy số trên chuông tăng; tự thích bài mình không báo. Nhiều người thích cùng một bài → một dòng gộp. Thông báo hoạt động không hiện ở tab nhắc lịch |
+| AC-052 | BR-052 | C chặn A → C tìm A không ra, A mở hồ sơ C bị báo không tồn tại. Bỏ chặn → tìm lại được, theo dõi không tự khôi phục |
+| AC-053 | BR-053 | Vượt ngưỡng → bị từ chối kèm thời gian chờ |
+| AC-054 | BR-054 | Dùng tài khoản B gọi mọi chức năng đọc của bản tin trên dữ liệu A: không có email, giống, ngày sinh, cân nặng, triệu chứng, chẩn đoán, đơn thuốc hay ảnh sổ y tế |
+
+### 16.4 Quy tắc nghiệp vụ
+
+| ID | Quy tắc | Loại | Phạm vi | Chủ thể thực thi | Nguồn |
+|---|---|---|---|---|---|
+| BRU-013 | Username 3–30 ký tự gồm chữ thường, số, dấu chấm, gạch dưới; không bắt đầu / kết thúc bằng dấu chấm; không trùng (không phân biệt hoa thường); không dùng tên trong danh sách cấm (`admin`, `me`, `feed`…). Đổi username tối đa 1 lần mỗi 14 ngày | Policy | Hồ sơ công khai | Hệ thống | DEC-028 |
+| BRU-014 | Mỗi bài 1–5 ảnh JPG/PNG/HEIC. Ảnh lớn hơn 5 MB được nén trên thiết bị trước khi gửi (chọn được tới 50 MB). Ảnh lưu bỏ toàn bộ metadata, kể cả vị trí. Chú thích ≤ 2.200 ký tự; bình luận 1–500 ký tự | Policy | Bài đăng | Hệ thống | DEC-026 |
+| BRU-015 | Giới hạn mỗi tài khoản: đăng bài 30/ngày, bình luận 30/10 phút, thích 300/giờ, theo dõi 200/ngày, chặn 50/ngày, tìm kiếm 60/phút. Tài khoản tạo chưa đủ 24 giờ: đăng bài và bình luận còn 1/3 | Policy | Bản tin | Hệ thống | DEC-025 |
+| BRU-016 | Thông báo hoạt động: tự tương tác lên chính mình không tạo thông báo; thích lại sau khi bỏ thích không báo lần nữa; tim chưa đọc cùng một bài gộp thành một dòng; giữ 90 ngày. Số trên chuông tự cập nhật mỗi 30 giây khi app đang mở | Policy | Thông báo | Hệ thống | DEC-029 |
+| BRU-017 | Bài chưa đủ ảnh sau 24 giờ (ảnh lỗi, bỏ dở) bị xóa cùng ảnh | Policy | Bài đăng | Hệ thống | DEC-026 |
+
+### 16.5 Rủi ro
+
+| ID | Hạng mục | Loại | Mô tả | Tác động nếu sai / mức độ | Chủ thể | Kiểm chứng / giảm thiểu | Hạn |
+|---|---|---|---|---|---|---|---|
+| RSK-007 | Nội dung xấu không có cách báo cáo | Rủi ro | Không có báo cáo / kiểm duyệt (DEC-025) → bài vi phạm chỉ gỡ được bằng tay | Med (**Chấp nhận**, DEC-025) | Việt | Chặn + giới hạn chống spam; quy trình gỡ tay bằng SQL trong ghi chú vận hành F-13 | Xem lại trước khi mở cho người ngoài |
+| RSK-008 | Lộ dữ liệu sức khỏe qua phần công khai | Rủi ro | Thêm dữ liệu đọc công khai → nguy cơ rò rỉ dữ liệu riêng (RSK-004) | High | Việt | Bảng sức khỏe giữ phân quyền theo chủ (DEC-027); test quét rò rỉ chéo tài khoản (AC-054) | Đã kiểm 2026-10-26 |
+| RSK-009 | Dung lượng ảnh tăng nhanh | Rủi ro | Mỗi bài tới 5 ảnh → vượt dung lượng lưu trữ miễn phí | Low | Việt | Ảnh bài thu về 1080 px; giới hạn 30 bài/ngày; theo dõi dung lượng R2 khi lên production | Khi triển khai production |
