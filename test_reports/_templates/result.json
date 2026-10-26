@@ -1,0 +1,47 @@
+{
+  "id": "<ID>",
+  "title": "<Tên test case>",
+  "type": "<Chức năng | Tích hợp DB | Hợp đồng | API | Hệ thống/E2E | Chấp nhận | Hồi quy | Hiệu năng | Bảo mật | Accessibility | UI/UX | Độ tin cậy | Vận hành | Bảo trì>",
+  "priority": "<P0 | P1 | P2>",
+  "environment": "https://pet.vietdeptrai.io.vn/",
+  "apiBase": "https://pet.vietdeptrai.io.vn/api/v1",
+  "verdict": "<Pass | Fail | Blocked | N/A (Withdrawn)>",
+  "startedAt": "<YYYY-MM-DDTHH:mm:ss+07:00>",
+  "finishedAt": "<YYYY-MM-DDTHH:mm:ss+07:00>",
+  "executor": "<tên người/agent chạy>",
+  "browser": "<Chromium 1xx / viewport>",
+  "build": "<commit hash hoặc 'không xác định'>",
+  "account": "<qa.a+<run>@example.test — đã che PII>",
+  "notRunReason": "<chỉ điền khi verdict = Blocked: thiếu gì>",
+  "steps": [
+    {
+      "n": 1,
+      "action": "<hành động theo test-case.md>",
+      "expected": "<kỳ vọng>",
+      "actual": "<quan sát thực tế>",
+      "result": "<Pass | Fail | Blocked | Skipped>",
+      "evidence": ["screenshots/02-step-01.png"]
+    }
+  ],
+  "evidence": {
+    "screenshots": [
+      "screenshots/01-initial.png",
+      "screenshots/02-step-01.png",
+      "screenshots/03-final.png"
+    ],
+    "video": ["video/recording.webm"],
+    "logs": ["logs/console.log"]
+  },
+  "defects": [
+    {
+      "id": "<BUG-xxx>",
+      "severity": "<S1 | S2 | S3 | S4>",
+      "summary": "<mô tả ngắn>",
+      "repro": "<1) ... 2) ...>",
+      "evidence": ["screenshots/02-step-01.png"],
+      "status": "<Open | Fixed | Won't fix>"
+    }
+  ],
+  "notes": "<ghi chú thêm: khác biệt môi trường, dữ liệu, thời gian>",
+  "updatedAt": "<YYYY-MM-DDTHH:mm:ss+07:00>"
+}
