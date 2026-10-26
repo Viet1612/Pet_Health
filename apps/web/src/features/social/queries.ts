@@ -380,6 +380,9 @@ export const activityQuery = infiniteQueryOptions({
   initialPageParam: '',
   getNextPageParam: (last) => last.nextCursor ?? undefined,
   staleTime: 0,
+  // Đang mở tab "Hoạt động": hoạt động mới tự hiện (cùng nhịp với chuông).
+  refetchInterval: 30_000,
+  refetchIntervalInBackground: false,
 });
 
 export async function readAllActivity(upTo: string): Promise<void> {

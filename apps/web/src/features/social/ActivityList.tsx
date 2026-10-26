@@ -78,14 +78,15 @@ function ActivityRow({ item }: { item: Activity }) {
 export function ActivityList() {
   const queryClient = useQueryClient();
   const query = useInfiniteQuery(activityQuery);
-  const marked = useRef(false);
+  // Thời điểm đã đánh dấu đã xem tới; có hoạt động mới hơn (tự tải 30 s) thì đánh dấu tiếp.
+  const markedUpTo = useRef<string | null>(null);
   const items = query.data?.pages.flatMap((p) => p.items) ?? [];
   const newest = items[0]?.createdAt;
   const hasUnread = items.some((i) => i.unread);
 
   useEffect(() => {
-    if (!newest || !hasUnread || marked.current) return;
-    marked.current = true;
+    if (!newest || !hasUnread || markedUpTo.current === newest) return;
+    markedUpTo.current = newest;
     readAllActivity(newest).then(
       () => queryClient.invalidateQueries({ queryKey: ['notifications', 'summary'] }),
       () => undefined,

@@ -17,13 +17,21 @@ export type AppNotification = NotificationPage['items'][number];
 export const SUMMARY_KEY = ['notifications', 'summary'] as const;
 export const LIST_KEY = ['notifications', 'list'] as const;
 
-/** Chuông (CMP-07): lấy khi mở app, đổi route, quay lại tab, sau mỗi thao tác. Không polling. */
+/** Chuông tự cập nhật mỗi 30 s khi tab đang mở (tab ẩn thì dừng, quay lại tab thì lấy ngay). */
+export const SUMMARY_POLL_MS = 30_000;
+
+/**
+ * Chuông (CMP-07): lấy khi mở app, đổi route, quay lại tab, sau mỗi thao tác, và mỗi 30 s khi tab
+ * đang hiển thị để số thông báo mới (nhắc lịch, hoạt động) tự hiện.
+ */
 export const summaryQuery = queryOptions({
   queryKey: SUMMARY_KEY,
   queryFn: async (): Promise<NotificationSummary> =>
     unwrap(await api.GET('/notifications/summary', { params: { query: { pet: 'all' } } })),
   staleTime: 0,
   refetchOnWindowFocus: true,
+  refetchInterval: SUMMARY_POLL_MS,
+  refetchIntervalInBackground: false,
 });
 
 export const listQuery = infiniteQueryOptions({
