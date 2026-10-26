@@ -8,6 +8,14 @@ export type UserMessage =
   | { kind: 'fields'; fields: Record<string, string> }
   | { kind: 'message'; message: string };
 
+const SOCIAL_LIMIT_CODES = new Set([
+  'POST_LIMIT_REACHED',
+  'COMMENT_RATE_LIMITED',
+  'LIKE_RATE_LIMITED',
+  'FOLLOW_LIMIT_REACHED',
+  'BLOCK_LIMIT_REACHED',
+]);
+
 /** Câu của lỗi theo ngôn ngữ đang dùng; mã chưa có trong từ điển → `title` của server. */
 export const problemText = (problem: Problem): string =>
   m.apiErrors.problem[problem.code] ?? problem.title;
@@ -35,6 +43,11 @@ export function toUserMessage(error: unknown): UserMessage {
         kind: 'fields',
         fields: Object.fromEntries(problem.errors.map((e) => [e.field, fieldErrorText(e)])),
       };
+    }
+    // Ngưỡng chống spam của bản tin (F-12): một câu chung kèm số phút chờ.
+    if (problem.status === 429 && SOCIAL_LIMIT_CODES.has(problem.code)) {
+      const minutes = Math.max(1, Math.ceil((problem.retryAfter ?? 60) / 60));
+      return { kind: 'message', message: m.social.tooFast(minutes) };
     }
     return { kind: 'message', message: problemText(problem) };
   }

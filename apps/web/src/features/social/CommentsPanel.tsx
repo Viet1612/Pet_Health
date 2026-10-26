@@ -24,6 +24,7 @@ import {
   postComment,
   type Comment,
 } from './queries';
+import { BlockConfirm } from './BlockControls';
 import { UserAvatar } from './UserAvatar';
 
 const t = m.social.comments;
@@ -39,11 +40,14 @@ interface Pending {
 function CommentRow({
   comment,
   onDelete,
+  onBlock,
   className,
   children,
 }: {
   comment: Pick<Comment, 'author' | 'body' | 'createdAt'> & { canDelete?: boolean };
   onDelete?: () => void;
+  /** Bình luận của người khác: mục "Chặn @username" (F-12). */
+  onBlock?: () => void;
   className?: string | false;
   children?: ReactNode;
 }) {
@@ -68,7 +72,7 @@ function CommentRow({
           {formatRelative(comment.createdAt)}
         </time>
       </div>
-      {comment.canDelete && onDelete && (
+      {(Boolean(comment.canDelete && onDelete) || onBlock !== undefined) && (
         <div className="relative shrink-0">
           <IconButton
             aria-label={t.menu(comment.author.username)}
@@ -84,17 +88,32 @@ function CommentRow({
               role="menu"
               className="border-divider bg-surface shadow-overlay absolute top-11 right-0 z-30 min-w-40 rounded-md border py-1"
             >
-              <button
-                type="button"
-                role="menuitem"
-                className="text-body text-danger hover:bg-surface-2 flex min-h-11 w-full items-center px-4"
-                onClick={() => {
-                  setMenu(false);
-                  onDelete();
-                }}
-              >
-                {t.delete}
-              </button>
+              {comment.canDelete && onDelete && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="text-body text-danger hover:bg-surface-2 flex min-h-11 w-full items-center px-4"
+                  onClick={() => {
+                    setMenu(false);
+                    onDelete();
+                  }}
+                >
+                  {t.delete}
+                </button>
+              )}
+              {onBlock && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="text-body text-danger hover:bg-surface-2 flex min-h-11 w-full items-center px-4"
+                  onClick={() => {
+                    setMenu(false);
+                    onBlock();
+                  }}
+                >
+                  {m.social.block.block(comment.author.username)}
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -126,6 +145,7 @@ export function CommentsPanel({
   const [text, setText] = useState('');
   const [pending, setPending] = useState<Pending[]>([]);
   const [deleting, setDeleting] = useState<Comment | null>(null);
+  const [blocking, setBlocking] = useState<string | null>(null);
 
   useEffect(() => {
     if (autoFocus) inputRef.current?.focus();
@@ -209,6 +229,13 @@ export function CommentsPanel({
               onDelete={() => {
                 setDeleting(c);
               }}
+              {...(me.data && c.author.username !== me.data.username
+                ? {
+                    onBlock: () => {
+                      setBlocking(c.author.username);
+                    },
+                  }
+                : {})}
             />
           ))}
           {pending.map((p) => (
@@ -283,6 +310,15 @@ export function CommentsPanel({
         </p>
       )}
 
+      {blocking && (
+        <BlockConfirm
+          username={blocking}
+          open
+          onClose={() => {
+            setBlocking(null);
+          }}
+        />
+      )}
       <ConfirmDialog
         open={deleting !== null}
         title={t.deleteTitle}

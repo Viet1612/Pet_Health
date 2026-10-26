@@ -67,6 +67,11 @@ export function screenOf(pathname: string): string {
   if (pathname.startsWith('/pets')) return 'pets';
   if (pathname.startsWith('/notifications')) return 'notifications';
   if (pathname.startsWith('/settings')) return 'settings';
+  if (pathname === '/feed/new') return 'composer';
+  if (pathname.startsWith('/feed')) return 'feed';
+  if (pathname.startsWith('/u/')) return 'social_profile';
+  if (pathname.startsWith('/p/')) return 'post_detail';
+  if (pathname.startsWith('/search')) return 'search';
   if (/^\/(login|register|forgot-password|reset-password|verify-email)/.test(pathname))
     return 'auth';
   return 'other';

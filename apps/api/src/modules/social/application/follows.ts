@@ -1,23 +1,19 @@
 import type { Transaction } from 'kysely';
 
+import type { AnalyticsPort } from '../../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../../platform/clock/clock.js';
 import type { Database } from '../../../platform/db/kysely.js';
-import {
-  AppError,
-  NotFoundError,
-  RateLimitedError,
-  ValidationError,
-} from '../../../platform/errors/app-error.js';
+import { AppError, NotFoundError, ValidationError } from '../../../platform/errors/app-error.js';
 import type { RateLimiter } from '../../../platform/rate-limit/rate-limiter.js';
 import { thumbKeyOf, type MediaService } from '../../media/index.js';
 import { activityRepository } from '../adapters/persistence/engagement.repository.js';
 import { followRepository, type PersonRow } from '../adapters/persistence/follow.repository.js';
 import { profileRepository } from '../adapters/persistence/profile.repository.js';
 import { normalizeUsername } from '../domain/username.js';
+import { socialLimit } from './limits.js';
 
 type Trx = Transaction<Database>;
 
-export const FOLLOWS_PER_DAY = 200;
 export const FOLLOW_PAGE = 30;
 export const SEARCH_LIMIT = 20;
 export const SEARCH_MAX = 30;
@@ -25,6 +21,7 @@ export const SEARCH_MAX = 30;
 export interface FollowsDeps {
   clock: ClockPort;
   media: MediaService;
+  analytics?: AnalyticsPort;
   rateLimiter: RateLimiter;
 }
 
@@ -74,15 +71,7 @@ export async function follow(
     ]);
   }
   if (!(await profileRepository.isFollowing(trx, viewerId, target))) {
-    try {
-      await deps.rateLimiter.hit(`follow:${viewerId}`, FOLLOWS_PER_DAY, 86_400);
-    } catch (error) {
-      if (!(error instanceof RateLimitedError)) throw error;
-      throw new AppError(429, 'FOLLOW_LIMIT_REACHED', 'Bạn đã theo dõi quá nhiều người hôm nay', {
-        retryAfter: error.options.retryAfter ?? 3600,
-        params: { max: FOLLOWS_PER_DAY },
-      });
-    }
+    await socialLimit(deps.rateLimiter, 'follow', viewerId);
     const now = deps.clock.now();
     if (await followRepository.follow(trx, viewerId, target, now)) {
       await activityRepository.add(trx, {
@@ -91,6 +80,7 @@ export async function follow(
         kind: 'FOLLOW',
         now,
       });
+      await deps.analytics?.track(trx, 'user_followed', {}, viewerId);
     }
   }
   return { following: true, followerCount: await followRepository.followerCount(trx, target) };
@@ -169,7 +159,7 @@ export async function searchProfiles(
       },
     ]);
   }
-  await deps.rateLimiter.hit(`search:${viewerId}`, 60, 60);
+  await socialLimit(deps.rateLimiter, 'search', viewerId);
   const rows = await followRepository.search(trx, viewerId, q, SEARCH_LIMIT);
   return { items: rows.map((r) => toPerson(deps, viewerId, r)) };
 }

@@ -5,7 +5,9 @@ import {
   activityRepository,
   engagementRepository,
 } from '../src/modules/social/adapters/persistence/engagement.repository.js';
+import { blockRepository } from '../src/modules/social/adapters/persistence/block.repository.js';
 import { followRepository } from '../src/modules/social/adapters/persistence/follow.repository.js';
+import { profileRepository } from '../src/modules/social/adapters/persistence/profile.repository.js';
 import { postRepository } from '../src/modules/social/adapters/persistence/post.repository.js';
 import { withUserTx } from '../src/platform/db/with-user-tx.js';
 import { newId } from '../src/platform/ids.js';
@@ -187,5 +189,87 @@ describe('tim, bình luận, thông báo hoạt động (F-09, F-11)', () => {
     expect(
       await withUserTx(env.appDb, A, (trx) => activityRepository.list(trx, C, null, 30)),
     ).toEqual([]);
+  });
+});
+
+describe('chặn (F-12)', () => {
+  it('B chặn C: xóa follow hai chiều, tim + bình luận của C trên bài B; ẩn hai chiều; bỏ chặn không khôi phục', async () => {
+    const postB = await addPost(B, 400);
+    await env.workerDb
+      .insertInto('follows')
+      .values([
+        { follower_id: B, followee_id: C, created_at: new Date() },
+        { follower_id: C, followee_id: B, created_at: new Date() },
+      ])
+      .onConflict((oc) => oc.doNothing())
+      .execute();
+    await withUserTx(env.appDb, C, async (trx) => {
+      await engagementRepository.like(trx, postB, C, new Date());
+      await engagementRepository.insertComment(trx, {
+        id: newId(),
+        postId: postB,
+        ownerId: C,
+        body: 'hi',
+        now: new Date(),
+      });
+    });
+
+    await withUserTx(env.appDb, B, async (trx) => {
+      await blockRepository.cleanup(trx, B, C);
+      await blockRepository.block(trx, B, C, new Date());
+    });
+
+    const left = await env.workerDb
+      .selectFrom('follows')
+      .select('follower_id')
+      .where((eb) =>
+        eb.or([
+          eb.and([eb('follower_id', '=', B), eb('followee_id', '=', C)]),
+          eb.and([eb('follower_id', '=', C), eb('followee_id', '=', B)]),
+        ]),
+      )
+      .execute();
+    expect(left).toEqual([]);
+    const likes = await env.workerDb
+      .selectFrom('post_likes')
+      .select('user_id')
+      .where('post_id', '=', postB)
+      .execute();
+    const comments = await env.workerDb
+      .selectFrom('post_comments')
+      .select('id')
+      .where('post_id', '=', postB)
+      .execute();
+    expect([likes, comments]).toEqual([[], []]);
+
+    // C không thấy hồ sơ / bài của B, không tìm ra B; B thấy hồ sơ C nhưng tìm không ra C.
+    const byC = await withUserTx(env.appDb, C, async (trx) => ({
+      profile: await trx
+        .selectFrom('profiles')
+        .select('user_id')
+        .where('user_id', '=', B)
+        .execute(),
+      post: await trx.selectFrom('posts').select('id').where('id', '=', postB).execute(),
+      search: await followRepository.search(trx, C, 'mochi.cute', 20),
+    }));
+    expect(byC).toEqual({ profile: [], post: [], search: [] });
+    const byB = await withUserTx(env.appDb, B, async (trx) => ({
+      profile: await trx
+        .selectFrom('profiles')
+        .select('user_id')
+        .where('user_id', '=', C)
+        .execute(),
+      search: await followRepository.search(trx, B, 'carol', 20),
+    }));
+    expect(byB).toEqual({ profile: [{ user_id: C }], search: [] });
+
+    await withUserTx(env.appDb, B, (trx) => blockRepository.unblock(trx, B, C));
+    const after = await withUserTx(env.appDb, C, (trx) =>
+      followRepository.search(trx, C, 'mochi.cute', 20),
+    );
+    expect(after.map((r) => r.username)).toEqual(['mochi.cute']);
+    expect(await withUserTx(env.appDb, C, (trx) => profileRepository.isFollowing(trx, C, B))).toBe(
+      false,
+    );
   });
 });

@@ -61,7 +61,7 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 
 Task ở [../tasks-feed/](../tasks-feed/README.md). Làm trên máy dev trước; F-01 (R2) làm cùng đợt triển khai production.
 
-**Tiến độ:** 10 / 13 task
+**Tiến độ:** 12 / 13 task (còn F-01 R2, làm cùng đợt triển khai production)
 
 | Task | Tên | Trạng thái | Ngày | Commit | Kết quả |
 |---|---|---|---|---|---|
@@ -72,6 +72,8 @@ Task ở [../tasks-feed/](../tasks-feed/README.md). Làm trên máy dev trước
 | F-06 | Hồ sơ dạng lưới 3 cột, chi tiết bài vuốt ảnh, sửa / xóa bài | Xong, E2E giao diện + axe Pass | 2026-10-26 | `a26ada5` | [F-06](F-06-profile-grid-post-detail.md) |
 | F-07 | Theo dõi / bỏ theo dõi, danh sách theo dõi, tìm người không dấu | Xong, E2E + test tích hợp Pass | 2026-10-26 | `6d240a9` | [F-07](F-07-follow-search.md) |
 | F-08 | Bản tin từ người đang theo dõi: cuộn vô hạn, kéo làm mới, "Có bài mới" | Xong, E2E + test tích hợp Pass | 2026-10-26 | `6d240a9` | [F-08](F-08-feed.md) |
-| F-09 | API thả tim, bình luận (idempotent, rate limit, xóa bởi người viết / chủ bài) | Xong, E2E API + IDOR Pass | 2026-10-26 | — | [F-09](F-09-likes-comments-api.md) |
-| F-10 | Giao diện tim (nhấn đúp), danh sách người thích, bình luận (sheet / chi tiết bài) | Xong, E2E giao diện + axe Pass | 2026-10-26 | — | [F-10](F-10-likes-comments-ui.md) |
-| F-11 | Thông báo hoạt động: tim gộp, bình luận, theo dõi; chuông + tab "Hoạt động" | Xong, E2E + test tích hợp Pass | 2026-10-26 | — | [F-11](F-11-social-notifications.md) |
+| F-09 | API thả tim, bình luận (idempotent, rate limit, xóa bởi người viết / chủ bài) | Xong, E2E API + IDOR Pass | 2026-10-26 | `4905d32` | [F-09](F-09-likes-comments-api.md) |
+| F-10 | Giao diện tim (nhấn đúp), danh sách người thích, bình luận (sheet / chi tiết bài) | Xong, E2E giao diện + axe Pass | 2026-10-26 | `4905d32` | [F-10](F-10-likes-comments-ui.md) |
+| F-11 | Thông báo hoạt động: tim gộp, bình luận, theo dõi; chuông + tab "Hoạt động" | Xong, E2E + test tích hợp Pass | 2026-10-26 | `4905d32` | [F-11](F-11-social-notifications.md) |
+| F-12 | Chặn người dùng, gom ngưỡng chống spam (tài khoản < 24 h còn 1/3) | Xong, E2E + test tích hợp Pass | 2026-10-26 | — | [F-12](F-12-safety.md) |
+| F-13 | Quét rò rỉ chéo tài khoản, E2E 6 bước, i18n, analytics + funnel bản tin | Xong trên dev (R2 chờ F-01) | 2026-10-26 | — | [F-13](F-13-cross-account-tests.md) |

@@ -34,6 +34,11 @@ const SCREEN = e(
   'notifications',
   'settings',
   'auth',
+  'feed',
+  'composer',
+  'social_profile',
+  'post_detail',
+  'search',
   'other',
 );
 
@@ -41,6 +46,13 @@ export const ALLOWLIST: Record<string, Record<string, Rule>> = {
   signup_started: { source: e('direct', 'login_page', 'other') },
   signup_completed: {},
   post_liked: {},
+  profile_created: {},
+  post_created: { photo_count: int(1, 5), has_caption: bool, pet_count: int(0, 5) },
+  user_followed: {},
+  /** Ghi cho chủ bài khi có tim mới (bước "nhận tim đầu" của funnel bản tin). */
+  post_like_received: {},
+  feed_viewed: { items_seen_bucket: e('0', '1_10', '11_30', '31_plus') },
+  user_blocked: {},
   post_commented: { length_bucket: e('short', 'medium', 'long') },
   pet_limit_reached: {},
   weight_target_set: {},

@@ -92,8 +92,11 @@ export const followRepository = {
                      WHERE me.follower_id = ${viewerId} AND me.followee_id = pr.user_id)
                AS followed_by_me
       FROM profiles pr
-      WHERE lower(pr.username::text) LIKE lower(${escaped}) || '%'
-         OR social_fold(pr.display_name) LIKE '%' || social_fold(${escaped}) || '%'
+      WHERE (lower(pr.username::text) LIKE lower(${escaped}) || '%'
+             OR social_fold(pr.display_name) LIKE '%' || social_fold(${escaped}) || '%')
+        -- Người mình đã chặn vẫn thấy hồ sơ (để bỏ chặn) nhưng không hiện trong tìm kiếm.
+        AND NOT EXISTS (SELECT 1 FROM blocks b
+                        WHERE b.blocker_id = ${viewerId} AND b.blocked_id = pr.user_id)
       ORDER BY (lower(pr.username::text) = lower(${raw})) DESC,
                (SELECT count(*) FROM follows f WHERE f.followee_id = pr.user_id) DESC,
                pr.username

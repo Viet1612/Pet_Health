@@ -9,6 +9,7 @@ import { Button } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
 import { ErrorState } from '../../ui/ErrorState';
 import { Skeleton } from '../../ui/Skeleton';
+import { UnblockButton, UserMenu } from './BlockControls';
 import { FollowButton } from './FollowButton';
 import { ProfileFormDialog } from './ProfileFormDialog';
 import { ProfileGrid } from './ProfileGrid';
@@ -71,17 +72,26 @@ export function ProfileHeader({ profile, onEdit }: { profile: Profile; onEdit?: 
           />
         </div>
       </div>
-      <div>
-        <h1 className="text-h2 font-bold">{profile.displayName}</h1>
-        <p className="text-small text-text-muted">@{profile.username}</p>
-        {profile.bio && <p className="text-body mt-2 whitespace-pre-line">{profile.bio}</p>}
+      <div className="flex items-start gap-2">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-h2 font-bold">{profile.displayName}</h1>
+          <p className="text-small text-text-muted">@{profile.username}</p>
+          {profile.bio && <p className="text-body mt-2 whitespace-pre-line">{profile.bio}</p>}
+        </div>
+        {!profile.isMe && !profile.blockedByMe && <UserMenu username={profile.username} />}
       </div>
       {profile.isMe && onEdit && (
         <Button variant="secondary" fullWidth onClick={onEdit}>
           {t.editProfile}
         </Button>
       )}
-      {!profile.isMe && (
+      {!profile.isMe && profile.blockedByMe && (
+        <>
+          <p className="text-small text-text-muted">{t.block.youBlocked}</p>
+          <UnblockButton username={profile.username} fullWidth />
+        </>
+      )}
+      {!profile.isMe && !profile.blockedByMe && (
         <FollowButton username={profile.username} following={profile.followedByMe} fullWidth />
       )}
     </section>
@@ -116,7 +126,7 @@ export function ProfileScreen({ username }: { username: string }) {
           setEditing(true);
         }}
       />
-      <ProfileGrid username={profile.data.username} />
+      {!profile.data.blockedByMe && <ProfileGrid username={profile.data.username} />}
       {editing && mine.data && (
         <ProfileFormDialog
           profile={mine.data}

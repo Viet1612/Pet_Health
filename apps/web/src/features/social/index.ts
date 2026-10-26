@@ -10,3 +10,5 @@ export { postQuery } from './queries';
 export { FollowListScreen } from './FollowListScreen';
 export { SearchScreen } from './SearchScreen';
 export { ActivityList } from './ActivityList';
+export { BlockedDialog } from './BlockedDialog';
+export { blockedQuery } from './queries';

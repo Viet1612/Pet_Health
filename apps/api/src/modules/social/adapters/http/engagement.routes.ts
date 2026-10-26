@@ -142,11 +142,15 @@ export const engagementRoutes: FastifyPluginAsyncZod<EngagementDeps> = (app, dep
       const idem = req.idempotency;
       if (!idem) throw new Error('Thiếu thông tin Idempotency-Key');
       const result = await req.withTx((trx) =>
-        addComment(deps, trx, userId, id, req.body.body, {
-          ...idem,
-          ownerId: userId,
-          now: deps.clock.now(),
-        }),
+        addComment(
+          deps,
+          trx,
+          userId,
+          id,
+          req.body.body,
+          { ...idem, ownerId: userId, now: deps.clock.now() },
+          req.auth?.accountCreatedAt,
+        ),
       );
       return sendIdempotent(reply, result);
     },

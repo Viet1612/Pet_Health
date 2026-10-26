@@ -42,6 +42,7 @@ const zProfile = z.object({
   followingCount: z.number().int(),
   isMe: z.boolean(),
   followedByMe: z.boolean(),
+  blockedByMe: z.boolean(),
 });
 
 /** Hồ sơ công khai (F-02). Chỉ người đã đăng nhập; không trả email hay dữ liệu sức khỏe. */

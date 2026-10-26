@@ -10,7 +10,13 @@ import { ErrorState } from '../../ui/ErrorState';
 import { Skeleton } from '../../ui/Skeleton';
 import { useToast } from '../../ui/toast';
 import { formatLocalDate, petsQuery } from '../pets';
-import { myProfileQuery, PersonalInfoDialog, ProfileFormDialog } from '../social';
+import {
+  BlockedDialog,
+  blockedQuery,
+  myProfileQuery,
+  PersonalInfoDialog,
+  ProfileFormDialog,
+} from '../social';
 import { useChangeLocale, useLogoutAction } from '../session';
 import {
   ChangeEmailDialog,
@@ -26,7 +32,7 @@ const t = m.settings;
 export const SETTINGS_SECTIONS = ['account', 'time', 'security', 'danger'] as const;
 export type SettingsSection = (typeof SETTINGS_SECTIONS)[number];
 
-type Dialog = 'email' | 'password' | 'timezone' | 'delete' | 'personal' | 'profile';
+type Dialog = 'email' | 'password' | 'timezone' | 'delete' | 'personal' | 'profile' | 'blocked';
 
 const version = (): string => {
   const v: unknown = import.meta.env.VITE_APP_VERSION;
@@ -148,6 +154,7 @@ export function SettingsScreen({
   const me = useQuery(meQuery);
   const pets = useQuery(petsQuery);
   const profile = useQuery(myProfileQuery);
+  const blocked = useQuery(blockedQuery);
   const logout = useLogoutAction();
   const [dialog, setDialog] = useState<Dialog | null>(null);
   const close = () => {
@@ -203,6 +210,17 @@ export function SettingsScreen({
           detail={profile.data ? `@${profile.data.username}` : t.publicProfileNone}
           onClick={() => {
             setDialog('profile');
+          }}
+        />
+        <Row
+          title={m.social.block.settingsRow}
+          detail={
+            blocked.data && blocked.data.length > 0
+              ? m.social.block.settingsCount(blocked.data.length)
+              : m.social.block.settingsEmpty
+          }
+          onClick={() => {
+            setDialog('blocked');
           }}
         />
         <li className="border-divider mt-1 border-t pt-2">
@@ -288,6 +306,7 @@ export function SettingsScreen({
       {dialog === 'profile' && profile.isSuccess && (
         <ProfileFormDialog profile={profile.data} suggestedName={user.nickname} onClose={close} />
       )}
+      {dialog === 'blocked' && <BlockedDialog onClose={close} />}
       {dialog === 'delete' && (
         <DeleteAccountDialog petCount={pets.data?.length ?? 0} onClose={close} />
       )}

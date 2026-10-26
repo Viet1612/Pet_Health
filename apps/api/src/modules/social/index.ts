@@ -7,6 +7,7 @@ import type { Transaction } from 'kysely';
 
 import type { AnalyticsPort } from '../../platform/analytics/analytics.port.js';
 import type { Database } from '../../platform/db/kysely.js';
+import { blocksRoutes } from './adapters/http/blocks.routes.js';
 import { engagementRoutes } from './adapters/http/engagement.routes.js';
 import { followsRoutes } from './adapters/http/follows.routes.js';
 import { activityUnreadCount } from './application/activity.js';
@@ -33,6 +34,7 @@ export async function registerSocialRoutes(
   await api.register(postsRoutes, routeDeps);
   await api.register(followsRoutes, routeDeps);
   await api.register(engagementRoutes, routeDeps);
+  await api.register(blocksRoutes, routeDeps);
 }
 
 /** `TargetResolver` cho ảnh đại diện người dùng (đăng ký vào worker ảnh). */

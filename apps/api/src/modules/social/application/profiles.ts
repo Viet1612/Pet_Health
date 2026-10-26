@@ -1,6 +1,7 @@
 import type { FastifyRequest } from 'fastify';
 import type { Transaction } from 'kysely';
 
+import type { AnalyticsPort } from '../../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../../platform/clock/clock.js';
 import type { Database } from '../../../platform/db/kysely.js';
 import {
@@ -17,6 +18,7 @@ import {
   type MediaService,
   type TargetResolver,
 } from '../../media/index.js';
+import { blockRepository } from '../adapters/persistence/block.repository.js';
 import { profileRepository, type ProfileRow } from '../adapters/persistence/profile.repository.js';
 import {
   BIO_MAX,
@@ -31,6 +33,7 @@ type Trx = Transaction<Database>;
 export interface SocialDeps {
   clock: ClockPort;
   media: MediaService;
+  analytics?: AnalyticsPort;
 }
 
 export interface ProfileView {
@@ -44,6 +47,8 @@ export interface ProfileView {
   followingCount: number;
   isMe: boolean;
   followedByMe: boolean;
+  /** Mình đã chặn người này (F-12): hồ sơ vẫn mở được để bỏ chặn, bài bị ẩn. */
+  blockedByMe: boolean;
 }
 
 /** Hồ sơ của mình (không số đếm): sửa hồ sơ, kiểm đã có hồ sơ chưa. */
@@ -144,6 +149,7 @@ export async function upsertMyProfile(
         bio: bio || null,
         now,
       });
+      await deps.analytics?.track(trx, 'profile_created', {}, userId);
       return myView(deps, row, now);
     }
     const changing = current.username.toLowerCase() !== username;
@@ -188,9 +194,10 @@ export async function getProfile(
   const row = await profileRepository.findByUsername(trx, normalizeUsername(rawUsername));
   if (!row) throw new NotFoundError();
   const isMe = row.user_id === viewerId;
-  const [counts, followedByMe] = await Promise.all([
+  const [counts, followedByMe, blockedByMe] = await Promise.all([
     profileRepository.counts(trx, row.user_id),
     isMe ? Promise.resolve(false) : profileRepository.isFollowing(trx, viewerId, row.user_id),
+    isMe ? Promise.resolve(false) : blockRepository.isBlocking(trx, viewerId, row.user_id),
   ]);
   return {
     username: row.username,
@@ -201,6 +208,7 @@ export async function getProfile(
     ...counts,
     isMe,
     followedByMe,
+    blockedByMe,
   };
 }
 

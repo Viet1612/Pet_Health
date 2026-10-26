@@ -724,6 +724,22 @@ export const vi = {
         'Khi có người thích, bình luận bài của bạn hoặc theo dõi bạn, thông báo sẽ hiện ở đây.',
       unread: 'Mới',
     },
+    block: {
+      block: (u: string) => `Chặn @${u}`,
+      unblock: 'Bỏ chặn',
+      confirmTitle: (u: string) => `Chặn @${u}?`,
+      confirmBody:
+        'Họ sẽ không thấy bài và hồ sơ của bạn, và bạn cũng không thấy bài của họ. Theo dõi hai chiều, lượt thích và bình luận của họ trên bài bạn sẽ bị xóa.',
+      confirm: 'Chặn',
+      blocked: (u: string) => `Đã chặn @${u}`,
+      unblocked: (u: string) => `Đã bỏ chặn @${u}`,
+      youBlocked: 'Bạn đã chặn người này. Bài của họ bị ẩn.',
+      menu: 'Tùy chọn',
+      settingsRow: 'Đã chặn',
+      settingsEmpty: 'Bạn chưa chặn ai',
+      settingsCount: (n: number) => `${String(n)} người`,
+    },
+    tooFast: (min: number) => `Bạn thao tác quá nhanh, thử lại sau ${String(min)} phút`,
     complete: {
       title: 'Bổ sung thông tin tài khoản',
       lead: 'Tài khoản của bạn chưa có nickname hoặc ngày sinh. Nhập để tiếp tục.',

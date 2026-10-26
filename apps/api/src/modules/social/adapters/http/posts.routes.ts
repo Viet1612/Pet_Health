@@ -101,7 +101,9 @@ export const postsRoutes: FastifyPluginAsyncZod<PostsDeps> = (app, deps) => {
     async (req, reply) => {
       const userId = userOf(req);
       const idem = { ...idemOf(req), ownerId: userId, now: deps.clock.now() };
-      const result = await req.withTx((trx) => createPost(deps, trx, userId, req.body, idem));
+      const result = await req.withTx((trx) =>
+        createPost(deps, trx, userId, req.body, idem, req.auth?.accountCreatedAt),
+      );
       return sendIdempotent(reply, result);
     },
   );

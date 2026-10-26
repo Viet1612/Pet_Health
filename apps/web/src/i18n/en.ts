@@ -417,6 +417,7 @@ export const en: Messages = {
       EMAIL_TAKEN: 'This email is already in use',
       USERNAME_TAKEN: 'Username is already taken',
       FOLLOW_LIMIT_REACHED: 'You have followed too many people today',
+      BLOCK_LIMIT_REACHED: 'You have blocked too many accounts today',
       COMMENT_RATE_LIMITED: 'You are commenting too fast. Try again in a few minutes.',
       LIKE_RATE_LIMITED: 'Too many actions. Try again later.',
       POST_LIMIT_REACHED: 'You have reached the limit of 30 posts today',
@@ -481,6 +482,8 @@ export const en: Messages = {
           return 'Value out of range';
         case 'USERNAME_INVALID':
           return 'Username must be 3–30 lowercase letters, digits, dots or underscores';
+        case 'CANNOT_BLOCK_SELF':
+          return "You can't block yourself";
         case 'CANNOT_FOLLOW_SELF':
           return "You can't follow yourself";
         case 'PET_NOT_OWNED':
@@ -817,6 +820,23 @@ export const en: Messages = {
       emptyBody: 'When people like or comment on your posts or follow you, it shows up here.',
       unread: 'New',
     },
+    block: {
+      block: (u: string) => `Block @${u}`,
+      unblock: 'Unblock',
+      confirmTitle: (u: string) => `Block @${u}?`,
+      confirmBody:
+        "They won't see your posts or profile, and you won't see their posts. Follows both ways and their likes and comments on your posts will be removed.",
+      confirm: 'Block',
+      blocked: (u: string) => `Blocked @${u}`,
+      unblocked: (u: string) => `Unblocked @${u}`,
+      youBlocked: 'You blocked this account. Their posts are hidden.',
+      menu: 'Options',
+      settingsRow: 'Blocked accounts',
+      settingsEmpty: "You haven't blocked anyone",
+      settingsCount: (n: number) => `${String(n)} account${n === 1 ? '' : 's'}`,
+    },
+    tooFast: (min: number) =>
+      `You're doing that too fast. Try again in ${String(min)} minute${min === 1 ? '' : 's'}`,
     complete: {
       title: 'Complete your account',
       lead: "Your account doesn't have a nickname or date of birth yet. Add them to continue.",

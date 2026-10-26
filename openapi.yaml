@@ -4353,6 +4353,8 @@ paths:
                         type: boolean
                       followedByMe:
                         type: boolean
+                      blockedByMe:
+                        type: boolean
                     required:
                       - username
                       - displayName
@@ -4364,6 +4366,7 @@ paths:
                       - followingCount
                       - isMe
                       - followedByMe
+                      - blockedByMe
                     additionalProperties: false
                 required:
                   - profile
@@ -5720,6 +5723,88 @@ paths:
                     maximum: 9007199254740991
                 required:
                   - updated
+                additionalProperties: false
+  /blocks/{username}:
+    put:
+      summary: "Chặn (idempotent): xóa follow hai chiều, tim/bình luận của họ trên bài
+        mình"
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: username
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  blocked:
+                    type: boolean
+                required:
+                  - blocked
+                additionalProperties: false
+    delete:
+      summary: Bỏ chặn (không khôi phục follow, tim, bình luận đã xóa)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: username
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  blocked:
+                    type: boolean
+                required:
+                  - blocked
+                additionalProperties: false
+  /me/blocks:
+    get:
+      summary: Người tôi đã chặn
+      tags:
+        - social
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                        displayName:
+                          type: string
+                        avatarThumbUrl:
+                          type:
+                            - string
+                            - "null"
+                      required:
+                        - username
+                        - displayName
+                        - avatarThumbUrl
+                      additionalProperties: false
+                required:
+                  - items
                 additionalProperties: false
 servers:
   - url: /api/v1

@@ -115,7 +115,7 @@ describe('RLS mạng xã hội', () => {
     ).rejects.toThrow(/row-level security/);
   });
 
-  it('chặn nhau → hai bên không thấy hồ sơ và bài của nhau; người thứ ba vẫn thấy', async () => {
+  it('chặn → người bị chặn không thấy hồ sơ, người chặn chỉ thấy hồ sơ (không thấy bài); người thứ ba vẫn thấy', async () => {
     await as(C, (trx) =>
       trx.insertInto('blocks').values({ blocker_id: C, blocked_id: A, created_at: NOW }).execute(),
     );
@@ -135,7 +135,8 @@ describe('RLS mạng xã hội', () => {
         .execute(),
       posts: await trx.selectFrom('posts').select('id').execute(),
     }));
-    expect(byBlocker).toEqual({ profile: [], posts: [] });
+    // Người chặn vẫn thấy hồ sơ người bị chặn (để bỏ chặn, F-12) nhưng không thấy bài.
+    expect(byBlocker).toEqual({ profile: [{ user_id: A }], posts: [] });
     const third = await as(B, (trx) => trx.selectFrom('posts').select('id').execute());
     expect(ids(third)).toEqual([published]);
   });

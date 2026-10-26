@@ -9,6 +9,8 @@ export interface AuthContext {
   csrfSecret: Buffer | null;
   /** Email đã xác minh (Dashboard nhắc xác minh, FR-DSH-007); không có → coi như chưa. */
   emailVerified?: boolean;
+  /** Thời điểm tạo tài khoản (bản tin F-12: tài khoản < 24 h có ngưỡng chống spam thấp hơn). */
+  accountCreatedAt?: Date;
 }
 
 /**

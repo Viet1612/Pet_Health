@@ -49,6 +49,7 @@ export class CookieSessionResolver implements SessionResolverPort {
       sessionId: session.sessionId,
       csrfSecret: session.csrfSecret,
       emailVerified: session.user.email_verified_at !== null,
+      accountCreatedAt: session.user.created_at,
     };
   }
 }

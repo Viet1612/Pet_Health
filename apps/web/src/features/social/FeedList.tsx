@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { ArrowUp, Loader2, Newspaper, RefreshCw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
+import { track } from '../../api/analytics';
 import { m } from '../../i18n';
 import { Button, buttonClassName } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
@@ -90,6 +91,21 @@ export function FeedList() {
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = feed;
   const items = feed.data?.pages.flatMap((p) => p.items) ?? [];
   const newCount = useNewPostCount(items[0]?.createdAt);
+
+  // `feed_viewed` khi rời bản tin: chỉ gửi nhóm số bài đã tải, không gửi ID bài.
+  const seen = useRef(0);
+  useEffect(() => {
+    seen.current = Math.max(seen.current, items.length);
+  }, [items.length]);
+  useEffect(
+    () => () => {
+      const n = seen.current;
+      track('feed_viewed', {
+        items_seen_bucket: n === 0 ? '0' : n <= 10 ? '1_10' : n <= 30 ? '11_30' : '31_plus',
+      });
+    },
+    [],
+  );
 
   const refresh = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

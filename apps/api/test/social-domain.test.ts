@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { checkBirthDate } from '../src/modules/identity/application/birth-date.js';
+import { limitFor } from '../src/modules/social/application/limits.js';
 import {
   daysUntilUsernameChange,
   normalizeUsername,
@@ -36,5 +37,19 @@ describe('ngày sinh người dùng (F-02)', () => {
     expect(() => checkBirthDate('2026-10-26', 'UTC', now)).toThrow();
     expect(() => checkBirthDate('2001-02-30', 'UTC', now)).toThrow();
     expect(() => checkBirthDate('1899-12-31', 'UTC', now)).toThrow();
+  });
+});
+
+describe('ngưỡng chống spam (F-12)', () => {
+  const now = new Date('2026-10-26T12:00:00Z');
+  it('tài khoản < 24 h: đăng bài và bình luận còn 1/3; hành động khác giữ nguyên', () => {
+    const fresh = new Date('2026-10-26T00:00:00Z');
+    expect(limitFor('post', fresh, now)).toBe(10);
+    expect(limitFor('comment', fresh, now)).toBe(10);
+    expect(limitFor('like', fresh, now)).toBe(300);
+  });
+  it('tài khoản ≥ 24 h hoặc không rõ tuổi: ngưỡng đầy đủ', () => {
+    expect(limitFor('post', new Date('2026-10-25T12:00:00Z'), now)).toBe(30);
+    expect(limitFor('comment', undefined, now)).toBe(30);
   });
 });

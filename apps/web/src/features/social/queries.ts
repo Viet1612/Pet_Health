@@ -388,3 +388,27 @@ export const activityQuery = infiniteQueryOptions({
 export async function readAllActivity(upTo: string): Promise<void> {
   await api.POST('/social-notifications/read-all', { body: { upTo } });
 }
+
+export const BLOCKS_KEY = ['social', 'blocks'] as const;
+
+export const blockedQuery = queryOptions({
+  queryKey: BLOCKS_KEY,
+  queryFn: async () => unwrap(await api.GET('/me/blocks')).items,
+  staleTime: 30_000,
+});
+
+/** Chặn / bỏ chặn (F-12): xong thì làm mới mọi dữ liệu mạng xã hội (bài, hồ sơ, bản tin…). */
+export function useBlock(username: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (block: boolean) => {
+      const params = { params: { path: { username } } };
+      return unwrap(
+        block
+          ? await api.PUT('/blocks/{username}', params)
+          : await api.DELETE('/blocks/{username}', params),
+      );
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['social'] }),
+  });
+}

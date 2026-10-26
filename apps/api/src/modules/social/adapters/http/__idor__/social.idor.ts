@@ -40,3 +40,7 @@ for (const [method, url] of [
     'Bài đã đăng đọc công khai; tim/bình luận chỉ ghi dòng của người gọi',
   );
 }
+
+// F-12: chặn theo username; chỉ ghi dòng `blocks` của chính người gọi (RLS `blocker_id`).
+exemptFromIdor('PUT', '/blocks/:username', 'Chỉ ghi dòng chặn của chính người gọi (RLS)');
+exemptFromIdor('DELETE', '/blocks/:username', 'Chỉ xóa dòng chặn của chính người gọi (RLS)');

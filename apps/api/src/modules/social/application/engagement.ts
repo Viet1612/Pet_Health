@@ -3,12 +3,7 @@ import type { Transaction } from 'kysely';
 import type { AnalyticsPort } from '../../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../../platform/clock/clock.js';
 import type { Database } from '../../../platform/db/kysely.js';
-import {
-  AppError,
-  NotFoundError,
-  RateLimitedError,
-  ValidationError,
-} from '../../../platform/errors/app-error.js';
+import { AppError, NotFoundError, ValidationError } from '../../../platform/errors/app-error.js';
 import {
   runIdempotent,
   type IdempotencyInput,
@@ -23,6 +18,7 @@ import {
 } from '../adapters/persistence/engagement.repository.js';
 import { postRepository } from '../adapters/persistence/post.repository.js';
 import type { PersonView } from './follows.js';
+import { socialLimit } from './limits.js';
 
 type Trx = Transaction<Database>;
 
@@ -73,22 +69,6 @@ async function visiblePost(trx: Trx, postId: string) {
   return post;
 }
 
-async function limited(
-  rateLimiter: RateLimiter,
-  bucket: string,
-  limit: number,
-  windowSec: number,
-  code: string,
-  title: string,
-) {
-  try {
-    await rateLimiter.hit(bucket, limit, windowSec);
-  } catch (error) {
-    if (!(error instanceof RateLimitedError)) throw error;
-    throw new AppError(429, code, title, { retryAfter: error.options.retryAfter ?? windowSec });
-  }
-}
-
 /** `PUT /posts/{id}/like` (idempotent): tạo thông báo LIKE cho chủ bài (một lần mỗi người). */
 export async function likePost(
   deps: EngagementDeps,
@@ -98,14 +78,7 @@ export async function likePost(
 ): Promise<{ liked: true; likeCount: number }> {
   const post = await visiblePost(trx, postId);
   const now = deps.clock.now();
-  await limited(
-    deps.rateLimiter,
-    `like:${viewerId}`,
-    300,
-    3600,
-    'LIKE_RATE_LIMITED',
-    'Bạn thao tác quá nhanh, thử lại sau',
-  );
+  await socialLimit(deps.rateLimiter, 'like', viewerId);
   if (await engagementRepository.like(trx, postId, viewerId, now)) {
     await activityRepository.add(trx, {
       ownerId: post.owner_id,
@@ -115,6 +88,9 @@ export async function likePost(
       now,
     });
     await deps.analytics?.track(trx, 'post_liked', {}, viewerId);
+    if (post.owner_id !== viewerId) {
+      await deps.analytics?.track(trx, 'post_like_received', {}, post.owner_id);
+    }
   }
   return { liked: true, likeCount: await engagementRepository.likeCount(trx, postId) };
 }
@@ -230,18 +206,15 @@ export async function addComment(
   postId: string,
   rawBody: string,
   idem: IdempotencyInput,
+  accountCreatedAt?: Date,
 ) {
   return runIdempotent(trx, idem, async () => {
     const body = checkCommentBody(rawBody);
     const post = await visiblePost(trx, postId);
-    await limited(
-      deps.rateLimiter,
-      `comment:${viewerId}`,
-      30,
-      600,
-      'COMMENT_RATE_LIMITED',
-      'Bạn bình luận quá nhanh, thử lại sau ít phút',
-    );
+    await socialLimit(deps.rateLimiter, 'comment', viewerId, {
+      accountCreatedAt,
+      now: deps.clock.now(),
+    });
     const id = newId();
     const now = deps.clock.now();
     await engagementRepository.insertComment(trx, { id, postId, ownerId: viewerId, body, now });

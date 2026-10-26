@@ -61,6 +61,14 @@ export interface AnalyticsFunnelReminderLoop {
   week: Timestamp | null;
 }
 
+export interface AnalyticsFunnelSocial {
+  first_like_received_at: Timestamp | null;
+  first_post_at: Timestamp | null;
+  followed_3: boolean | null;
+  profile_created_at: Timestamp | null;
+  user_id_hash: string | null;
+}
+
 export interface AuthTokens {
   created_at: Generated<Timestamp>;
   expires_at: Timestamp;
@@ -301,6 +309,7 @@ export interface DB {
   analytics_funnel_activation: AnalyticsFunnelActivation;
   analytics_funnel_daily_habit: AnalyticsFunnelDailyHabit;
   analytics_funnel_reminder_loop: AnalyticsFunnelReminderLoop;
+  analytics_funnel_social: AnalyticsFunnelSocial;
   auth_tokens: AuthTokens;
   blocks: Blocks;
   follows: Follows;

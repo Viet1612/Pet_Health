@@ -1,14 +1,10 @@
 import type { FastifyRequest } from 'fastify';
 import type { Transaction } from 'kysely';
 
+import type { AnalyticsPort } from '../../../platform/analytics/analytics.port.js';
 import type { ClockPort } from '../../../platform/clock/clock.js';
 import type { Database } from '../../../platform/db/kysely.js';
-import {
-  AppError,
-  NotFoundError,
-  RateLimitedError,
-  ValidationError,
-} from '../../../platform/errors/app-error.js';
+import { AppError, NotFoundError, ValidationError } from '../../../platform/errors/app-error.js';
 import {
   findStoredResponse,
   runIdempotent,
@@ -33,18 +29,19 @@ import {
 } from '../adapters/persistence/post.repository.js';
 import { profileRepository } from '../adapters/persistence/profile.repository.js';
 import { normalizeUsername } from '../domain/username.js';
+import { socialLimit } from './limits.js';
 
 type Trx = Transaction<Database>;
 
 export const CAPTION_MAX = 2200;
 export const MAX_PHOTOS = 5;
 export const MAX_PETS = 5;
-export const POSTS_PER_DAY = 30;
 export const GRID_PAGE = 18;
 
 export interface PostsDeps {
   clock: ClockPort;
   media: MediaService;
+  analytics?: AnalyticsPort;
   rateLimiter: RateLimiter;
 }
 
@@ -124,20 +121,16 @@ export async function createPost(
   ownerId: string,
   input: { caption?: string | null | undefined; petIds?: string[] | undefined; photoCount: number },
   idem: IdempotencyInput,
+  accountCreatedAt?: Date,
 ): Promise<IdempotentResult> {
   return runIdempotent(trx, idem, async () => {
     if (!(await profileRepository.findByUser(trx, ownerId))) throw profileRequired();
     const caption = checkCaption(input.caption);
     const petIds = await checkPets(trx, ownerId, input.petIds);
-    try {
-      await deps.rateLimiter.hit(`post:${ownerId}`, POSTS_PER_DAY, 86_400);
-    } catch (error) {
-      if (!(error instanceof RateLimitedError)) throw error;
-      throw new AppError(429, 'POST_LIMIT_REACHED', 'Bạn đã đăng tối đa 30 bài hôm nay', {
-        retryAfter: error.options.retryAfter ?? 3600,
-        params: { max: POSTS_PER_DAY },
-      });
-    }
+    await socialLimit(deps.rateLimiter, 'post', ownerId, {
+      accountCreatedAt,
+      now: deps.clock.now(),
+    });
     const post = await postRepository.insert(trx, {
       id: newId(),
       ownerId,
@@ -146,6 +139,12 @@ export async function createPost(
       photoCount: input.photoCount,
       now: deps.clock.now(),
     });
+    await deps.analytics?.track(
+      trx,
+      'post_created',
+      { photo_count: input.photoCount, has_caption: caption !== null, pet_count: petIds.length },
+      ownerId,
+    );
     return { status: 201, body: { id: post.id, status: 'DRAFT' } };
   });
 }

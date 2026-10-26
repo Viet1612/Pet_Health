@@ -19,6 +19,7 @@ import { useToast } from '../../ui/toast';
 import { petsQuery } from '../pets';
 import { CAPTION_MAX } from './composer';
 import { PetChips } from './PetChips';
+import { UserMenu } from './BlockControls';
 import { CommentsPanel } from './CommentsPanel';
 import { LikeBar, useLikeAction } from './LikeBar';
 import { PhotoCarousel } from './PhotoCarousel';
@@ -215,6 +216,12 @@ export function PostDetailScreen({ postId }: { postId: string }) {
           onDelete={() => {
             setDialog('delete');
           }}
+        />
+      )}
+      {!p.isMine && (
+        <UserMenu
+          username={p.author.username}
+          onBlocked={() => void navigate({ to: '/feed', replace: true })}
         />
       )}
     </div>
