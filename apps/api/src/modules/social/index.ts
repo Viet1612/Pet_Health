@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import type { ClockPort } from '../../platform/clock/clock.js';
 import type { RateLimiter } from '../../platform/rate-limit/rate-limiter.js';
 import { createMediaService, type MediaDeps, type TargetResolver } from '../media/index.js';
+import { followsRoutes } from './adapters/http/follows.routes.js';
 import { postsRoutes } from './adapters/http/posts.routes.js';
 import { profilesRoutes } from './adapters/http/profiles.routes.js';
 import { postPhotoTargetResolver } from './application/posts.js';
@@ -23,6 +24,7 @@ export async function registerSocialRoutes(
   const routeDeps = { ...deps, media: createMediaService(mediaDeps) };
   await api.register(profilesRoutes, routeDeps);
   await api.register(postsRoutes, routeDeps);
+  await api.register(followsRoutes, routeDeps);
 }
 
 /** `TargetResolver` cho ảnh đại diện người dùng (đăng ký vào worker ảnh). */

@@ -413,6 +413,7 @@ export const en: Messages = {
       ACCOUNT_LOCKED: 'Account temporarily locked after too many failed logins',
       EMAIL_TAKEN: 'This email is already in use',
       USERNAME_TAKEN: 'Username is already taken',
+      FOLLOW_LIMIT_REACHED: 'You have followed too many people today',
       POST_LIMIT_REACHED: 'You have reached the limit of 30 posts today',
       POST_ALREADY_PUBLISHED: 'This post is already published',
       PHOTO_POSITION_TAKEN: 'This photo slot is already used',
@@ -475,6 +476,8 @@ export const en: Messages = {
           return 'Value out of range';
         case 'USERNAME_INVALID':
           return 'Username must be 3–30 lowercase letters, digits, dots or underscores';
+        case 'CANNOT_FOLLOW_SELF':
+          return "You can't follow yourself";
         case 'PET_NOT_OWNED':
           return "That pet isn't yours";
         case 'USERNAME_RESERVED':
@@ -741,6 +744,39 @@ export const en: Messages = {
       grid: 'Posts',
       pets: 'Pets in this post',
       titleOf: (name: string) => `Post by ${name}`,
+    },
+    follow: {
+      follow: 'Follow',
+      following: 'Following',
+      unfollow: 'Unfollow',
+      unfollowTitle: (u: string) => `Unfollow @${u}?`,
+      unfollowBody: 'Their posts will no longer show up in your feed.',
+      followers: 'Followers',
+      followingList: 'Following',
+      emptyFollowers: 'No followers yet',
+      emptyFollowing: 'Not following anyone yet',
+      you: 'You',
+    },
+    search: {
+      title: 'Find people',
+      open: 'Find people',
+      label: 'Search by username or name',
+      placeholder: 'Username or name',
+      hint: 'Type a username or display name (accents optional).',
+      empty: (q: string) => `No one found for "${q}"`,
+    },
+    feed: {
+      refresh: 'Refresh',
+      newPosts: 'New posts',
+      emptyTitle: "Follow friends to see their pets' photos",
+      emptyBody: 'Your feed shows your posts and posts from people you follow, newest first.',
+      findPeople: 'Find people',
+      firstPost: 'Share your first post',
+      more: 'more',
+      likes: (n: number) => `${String(n)} like${n === 1 ? '' : 's'}`,
+      comments: (n: number) => `View ${String(n)} comment${n === 1 ? '' : 's'}`,
+      end: "You're all caught up",
+      pullToRefresh: 'Release to refresh',
     },
     complete: {
       title: 'Complete your account',

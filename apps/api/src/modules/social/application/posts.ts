@@ -370,6 +370,39 @@ function decodeGridCursor(raw: string): { createdAt: Date; id: string } {
   throw new AppError(400, 'INVALID_CURSOR', 'Con trỏ phân trang không hợp lệ');
 }
 
+export const FEED_PAGE = 10;
+
+/**
+ * `GET /feed`: bài của mình và người mình theo dõi, 10 bài/trang, mới nhất trước. Ghép ảnh, tên
+ * thú cưng, số tim/bình luận bằng 3 truy vấn phụ cho cả trang (không N+1).
+ */
+export async function listFeed(
+  deps: Pick<PostsDeps, 'media'>,
+  trx: Trx,
+  viewerId: string,
+  cursor: string | undefined,
+): Promise<{ items: PostView[]; nextCursor: string | null }> {
+  const after = cursor === undefined ? null : decodeGridCursor(cursor);
+  const rows = await postRepository.feed(trx, viewerId, after, FEED_PAGE + 1);
+  const hasMore = rows.length > FEED_PAGE;
+  const page = hasMore ? rows.slice(0, FEED_PAGE) : rows;
+  const last = page.at(-1);
+  return {
+    items: await toPostViews(deps, trx, viewerId, page),
+    nextCursor:
+      hasMore && last
+        ? Buffer.from(JSON.stringify({ t: last.created_at.toISOString(), id: last.id })).toString(
+            'base64url',
+          )
+        : null,
+  };
+}
+
+/** `GET /feed/new-count?since=`: số bài mới của người mình theo dõi (nút "Có bài mới"). */
+export async function feedNewCount(trx: Trx, viewerId: string, since: Date): Promise<number> {
+  return postRepository.feedNewCount(trx, viewerId, since);
+}
+
 /** `GET /profiles/{username}/posts`: lưới 18 bài/trang, chỉ bài đã đăng. */
 export async function listProfilePosts(
   deps: Pick<PostsDeps, 'media'>,

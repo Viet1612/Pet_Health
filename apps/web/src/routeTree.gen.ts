@@ -13,6 +13,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
+import { Route as AppSearchRouteImport } from './routes/_app/search'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
@@ -25,12 +26,14 @@ import { Route as AppMilestonesMilestoneIdRouteImport } from './routes/_app/mile
 import { Route as AppPPostIdRouteImport } from './routes/_app/p/$postId'
 import { Route as AppPetsIndexRouteImport } from './routes/_app/pets/index'
 import { Route as AppPetsNewRouteImport } from './routes/_app/pets/new'
-import { Route as AppUUsernameRouteImport } from './routes/_app/u/$username'
 import { Route as AppPetsPetIdIndexRouteImport } from './routes/_app/pets/$petId/index'
 import { Route as AppPetsPetIdEditRouteImport } from './routes/_app/pets/$petId/edit'
 import { Route as AppPetsPetIdHealthRouteImport } from './routes/_app/pets/$petId/health'
 import { Route as AppPetsPetIdMilestonesRouteImport } from './routes/_app/pets/$petId/milestones'
 import { Route as AppPetsPetIdRoutinesRouteImport } from './routes/_app/pets/$petId/routines'
+import { Route as AppUUsernameIndexRouteImport } from './routes/_app/u/$username/index'
+import { Route as AppUUsernameFollowersRouteImport } from './routes/_app/u/$username/followers'
+import { Route as AppUUsernameFollowingRouteImport } from './routes/_app/u/$username/following'
 import { Route as AppVisitsVisitIdIndexRouteImport } from './routes/_app/visits/$visitId/index'
 import { Route as AppVisitsVisitIdEditRouteImport } from './routes/_app/visits/$visitId/edit'
 import { Route as AppPetsPetIdHealthIndexRouteImport } from './routes/_app/pets/$petId/health/index'
@@ -54,6 +57,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSearchRoute = AppSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
@@ -117,11 +125,6 @@ const AppPetsNewRoute = AppPetsNewRouteImport.update({
   path: '/pets/new',
   getParentRoute: () => AppRoute,
 } as any)
-const AppUUsernameRoute = AppUUsernameRouteImport.update({
-  id: '/u/$username',
-  path: '/u/$username',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppPetsPetIdIndexRoute = AppPetsPetIdIndexRouteImport.update({
   id: '/pets/$petId/',
   path: '/pets/$petId/',
@@ -145,6 +148,21 @@ const AppPetsPetIdMilestonesRoute = AppPetsPetIdMilestonesRouteImport.update({
 const AppPetsPetIdRoutinesRoute = AppPetsPetIdRoutinesRouteImport.update({
   id: '/pets/$petId/routines',
   path: '/pets/$petId/routines',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUUsernameIndexRoute = AppUUsernameIndexRouteImport.update({
+  id: '/u/$username/',
+  path: '/u/$username/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUUsernameFollowersRoute = AppUUsernameFollowersRouteImport.update({
+  id: '/u/$username/followers',
+  path: '/u/$username/followers',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUUsernameFollowingRoute = AppUUsernameFollowingRouteImport.update({
+  id: '/u/$username/following',
+  path: '/u/$username/following',
   getParentRoute: () => AppRoute,
 } as any)
 const AppVisitsVisitIdIndexRoute = AppVisitsVisitIdIndexRouteImport.update({
@@ -183,6 +201,7 @@ const AppPetsPetIdVisitsNewRoute = AppPetsPetIdVisitsNewRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/notifications': typeof AppNotificationsRoute
+  '/search': typeof AppSearchRoute
   '/settings': typeof AppSettingsRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
@@ -193,15 +212,17 @@ export interface FileRoutesByFullPath {
   '/milestones/$milestoneId': typeof AppMilestonesMilestoneIdRoute
   '/p/$postId': typeof AppPPostIdRoute
   '/pets/new': typeof AppPetsNewRoute
-  '/u/$username': typeof AppUUsernameRoute
   '/feed/': typeof AppFeedIndexRoute
   '/pets/': typeof AppPetsIndexRoute
   '/pets/$petId/edit': typeof AppPetsPetIdEditRoute
   '/pets/$petId/health': typeof AppPetsPetIdHealthRouteWithChildren
   '/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
   '/pets/$petId/routines': typeof AppPetsPetIdRoutinesRoute
+  '/u/$username/followers': typeof AppUUsernameFollowersRoute
+  '/u/$username/following': typeof AppUUsernameFollowingRoute
   '/visits/$visitId/edit': typeof AppVisitsVisitIdEditRoute
   '/pets/$petId/': typeof AppPetsPetIdIndexRoute
+  '/u/$username/': typeof AppUUsernameIndexRoute
   '/visits/$visitId/': typeof AppVisitsVisitIdIndexRoute
   '/pets/$petId/health/visits': typeof AppPetsPetIdHealthVisitsRoute
   '/pets/$petId/health/weight': typeof AppPetsPetIdHealthWeightRoute
@@ -211,6 +232,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/notifications': typeof AppNotificationsRoute
+  '/search': typeof AppSearchRoute
   '/settings': typeof AppSettingsRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
@@ -221,14 +243,16 @@ export interface FileRoutesByTo {
   '/milestones/$milestoneId': typeof AppMilestonesMilestoneIdRoute
   '/p/$postId': typeof AppPPostIdRoute
   '/pets/new': typeof AppPetsNewRoute
-  '/u/$username': typeof AppUUsernameRoute
   '/feed': typeof AppFeedIndexRoute
   '/pets': typeof AppPetsIndexRoute
   '/pets/$petId/edit': typeof AppPetsPetIdEditRoute
   '/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
   '/pets/$petId/routines': typeof AppPetsPetIdRoutinesRoute
+  '/u/$username/followers': typeof AppUUsernameFollowersRoute
+  '/u/$username/following': typeof AppUUsernameFollowingRoute
   '/visits/$visitId/edit': typeof AppVisitsVisitIdEditRoute
   '/pets/$petId': typeof AppPetsPetIdIndexRoute
+  '/u/$username': typeof AppUUsernameIndexRoute
   '/visits/$visitId': typeof AppVisitsVisitIdIndexRoute
   '/pets/$petId/health/visits': typeof AppPetsPetIdHealthVisitsRoute
   '/pets/$petId/health/weight': typeof AppPetsPetIdHealthWeightRoute
@@ -240,6 +264,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
   '/_app/notifications': typeof AppNotificationsRoute
+  '/_app/search': typeof AppSearchRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/login': typeof AuthLoginRoute
@@ -251,15 +276,17 @@ export interface FileRoutesById {
   '/_app/milestones/$milestoneId': typeof AppMilestonesMilestoneIdRoute
   '/_app/p/$postId': typeof AppPPostIdRoute
   '/_app/pets/new': typeof AppPetsNewRoute
-  '/_app/u/$username': typeof AppUUsernameRoute
   '/_app/feed/': typeof AppFeedIndexRoute
   '/_app/pets/': typeof AppPetsIndexRoute
   '/_app/pets/$petId/edit': typeof AppPetsPetIdEditRoute
   '/_app/pets/$petId/health': typeof AppPetsPetIdHealthRouteWithChildren
   '/_app/pets/$petId/milestones': typeof AppPetsPetIdMilestonesRoute
   '/_app/pets/$petId/routines': typeof AppPetsPetIdRoutinesRoute
+  '/_app/u/$username/followers': typeof AppUUsernameFollowersRoute
+  '/_app/u/$username/following': typeof AppUUsernameFollowingRoute
   '/_app/visits/$visitId/edit': typeof AppVisitsVisitIdEditRoute
   '/_app/pets/$petId/': typeof AppPetsPetIdIndexRoute
+  '/_app/u/$username/': typeof AppUUsernameIndexRoute
   '/_app/visits/$visitId/': typeof AppVisitsVisitIdIndexRoute
   '/_app/pets/$petId/health/visits': typeof AppPetsPetIdHealthVisitsRoute
   '/_app/pets/$petId/health/weight': typeof AppPetsPetIdHealthWeightRoute
@@ -271,6 +298,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/notifications'
+    | '/search'
     | '/settings'
     | '/forgot-password'
     | '/login'
@@ -281,15 +309,17 @@ export interface FileRouteTypes {
     | '/milestones/$milestoneId'
     | '/p/$postId'
     | '/pets/new'
-    | '/u/$username'
     | '/feed/'
     | '/pets/'
     | '/pets/$petId/edit'
     | '/pets/$petId/health'
     | '/pets/$petId/milestones'
     | '/pets/$petId/routines'
+    | '/u/$username/followers'
+    | '/u/$username/following'
     | '/visits/$visitId/edit'
     | '/pets/$petId/'
+    | '/u/$username/'
     | '/visits/$visitId/'
     | '/pets/$petId/health/visits'
     | '/pets/$petId/health/weight'
@@ -299,6 +329,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/notifications'
+    | '/search'
     | '/settings'
     | '/forgot-password'
     | '/login'
@@ -309,14 +340,16 @@ export interface FileRouteTypes {
     | '/milestones/$milestoneId'
     | '/p/$postId'
     | '/pets/new'
-    | '/u/$username'
     | '/feed'
     | '/pets'
     | '/pets/$petId/edit'
     | '/pets/$petId/milestones'
     | '/pets/$petId/routines'
+    | '/u/$username/followers'
+    | '/u/$username/following'
     | '/visits/$visitId/edit'
     | '/pets/$petId'
+    | '/u/$username'
     | '/visits/$visitId'
     | '/pets/$petId/health/visits'
     | '/pets/$petId/health/weight'
@@ -327,6 +360,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/_auth'
     | '/_app/notifications'
+    | '/_app/search'
     | '/_app/settings'
     | '/_auth/forgot-password'
     | '/_auth/login'
@@ -338,15 +372,17 @@ export interface FileRouteTypes {
     | '/_app/milestones/$milestoneId'
     | '/_app/p/$postId'
     | '/_app/pets/new'
-    | '/_app/u/$username'
     | '/_app/feed/'
     | '/_app/pets/'
     | '/_app/pets/$petId/edit'
     | '/_app/pets/$petId/health'
     | '/_app/pets/$petId/milestones'
     | '/_app/pets/$petId/routines'
+    | '/_app/u/$username/followers'
+    | '/_app/u/$username/following'
     | '/_app/visits/$visitId/edit'
     | '/_app/pets/$petId/'
+    | '/_app/u/$username/'
     | '/_app/visits/$visitId/'
     | '/_app/pets/$petId/health/visits'
     | '/_app/pets/$petId/health/weight'
@@ -387,6 +423,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/search': {
+      id: '/_app/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof AppSearchRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings': {
@@ -473,13 +516,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPetsNewRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/u/$username': {
-      id: '/_app/u/$username'
-      path: '/u/$username'
-      fullPath: '/u/$username'
-      preLoaderRoute: typeof AppUUsernameRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/pets/$petId/': {
       id: '/_app/pets/$petId/'
       path: '/pets/$petId'
@@ -513,6 +549,27 @@ declare module '@tanstack/react-router' {
       path: '/pets/$petId/routines'
       fullPath: '/pets/$petId/routines'
       preLoaderRoute: typeof AppPetsPetIdRoutinesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/u/$username/': {
+      id: '/_app/u/$username/'
+      path: '/u/$username'
+      fullPath: '/u/$username/'
+      preLoaderRoute: typeof AppUUsernameIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/u/$username/followers': {
+      id: '/_app/u/$username/followers'
+      path: '/u/$username/followers'
+      fullPath: '/u/$username/followers'
+      preLoaderRoute: typeof AppUUsernameFollowersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/u/$username/following': {
+      id: '/_app/u/$username/following'
+      path: '/u/$username/following'
+      fullPath: '/u/$username/following'
+      preLoaderRoute: typeof AppUUsernameFollowingRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/visits/$visitId/': {
@@ -577,42 +634,48 @@ const AppPetsPetIdHealthRouteWithChildren =
 
 interface AppRouteChildren {
   AppNotificationsRoute: typeof AppNotificationsRoute
+  AppSearchRoute: typeof AppSearchRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppFeedNewRoute: typeof AppFeedNewRoute
   AppMilestonesMilestoneIdRoute: typeof AppMilestonesMilestoneIdRoute
   AppPPostIdRoute: typeof AppPPostIdRoute
   AppPetsNewRoute: typeof AppPetsNewRoute
-  AppUUsernameRoute: typeof AppUUsernameRoute
   AppFeedIndexRoute: typeof AppFeedIndexRoute
   AppPetsIndexRoute: typeof AppPetsIndexRoute
   AppPetsPetIdEditRoute: typeof AppPetsPetIdEditRoute
   AppPetsPetIdHealthRoute: typeof AppPetsPetIdHealthRouteWithChildren
   AppPetsPetIdMilestonesRoute: typeof AppPetsPetIdMilestonesRoute
   AppPetsPetIdRoutinesRoute: typeof AppPetsPetIdRoutinesRoute
+  AppUUsernameFollowersRoute: typeof AppUUsernameFollowersRoute
+  AppUUsernameFollowingRoute: typeof AppUUsernameFollowingRoute
   AppVisitsVisitIdEditRoute: typeof AppVisitsVisitIdEditRoute
   AppPetsPetIdIndexRoute: typeof AppPetsPetIdIndexRoute
+  AppUUsernameIndexRoute: typeof AppUUsernameIndexRoute
   AppVisitsVisitIdIndexRoute: typeof AppVisitsVisitIdIndexRoute
   AppPetsPetIdVisitsNewRoute: typeof AppPetsPetIdVisitsNewRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppNotificationsRoute: AppNotificationsRoute,
+  AppSearchRoute: AppSearchRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
   AppFeedNewRoute: AppFeedNewRoute,
   AppMilestonesMilestoneIdRoute: AppMilestonesMilestoneIdRoute,
   AppPPostIdRoute: AppPPostIdRoute,
   AppPetsNewRoute: AppPetsNewRoute,
-  AppUUsernameRoute: AppUUsernameRoute,
   AppFeedIndexRoute: AppFeedIndexRoute,
   AppPetsIndexRoute: AppPetsIndexRoute,
   AppPetsPetIdEditRoute: AppPetsPetIdEditRoute,
   AppPetsPetIdHealthRoute: AppPetsPetIdHealthRouteWithChildren,
   AppPetsPetIdMilestonesRoute: AppPetsPetIdMilestonesRoute,
   AppPetsPetIdRoutinesRoute: AppPetsPetIdRoutinesRoute,
+  AppUUsernameFollowersRoute: AppUUsernameFollowersRoute,
+  AppUUsernameFollowingRoute: AppUUsernameFollowingRoute,
   AppVisitsVisitIdEditRoute: AppVisitsVisitIdEditRoute,
   AppPetsPetIdIndexRoute: AppPetsPetIdIndexRoute,
+  AppUUsernameIndexRoute: AppUUsernameIndexRoute,
   AppVisitsVisitIdIndexRoute: AppVisitsVisitIdIndexRoute,
   AppPetsPetIdVisitsNewRoute: AppPetsPetIdVisitsNewRoute,
 }

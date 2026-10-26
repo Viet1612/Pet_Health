@@ -61,12 +61,14 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 
 Task ở [../tasks-feed/](../tasks-feed/README.md). Làm trên máy dev trước; F-01 (R2) làm cùng đợt triển khai production.
 
-**Tiến độ:** 5 / 13 task
+**Tiến độ:** 7 / 13 task
 
 | Task | Tên | Trạng thái | Ngày | Commit | Kết quả |
 |---|---|---|---|---|---|
 | F-02 | Hồ sơ công khai, nickname và ngày sinh khi đăng ký | Xong, E2E API + IDOR Pass | 2026-10-26 | `302bc46` | [F-02](F-02-public-profile.md) |
 | F-03 | Schema mạng xã hội và RLS "đọc công khai, ghi chỉ chủ", chặn nhau | Xong, test tích hợp RLS Pass | 2026-10-26 | `302bc46` | [F-03](F-03-social-schema.md) |
 | F-04 | API bài đăng: nháp → ảnh → tự đăng, sửa, xóa, xem, lưới hồ sơ | Xong, E2E API + IDOR Pass | 2026-10-26 | `6eed3cc` | [F-04](F-04-posts-api.md) |
-| F-05 | Giao diện soạn bài: chọn nhiều ảnh, chú thích, gắn thú cưng (tùy chọn) | Xong, E2E giao diện + axe Pass | 2026-10-26 | — | [F-05](F-05-composer-ui.md) |
-| F-06 | Hồ sơ dạng lưới 3 cột, chi tiết bài vuốt ảnh, sửa / xóa bài | Xong, E2E giao diện + axe Pass | 2026-10-26 | — | [F-06](F-06-profile-grid-post-detail.md) |
+| F-05 | Giao diện soạn bài: chọn nhiều ảnh, chú thích, gắn thú cưng (tùy chọn) | Xong, E2E giao diện + axe Pass | 2026-10-26 | `a26ada5` | [F-05](F-05-composer-ui.md) |
+| F-06 | Hồ sơ dạng lưới 3 cột, chi tiết bài vuốt ảnh, sửa / xóa bài | Xong, E2E giao diện + axe Pass | 2026-10-26 | `a26ada5` | [F-06](F-06-profile-grid-post-detail.md) |
+| F-07 | Theo dõi / bỏ theo dõi, danh sách theo dõi, tìm người không dấu | Xong, E2E + test tích hợp Pass | 2026-10-26 | — | [F-07](F-07-follow-search.md) |
+| F-08 | Bản tin từ người đang theo dõi: cuộn vô hạn, kéo làm mới, "Có bài mới" | Xong, E2E + test tích hợp Pass | 2026-10-26 | — | [F-08](F-08-feed.md) |

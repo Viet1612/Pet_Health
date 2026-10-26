@@ -142,3 +142,100 @@ export function useDeletePost(id: string) {
     },
   });
 }
+
+export type Person =
+  paths['/search/profiles']['get']['responses'][200]['content']['application/json']['items'][number];
+
+export const PEOPLE_KEY = ['social', 'people'] as const;
+export const FEED_KEY = ['social', 'feed'] as const;
+
+export const searchQuery = (q: string) =>
+  queryOptions({
+    queryKey: [...PEOPLE_KEY, 'search', q.trim().toLowerCase()],
+    queryFn: async (): Promise<Person[]> =>
+      unwrap(await api.GET('/search/profiles', { params: { query: { q } } })).items,
+    staleTime: 30_000,
+  });
+
+/** Người theo dõi / đang theo dõi của một hồ sơ, 30 người/trang. */
+export const followListQuery = (username: string, side: 'followers' | 'following') =>
+  infiniteQueryOptions({
+    queryKey: [...PEOPLE_KEY, side, username.toLowerCase()],
+    queryFn: async ({ pageParam }) => {
+      const params = { path: { username }, query: pageParam ? { cursor: pageParam } : {} };
+      return unwrap(
+        side === 'followers'
+          ? await api.GET('/profiles/{username}/followers', { params })
+          : await api.GET('/profiles/{username}/following', { params }),
+      );
+    },
+    initialPageParam: '',
+    getNextPageParam: (last) => last.nextCursor ?? undefined,
+    staleTime: 30_000,
+  });
+
+/**
+ * Theo dõi / bỏ theo dõi (F-07): cập nhật lạc quan hồ sơ đang xem (nút + số người theo dõi), lỗi
+ * thì hoàn lại. Xong thì làm mới danh sách người, bản tin.
+ */
+export function useFollow(username: string) {
+  const queryClient = useQueryClient();
+  const profileKey = profileQuery(username).queryKey;
+  return useMutation({
+    mutationFn: async (follow: boolean) => {
+      const params = { params: { path: { username } } };
+      return unwrap(
+        follow
+          ? await api.PUT('/follows/{username}', params)
+          : await api.DELETE('/follows/{username}', params),
+      );
+    },
+    onMutate: async (follow) => {
+      await queryClient.cancelQueries({ queryKey: profileKey });
+      const previous = queryClient.getQueryData<Profile>(profileKey);
+      if (previous && previous.followedByMe !== follow) {
+        queryClient.setQueryData<Profile>(profileKey, {
+          ...previous,
+          followedByMe: follow,
+          followerCount: previous.followerCount + (follow ? 1 : -1),
+        });
+      }
+      return { previous };
+    },
+    onError: (_err, _follow, context) => {
+      if (context?.previous) queryClient.setQueryData(profileKey, context.previous);
+    },
+    onSuccess: (state) => {
+      const current = queryClient.getQueryData<Profile>(profileKey);
+      if (current) {
+        queryClient.setQueryData<Profile>(profileKey, {
+          ...current,
+          followedByMe: state.following,
+          followerCount: state.followerCount,
+        });
+      }
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: PEOPLE_KEY });
+      void queryClient.invalidateQueries({ queryKey: FEED_KEY });
+      void queryClient.invalidateQueries({ queryKey: MY_PROFILE_KEY });
+    },
+  });
+}
+
+/**
+ * Bản tin: 10 bài/trang. Không dùng `maxPages`: chỉ phân trang một chiều nên bỏ trang đầu sẽ mất
+ * bài khi cuộn ngược lên.
+ */
+export const feedQuery = infiniteQueryOptions({
+  queryKey: FEED_KEY,
+  queryFn: async ({ pageParam }) =>
+    unwrap(await api.GET('/feed', { params: { query: pageParam ? { cursor: pageParam } : {} } })),
+  initialPageParam: '',
+  getNextPageParam: (last) => last.nextCursor ?? undefined,
+  staleTime: 30_000,
+});
+
+export async function feedNewCount(since: string): Promise<number> {
+  return unwrap(await api.GET('/feed/new-count', { params: { query: { since } } })).count;
+}

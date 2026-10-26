@@ -4851,6 +4851,193 @@ paths:
       responses:
         "204":
           description: Default Response
+  /feed:
+    get:
+      summary: "Bản tin: bài của mình và người đang theo dõi, 10 bài/trang, mới nhất
+        trước"
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: cursor
+          required: false
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        status:
+                          type: string
+                          enum:
+                            - DRAFT
+                            - PUBLISHED
+                        author:
+                          type: object
+                          properties:
+                            username:
+                              type: string
+                            displayName:
+                              type: string
+                            avatarThumbUrl:
+                              type:
+                                - string
+                                - "null"
+                          required:
+                            - username
+                            - displayName
+                            - avatarThumbUrl
+                          additionalProperties: false
+                        caption:
+                          type:
+                            - string
+                            - "null"
+                        pets:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                              name:
+                                type: string
+                            required:
+                              - id
+                              - name
+                            additionalProperties: false
+                        photos:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                              position:
+                                type: integer
+                                minimum: -9007199254740991
+                                maximum: 9007199254740991
+                              status:
+                                type: string
+                                enum:
+                                  - PROCESSING
+                                  - READY
+                                  - FAILED
+                              url:
+                                type:
+                                  - string
+                                  - "null"
+                              thumbUrl:
+                                type:
+                                  - string
+                                  - "null"
+                              width:
+                                anyOf:
+                                  - type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                  - type: "null"
+                              height:
+                                anyOf:
+                                  - type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                  - type: "null"
+                            required:
+                              - id
+                              - position
+                              - status
+                              - url
+                              - thumbUrl
+                              - width
+                              - height
+                            additionalProperties: false
+                        photoCount:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        likeCount:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        commentCount:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        likedByMe:
+                          type: boolean
+                        createdAt:
+                          type: string
+                          format: date-time
+                          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                        isMine:
+                          type: boolean
+                      required:
+                        - id
+                        - status
+                        - author
+                        - caption
+                        - pets
+                        - photos
+                        - photoCount
+                        - likeCount
+                        - commentCount
+                        - likedByMe
+                        - createdAt
+                        - isMine
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                required:
+                  - items
+                  - nextCursor
+                additionalProperties: false
+  /feed/new-count:
+    get:
+      summary: Số bài mới của người đang theo dõi sau thời điểm `since`
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+            format: date-time
+            pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
+          in: query
+          name: since
+          required: false
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                  - count
+                additionalProperties: false
   /profiles/{username}/posts:
     get:
       summary: Lưới bài đã đăng của một hồ sơ (18 bài/trang, mới nhất trước)
@@ -4904,6 +5091,223 @@ paths:
                 required:
                   - items
                   - nextCursor
+                additionalProperties: false
+  /follows/{username}:
+    put:
+      summary: Theo dõi (idempotent, không cần duyệt); tối đa 200 lần/ngày
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: username
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  following:
+                    type: boolean
+                  followerCount:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                  - following
+                  - followerCount
+                additionalProperties: false
+    delete:
+      summary: Bỏ theo dõi (idempotent)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: username
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  following:
+                    type: boolean
+                  followerCount:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                  - following
+                  - followerCount
+                additionalProperties: false
+  /profiles/{username}/followers:
+    get:
+      summary: Người theo dõi (30/trang, mới nhất trước)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: cursor
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: username
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                        displayName:
+                          type: string
+                        avatarThumbUrl:
+                          type:
+                            - string
+                            - "null"
+                        followedByMe:
+                          type: boolean
+                        isMe:
+                          type: boolean
+                      required:
+                        - username
+                        - displayName
+                        - avatarThumbUrl
+                        - followedByMe
+                        - isMe
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                required:
+                  - items
+                  - nextCursor
+                additionalProperties: false
+  /profiles/{username}/following:
+    get:
+      summary: Đang theo dõi (30/trang, mới nhất trước)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: cursor
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: username
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                        displayName:
+                          type: string
+                        avatarThumbUrl:
+                          type:
+                            - string
+                            - "null"
+                        followedByMe:
+                          type: boolean
+                        isMe:
+                          type: boolean
+                      required:
+                        - username
+                        - displayName
+                        - avatarThumbUrl
+                        - followedByMe
+                        - isMe
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                required:
+                  - items
+                  - nextCursor
+                additionalProperties: false
+  /search/profiles:
+    get:
+      summary: Tìm người theo username (tiền tố) hoặc tên hiển thị (không dấu); tối đa
+        20
+      tags:
+        - social
+      parameters:
+        - schema:
+            default: ""
+            type: string
+          in: query
+          name: q
+          required: false
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                        displayName:
+                          type: string
+                        avatarThumbUrl:
+                          type:
+                            - string
+                            - "null"
+                        followedByMe:
+                          type: boolean
+                        isMe:
+                          type: boolean
+                      required:
+                        - username
+                        - displayName
+                        - avatarThumbUrl
+                        - followedByMe
+                        - isMe
+                      additionalProperties: false
+                required:
+                  - items
                 additionalProperties: false
 servers:
   - url: /api/v1

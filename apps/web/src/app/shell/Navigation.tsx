@@ -52,7 +52,7 @@ const ITEMS: NavItem[] = [
     label: m.nav.feed,
     icon: <Newspaper size={24} />,
     to: () => '/feed',
-    isActive: (p) => p.startsWith('/feed') || p.startsWith('/u/') || p.startsWith('/p/'),
+    isActive: (p) => ['/feed', '/u/', '/p/', '/search'].some((prefix) => p.startsWith(prefix)),
   },
   {
     key: 'calendar',

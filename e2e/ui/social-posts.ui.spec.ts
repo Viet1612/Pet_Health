@@ -85,9 +85,13 @@ test('đăng 2 bài (có / không gắn bé) → lưới hồ sơ; người khá
   await page.getByRole('menuitem', { name: 'Sửa bài' }).click();
   await page.getByRole('dialog').getByLabel('Chú thích').fill('Mochi đi dạo công viên');
   await page.getByRole('dialog').getByRole('button', { name: 'Lưu' }).click();
+  await expect(page.getByRole('dialog')).toBeHidden();
+  await expect(page.getByText('Đã lưu')).toBeVisible();
   await expect(page.getByText('Mochi đi dạo công viên')).toBeVisible();
-  await pageB.reload();
-  await expect(pageB.getByText('Mochi đi dạo công viên')).toBeVisible();
+  await expect(async () => {
+    await pageB.reload();
+    await expect(pageB.getByText('Mochi đi dạo công viên')).toBeVisible({ timeout: 2_000 });
+  }).toPass({ timeout: 10_000 });
 
   // A xóa bài → về hồ sơ, còn 1 bài; B mở lại bài → "Bài này không còn".
   await page.getByRole('button', { name: 'Tùy chọn bài' }).click();

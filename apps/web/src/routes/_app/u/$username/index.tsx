@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { myProfileQuery, ProfileScreen } from '../../../features/social';
-import { m } from '../../../i18n';
+import { myProfileQuery, ProfileScreen } from '../../../../features/social';
+import { m } from '../../../../i18n';
 
 /** Hồ sơ công khai theo username (F-02). */
 function ProfilePage() {
@@ -9,7 +9,7 @@ function ProfilePage() {
   return <ProfileScreen username={username} />;
 }
 
-export const Route = createFileRoute('/_app/u/$username')({
+export const Route = createFileRoute('/_app/u/$username/')({
   // `/u/me` (mục "Hồ sơ" trên thanh điều hướng): về hồ sơ của mình, chưa có thì sang Bản tin để
   // tạo. "me" là username cấm nên không trùng người dùng thật.
   beforeLoad: async ({ params, context }) => {

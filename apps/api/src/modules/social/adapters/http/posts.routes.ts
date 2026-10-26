@@ -10,7 +10,9 @@ import {
   CAPTION_MAX,
   createPost,
   deletePost,
+  feedNewCount,
   getPost,
+  listFeed,
   listProfilePosts,
   MAX_PETS,
   MAX_PHOTOS,
@@ -225,6 +227,42 @@ export const postsRoutes: FastifyPluginAsyncZod<PostsDeps> = (app, deps) => {
       const id = uuidOf(req.params.id);
       await req.withTx((trx) => deletePost(deps, trx, userId, id));
       return reply.code(204).send(null);
+    },
+  );
+
+  app.get(
+    '/feed',
+    {
+      schema: {
+        tags: ['social'],
+        summary: 'Bản tin: bài của mình và người đang theo dõi, 10 bài/trang, mới nhất trước',
+        querystring: z.object({ cursor: z.string().optional() }),
+        response: {
+          200: z.object({ items: z.array(zPostView), nextCursor: z.string().nullable() }),
+        },
+      },
+    },
+    async (req) => {
+      const userId = userOf(req);
+      return req.withTx((trx) => listFeed(deps, trx, userId, req.query.cursor));
+    },
+  );
+
+  app.get(
+    '/feed/new-count',
+    {
+      schema: {
+        tags: ['social'],
+        summary: 'Số bài mới của người đang theo dõi sau thời điểm `since`',
+        querystring: z.object({ since: z.iso.datetime({ offset: true }).optional() }),
+        response: { 200: z.object({ count: z.number().int() }) },
+      },
+    },
+    async (req) => {
+      const userId = userOf(req);
+      const { since } = req.query;
+      if (since === undefined) return { count: 0 };
+      return { count: await req.withTx((trx) => feedNewCount(trx, userId, new Date(since))) };
     },
   );
 

@@ -3433,6 +3433,121 @@ export interface paths {
     };
     trace?: never;
   };
+  '/feed': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Bản tin: bài của mình và người đang theo dõi, 10 bài/trang, mới nhất trước */
+    get: {
+      parameters: {
+        query?: {
+          cursor?: string;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                status: 'DRAFT' | 'PUBLISHED';
+                author: {
+                  username: string;
+                  displayName: string;
+                  avatarThumbUrl: string | null;
+                };
+                caption: string | null;
+                pets: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
+                }[];
+                photos: {
+                  /** Format: uuid */
+                  id: string;
+                  position: number;
+                  /** @enum {string} */
+                  status: 'PROCESSING' | 'READY' | 'FAILED';
+                  url: string | null;
+                  thumbUrl: string | null;
+                  width: number | null;
+                  height: number | null;
+                }[];
+                photoCount: number;
+                likeCount: number;
+                commentCount: number;
+                likedByMe: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                isMine: boolean;
+              }[];
+              nextCursor: string | null;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/feed/new-count': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Số bài mới của người đang theo dõi sau thời điểm `since` */
+    get: {
+      parameters: {
+        query?: {
+          since?: string;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              count: number;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/profiles/{username}/posts': {
     parameters: {
       query?: never;
@@ -3468,6 +3583,216 @@ export interface paths {
                 photoCount: number;
               }[];
               nextCursor: string | null;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/follows/{username}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** Theo dõi (idempotent, không cần duyệt); tối đa 200 lần/ngày */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          username: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              following: boolean;
+              followerCount: number;
+            };
+          };
+        };
+      };
+    };
+    post?: never;
+    /** Bỏ theo dõi (idempotent) */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          username: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              following: boolean;
+              followerCount: number;
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/profiles/{username}/followers': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Người theo dõi (30/trang, mới nhất trước) */
+    get: {
+      parameters: {
+        query?: {
+          cursor?: string;
+        };
+        header?: never;
+        path: {
+          username: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                username: string;
+                displayName: string;
+                avatarThumbUrl: string | null;
+                followedByMe: boolean;
+                isMe: boolean;
+              }[];
+              nextCursor: string | null;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/profiles/{username}/following': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Đang theo dõi (30/trang, mới nhất trước) */
+    get: {
+      parameters: {
+        query?: {
+          cursor?: string;
+        };
+        header?: never;
+        path: {
+          username: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                username: string;
+                displayName: string;
+                avatarThumbUrl: string | null;
+                followedByMe: boolean;
+                isMe: boolean;
+              }[];
+              nextCursor: string | null;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/search/profiles': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Tìm người theo username (tiền tố) hoặc tên hiển thị (không dấu); tối đa 20 */
+    get: {
+      parameters: {
+        query?: {
+          q?: string;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                username: string;
+                displayName: string;
+                avatarThumbUrl: string | null;
+                followedByMe: boolean;
+                isMe: boolean;
+              }[];
             };
           };
         };

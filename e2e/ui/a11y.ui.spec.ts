@@ -166,5 +166,7 @@ test('axe + vùng chạm trên các màn bản tin (F-05, F-06)', async ({ page 
   await check('/feed/new', 'Bài mới');
   await check(`/u/${username}`, 'Mẹ Mochi');
   await check(`/p/${postId}`, 'Bài của Mẹ Mochi');
+  await check('/search', 'Tìm người');
+  await check(`/u/${username}/followers`, 'Người theo dõi');
   expect(problems, problems.join('\n')).toEqual([]);
 });

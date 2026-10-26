@@ -7,3 +7,5 @@ export { UserAvatar } from './UserAvatar';
 export { ComposerScreen } from './ComposerScreen';
 export { PostDetailScreen } from './PostDetailScreen';
 export { postQuery } from './queries';
+export { FollowListScreen } from './FollowListScreen';
+export { SearchScreen } from './SearchScreen';

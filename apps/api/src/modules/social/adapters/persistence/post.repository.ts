@@ -248,4 +248,57 @@ export const postRepository = {
     }
     return query.orderBy('p.created_at', 'desc').orderBy('p.id', 'desc').limit(limit).execute();
   },
+
+  /**
+   * Bản tin (F-08): bài đã đăng của mình và người mình theo dõi, mới nhất trước, keyset
+   * `(created_at, id)`. RLS loại người đã chặn nhau.
+   */
+  feed(
+    q: Q,
+    viewerId: string,
+    after: { createdAt: Date; id: string } | null,
+    limit: number,
+  ): Promise<PostWithAuthor[]> {
+    let query = q
+      .selectFrom('posts as p')
+      .innerJoin('profiles as pr', 'pr.user_id', 'p.owner_id')
+      .selectAll('p')
+      .select(['pr.username', 'pr.display_name', 'pr.avatar_key as author_avatar_key'])
+      .where('p.status', '=', 'PUBLISHED')
+      .where((eb) =>
+        eb.or([
+          eb('p.owner_id', '=', viewerId),
+          eb(
+            'p.owner_id',
+            'in',
+            eb.selectFrom('follows').select('followee_id').where('follower_id', '=', viewerId),
+          ),
+        ]),
+      );
+    if (after) {
+      query = query.where((eb) =>
+        eb.or([
+          eb('p.created_at', '<', after.createdAt),
+          eb.and([eb('p.created_at', '=', after.createdAt), eb('p.id', '<', after.id)]),
+        ]),
+      );
+    }
+    return query.orderBy('p.created_at', 'desc').orderBy('p.id', 'desc').limit(limit).execute();
+  },
+
+  /** Số bài mới trên bản tin sau `since` (không tính bài của mình). */
+  async feedNewCount(q: Q, viewerId: string, since: Date): Promise<number> {
+    const row = await q
+      .selectFrom('posts as p')
+      .select((eb) => eb.fn.countAll<string>().as('n'))
+      .where('p.status', '=', 'PUBLISHED')
+      .where('p.created_at', '>', since)
+      .where(
+        'p.owner_id',
+        'in',
+        q.selectFrom('follows').select('followee_id').where('follower_id', '=', viewerId),
+      )
+      .executeTakeFirstOrThrow();
+    return Number(row.n);
+  },
 };

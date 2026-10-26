@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ApiError } from '@ph/api-client';
+import { Link } from '@tanstack/react-router';
 import { ImageOff } from 'lucide-react';
 import { useState } from 'react';
 
@@ -8,6 +9,7 @@ import { Button } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
 import { ErrorState } from '../../ui/ErrorState';
 import { Skeleton } from '../../ui/Skeleton';
+import { FollowButton } from './FollowButton';
 import { ProfileFormDialog } from './ProfileFormDialog';
 import { ProfileGrid } from './ProfileGrid';
 import { myProfileQuery, profileQuery, type Profile } from './queries';
@@ -24,6 +26,29 @@ function Stat({ value, label }: { value: number; label: string }) {
   );
 }
 
+/** Số người theo dõi / đang theo dõi: chạm để xem danh sách (F-07). */
+function StatLink({
+  value,
+  label,
+  username,
+  side,
+}: {
+  value: number;
+  label: string;
+  username: string;
+  side: 'followers' | 'following';
+}) {
+  return (
+    <Link
+      to={side === 'followers' ? '/u/$username/followers' : '/u/$username/following'}
+      params={{ username }}
+      className="hover:bg-surface-2 min-h-11 rounded-md px-1"
+    >
+      <Stat value={value} label={label} />
+    </Link>
+  );
+}
+
 /** Đầu trang hồ sơ (F-02): ảnh, tên, @username, giới thiệu, số bài / theo dõi. */
 export function ProfileHeader({ profile, onEdit }: { profile: Profile; onEdit?: () => void }) {
   return (
@@ -32,8 +57,18 @@ export function ProfileHeader({ profile, onEdit }: { profile: Profile; onEdit?: 
         <UserAvatar profile={profile} size={96} />
         <div className="flex flex-1 justify-around">
           <Stat value={profile.postCount} label={t.posts} />
-          <Stat value={profile.followerCount} label={t.followers} />
-          <Stat value={profile.followingCount} label={t.following} />
+          <StatLink
+            value={profile.followerCount}
+            label={t.followers}
+            username={profile.username}
+            side="followers"
+          />
+          <StatLink
+            value={profile.followingCount}
+            label={t.following}
+            username={profile.username}
+            side="following"
+          />
         </div>
       </div>
       <div>
@@ -45,6 +80,9 @@ export function ProfileHeader({ profile, onEdit }: { profile: Profile; onEdit?: 
         <Button variant="secondary" fullWidth onClick={onEdit}>
           {t.editProfile}
         </Button>
+      )}
+      {!profile.isMe && (
+        <FollowButton username={profile.username} following={profile.followedByMe} fullWidth />
       )}
     </section>
   );
