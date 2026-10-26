@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useId, useState, type ReactNode } from 'react';
 
 import { locale, m } from '../../i18n';
 import { consumeLocaleChanged, SUPPORTED, type Locale } from '../../i18n/locale';
@@ -87,6 +87,9 @@ function Group({
 }
 
 function LanguagePicker() {
+  // Màn này vẽ nhóm Tài khoản 2 lần (phone + ≥ 768 px): mỗi nhóm radio cần `name` riêng, nếu không
+  // trình duyệt chỉ tích được một nhóm.
+  const group = useId();
   const toast = useToast();
   const change = useChangeLocale();
 
@@ -115,7 +118,7 @@ function LanguagePicker() {
         >
           <input
             type="radio"
-            name="locale"
+            name={`locale-${group}`}
             value={l}
             checked={(change.isPending ? change.variables : locale) === l}
             disabled={change.isPending}

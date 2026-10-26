@@ -3,8 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { dismissUpload, enqueuePhotos, getUploads, photoFileError } from './upload-store';
 
 describe('kho tải ảnh', () => {
-  const file = (name: string, type: string, size = 10) =>
-    new File([new Uint8Array(size)], name, { type });
+  // Kích thước giả qua `size` để không cấp phát hàng chục MB trong test.
+  const file = (name: string, type: string, size = 10) => {
+    const f = new File([new Uint8Array(10)], name, { type });
+    Object.defineProperty(f, 'size', { value: size });
+    return f;
+  };
 
   it('kiểm định dạng và dung lượng', () => {
     expect(photoFileError(file('a.jpg', 'image/jpeg'))).toBeNull();
@@ -12,7 +16,11 @@ describe('kho tải ảnh', () => {
     expect(photoFileError(file('a.pdf', 'application/pdf'))).toBe(
       'Định dạng không hỗ trợ (chỉ JPG, PNG, HEIC)',
     );
-    expect(photoFileError(file('a.jpg', 'image/jpeg', 5_242_881))).toBe('Ảnh vượt 5 MB');
+    // Trên 5 MB vẫn nhận (nén trước khi gửi); trên 50 MB thì từ chối.
+    expect(photoFileError(file('a.jpg', 'image/jpeg', 8_000_000))).toBeNull();
+    expect(photoFileError(file('a.jpg', 'image/jpeg', 52_428_801))).toBe(
+      'Ảnh quá lớn (tối đa 50 MB)',
+    );
   });
 
   it('tệp sai và tệp vượt 5 ảnh bị từ chối riêng, tệp hợp lệ vẫn vào hàng đợi', () => {

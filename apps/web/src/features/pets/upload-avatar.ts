@@ -1,8 +1,10 @@
 import { api, unwrap } from '../../api/client';
 import { uploadFile } from '../../api/upload-file';
 import { m } from '../../i18n';
+import { PICK_MAX_BYTES } from '../../lib/compress-image';
 
-export const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
+/** Tệp chọn tối đa 50 MB; trên 5 MB được nén trước khi gửi (`api/upload-file`). */
+export const MAX_AVATAR_BYTES = PICK_MAX_BYTES;
 const ACCEPTED_TYPES = new Set(['image/jpeg', 'image/png', 'image/heic', 'image/heif']);
 const ACCEPTED_EXT = /\.(jpe?g|png|heic|heif)$/i;
 export const AVATAR_ACCEPT = 'image/jpeg,image/png,image/heic,.heic';

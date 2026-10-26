@@ -1,22 +1,41 @@
 import { ApiError, NetworkError, TimeoutError, type Problem } from '@ph/api-client';
 
+import { fitImageForUpload } from '../lib/compress-image';
 import { getCsrfToken, SESSION_EXPIRED_EVENT } from './client';
 
 const UPLOAD_TIMEOUT_MS = 120_000;
 /** Không có sự kiện tiến trình trong 10 s → hủy (mạng treo). */
 const STALL_MS = 10_000;
 
-/**
- * Gửi một tệp multipart (field `file`) bằng XMLHttpRequest để có tiến trình tải lên (fetch không
- * có `upload.onprogress`). Lỗi ném giống api-client: `ApiError`, `TimeoutError`, `NetworkError`.
- */
-export function uploadFile<T>(options: {
+interface UploadOptions {
   method: 'PUT' | 'POST';
   path: string;
   file: File;
   onProgress?: (percent: number) => void;
   headers?: Record<string, string>;
-}): Promise<T> {
+}
+
+/**
+ * Gửi một tệp multipart (field `file`) bằng XMLHttpRequest để có tiến trình tải lên (fetch không
+ * có `upload.onprogress`). Ảnh trên 5 MB được nén ở trình duyệt trước (mọi chỗ tải ảnh); không nén
+ * được thì ném 413 như server. Lỗi ném giống api-client: `ApiError`, `TimeoutError`, `NetworkError`.
+ */
+export async function uploadFile<T>(options: UploadOptions): Promise<T> {
+  let file: File;
+  try {
+    file = await fitImageForUpload(options.file);
+  } catch {
+    throw new ApiError({
+      type: 'about:blank',
+      title: 'Ảnh quá lớn',
+      status: 413,
+      code: 'FILE_TOO_LARGE',
+    });
+  }
+  return send<T>({ ...options, file });
+}
+
+function send<T>(options: UploadOptions): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open(options.method, `/api/v1${options.path}`);

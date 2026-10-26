@@ -109,7 +109,7 @@ export function QuickAdd() {
         icon={<Plus size={20} />}
         aria-haspopup="menu"
         aria-expanded={menuOpen}
-        className="hidden md:inline-flex"
+        className="max-md:hidden"
         onClick={toggle}
       >
         {m.topBar.quickAddLabel.replace('+ ', '')}

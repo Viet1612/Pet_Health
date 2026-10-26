@@ -34,13 +34,19 @@ export const zUserBirthDateField = z
   .min(1, { error: t.required })
   .refine((d) => d <= deviceToday(), { error: t.futureBirthDate });
 
-export const registerSchema = z.object({
-  email: zEmailField,
-  password: zNewPasswordField,
-  nickname: zNicknameField,
-  birthDate: zUserBirthDateField,
-  timezone: z.string().min(1),
-});
+export const registerSchema = z
+  .object({
+    email: zEmailField,
+    password: zNewPasswordField,
+    confirmPassword: z.string().min(1, { error: t.required }),
+    nickname: zNicknameField,
+    birthDate: zUserBirthDateField,
+    timezone: z.string().min(1),
+  })
+  .refine((v) => v.confirmPassword === v.password, {
+    error: t.passwordMismatch,
+    path: ['confirmPassword'],
+  });
 export type RegisterValues = z.infer<typeof registerSchema>;
 
 export const forgotSchema = z.object({ email: zEmailField });

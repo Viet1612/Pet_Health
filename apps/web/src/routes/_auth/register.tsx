@@ -47,7 +47,14 @@ function RegisterPage() {
     resolver: zodResolver(registerSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    defaultValues: { email: '', password: '', nickname: '', birthDate: '', timezone: DEFAULT_TZ },
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+      nickname: '',
+      birthDate: '',
+      timezone: DEFAULT_TZ,
+    },
   });
   const passwordLength = Array.from(useWatch({ control: form.control, name: 'password' })).length;
 
@@ -59,7 +66,14 @@ function RegisterPage() {
 
   const onSubmit = form.handleSubmit(async (values) => {
     try {
-      await register.mutateAsync(values);
+      // Ô "Nhập lại mật khẩu" chỉ kiểm ở client.
+      await register.mutateAsync({
+        email: values.email,
+        password: values.password,
+        nickname: values.nickname,
+        birthDate: values.birthDate,
+        timezone: values.timezone,
+      });
       track('signup_completed');
       await navigate({ to: '/' });
     } catch (err) {
@@ -130,6 +144,12 @@ function RegisterPage() {
             />
           </div>
         </div>
+        <PasswordField
+          label={m.auth.confirmPassword}
+          autoComplete="new-password"
+          error={form.formState.errors.confirmPassword?.message}
+          {...form.register('confirmPassword')}
+        />
 
         <div className="flex flex-col gap-1">
           <label htmlFor="register-timezone" className="text-small font-semibold">

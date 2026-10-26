@@ -12,8 +12,8 @@ export interface ComposerPhoto {
 }
 
 /**
- * Thêm tệp vào danh sách, bỏ tệp sai định dạng / quá 5 MB và phần vượt 5 ảnh. Trả lỗi đầu tiên
- * (để báo một lần) hoặc `null`.
+ * Thêm tệp vào danh sách, bỏ tệp sai định dạng / quá 50 MB và phần vượt 5 ảnh (ảnh > 5 MB được
+ * nén khi gửi). Trả lỗi đầu tiên (để báo một lần) hoặc `null`.
  */
 export function addPhotos(
   current: ComposerPhoto[],

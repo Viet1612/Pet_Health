@@ -105,7 +105,7 @@ function PetProfilePage() {
       <div className="grid gap-6 md:grid-cols-[340px_1fr] xl:grid-cols-[380px_1fr]">
         <section className="bg-surface border-divider flex flex-col items-center gap-2 rounded-xl border p-6 text-center md:items-start md:text-left">
           <PetAvatar pet={pet} size={96} className="md:hidden" />
-          <PetAvatar pet={pet} size={112} className="hidden md:inline-flex" />
+          <PetAvatar pet={pet} size={112} className="max-md:hidden" />
           <h2 className="text-h1 mt-2 break-words">{pet.name}</h2>
           <p className="text-body text-text-muted">{petSubline(pet)}</p>
           <p className="text-small text-text-muted">{t.born(formatLocalDate(pet.birthDate))}</p>

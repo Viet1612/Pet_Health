@@ -9,7 +9,6 @@ import { m } from '../../i18n';
 import { clearDraft, readDraft, saveDraft } from '../../lib/draft';
 import { Alert } from '../../ui/Alert';
 import { Button } from '../../ui/Button';
-import { cx } from '../../ui/cx';
 import { TextAreaCounter } from '../../ui/TextAreaCounter';
 import { useToast } from '../../ui/toast';
 import { petsQuery } from '../pets';
@@ -61,9 +60,8 @@ function JobOverlay({ job }: { job: PhotoJob | undefined }) {
 }
 
 /**
- * Màn soạn bài `/feed/new` (F-05). Phone: bước 1 chọn ảnh → bước 2 chú thích, gắn bé → Đăng.
- * ≥ 768 px: hai cột trên cùng một màn. Đang đăng thì khóa chỉnh sửa; ảnh lỗi có "Thử lại" hoặc
- * "Bỏ ảnh lỗi rồi đăng".
+ * Màn soạn bài `/feed/new` (F-05): ảnh, chú thích, gắn bé trên cùng một màn (phone 1 cột, ≥ 768 px
+ * 2 cột) → Đăng. Đang đăng thì khóa chỉnh sửa; ảnh lỗi có "Thử lại" hoặc "Bỏ ảnh lỗi rồi đăng".
  */
 export function ComposerScreen() {
   const navigate = useNavigate();
@@ -77,7 +75,6 @@ export function ComposerScreen() {
   const [petIds, setPetIds] = useState<string[]>(
     typeof draft?.petIds === 'string' && draft.petIds ? draft.petIds.split(',') : [],
   );
-  const [step, setStep] = useState<'pick' | 'details'>('pick');
   const [pickError, setPickError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const restored = useRef(false);
@@ -117,7 +114,6 @@ export function ComposerScreen() {
     setFormError(null);
     if (photos.length === 0) {
       setPickError(t.needPhoto);
-      setStep('pick');
       return;
     }
     const here = { pathname: window.location.pathname, search: window.location.search };
@@ -139,7 +135,7 @@ export function ComposerScreen() {
   const failed = publisher.jobs.some((j) => j.state === 'error');
 
   const picker = (
-    <section className={cx('flex flex-col gap-3', step !== 'pick' && 'hidden md:flex')}>
+    <section className="flex flex-col gap-3">
       <div className="grid grid-cols-3 gap-2">
         {photos.map((p, i) => (
           <div
@@ -233,7 +229,7 @@ export function ComposerScreen() {
   );
 
   const details = (
-    <section className={cx('flex flex-col gap-4', step !== 'details' && 'hidden md:flex')}>
+    <section className="flex flex-col gap-4">
       <TextAreaCounter
         label={t.caption}
         max={CAPTION_MAX}
@@ -266,48 +262,24 @@ export function ComposerScreen() {
     </section>
   );
 
-  const nextOrPublish =
-    step === 'pick' ? (
-      <>
-        <Button
-          className="md:hidden"
-          disabled={photos.length === 0}
-          onClick={() => {
-            setStep('details');
-          }}
-        >
-          {t.next}
-        </Button>
-        <Button
-          className="hidden md:inline-flex"
-          loading={publisher.busy}
-          disabled={locked}
-          onClick={() => void submit()}
-        >
-          {t.publish}
-        </Button>
-      </>
-    ) : (
-      <Button loading={publisher.busy} disabled={locked} onClick={() => void submit()}>
-        {t.publish}
-      </Button>
-    );
-
   return (
     <div className="mx-auto flex w-full max-w-[935px] flex-col gap-4">
       <div className="flex items-center justify-between gap-2">
         <Button
           variant="ghost"
           disabled={publisher.busy}
-          onClick={() => {
-            if (step === 'details' && !locked) setStep('pick');
-            else void navigate({ to: '/feed' });
-          }}
+          onClick={() => void navigate({ to: '/feed' })}
         >
           {t.cancel}
         </Button>
         <h1 className="text-h2">{t.title}</h1>
-        {nextOrPublish}
+        <Button
+          loading={publisher.busy}
+          disabled={locked || photos.length === 0}
+          onClick={() => void submit()}
+        >
+          {t.publish}
+        </Button>
       </div>
       <div className="bg-surface shadow-card grid gap-6 rounded-lg p-4 md:grid-cols-2 md:p-6">
         {picker}

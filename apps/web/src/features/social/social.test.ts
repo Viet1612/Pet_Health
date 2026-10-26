@@ -2,8 +2,11 @@ import { describe, expect, it } from 'vitest';
 
 import { addPhotos, movePhoto, togglePet } from './composer';
 
-const jpg = (name: string, size = 1000) =>
-  new File([new Uint8Array(size)], name, { type: 'image/jpeg' });
+const jpg = (name: string, size = 1000) => {
+  const f = new File([new Uint8Array(10)], name, { type: 'image/jpeg' });
+  Object.defineProperty(f, 'size', { value: size });
+  return f;
+};
 let n = 0;
 const id = () => String((n += 1));
 
@@ -15,13 +18,18 @@ describe('soạn bài (F-05)', () => {
     expect(r.overLimit).toBe(true);
   });
 
-  it('bỏ tệp sai định dạng hoặc quá 5 MB, giữ tệp hợp lệ', () => {
+  it('bỏ tệp sai định dạng hoặc quá 50 MB; 6 MB vẫn nhận (nén khi gửi)', () => {
     const r = addPhotos(
       [],
-      [new File(['x'], 'a.gif', { type: 'image/gif' }), jpg('big.jpg', 6_000_000), jpg('ok.jpg')],
+      [
+        new File(['x'], 'a.gif', { type: 'image/gif' }),
+        jpg('huge.jpg', 60_000_000),
+        jpg('big.jpg', 6_000_000),
+        jpg('ok.jpg'),
+      ],
       id,
     );
-    expect(r.photos.map((p) => p.file.name)).toEqual(['ok.jpg']);
+    expect(r.photos.map((p) => p.file.name)).toEqual(['big.jpg', 'ok.jpg']);
     expect(r.error).not.toBeNull();
     expect(r.overLimit).toBe(false);
   });

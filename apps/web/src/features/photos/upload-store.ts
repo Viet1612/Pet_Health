@@ -3,12 +3,14 @@ import { ApiError, newIdempotencyKey } from '@ph/api-client';
 import { api, unwrap } from '../../api/client';
 import { uploadFile } from '../../api/upload-file';
 import { m } from '../../i18n';
+import { PICK_MAX_BYTES } from '../../lib/compress-image';
 
 // Hàng đợi tải ảnh lần khám (FLW-07, ST-04): sống ngoài cây route nên ảnh vẫn tải tiếp khi người
 // dùng chuyển màn hình (tạo lần khám xong là sang chi tiết ngay, không đợi ảnh).
 
 export const MAX_PHOTOS = 5;
-export const MAX_PHOTO_BYTES = 5_242_880;
+/** Tệp chọn tối đa 50 MB; trên 5 MB được nén trước khi gửi (`api/upload-file`). */
+export const MAX_PHOTO_BYTES = PICK_MAX_BYTES;
 const CONCURRENCY = 2;
 const POLL_MS = 1000;
 const POLL_TRIES = 20;

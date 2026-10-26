@@ -26,16 +26,14 @@ async function login(page: Page, email: string) {
   await expect(page).toHaveURL(`${ORIGIN}/`);
 }
 
-/** Soạn và đăng một bài; phone có bước "Tiếp". */
+/** Soạn và đăng một bài (ảnh, chú thích, gắn bé trên cùng một màn). */
 async function compose(page: Page, files: string[], caption: string, pet?: string) {
   await page.goto(`${ORIGIN}/feed/new`);
   await page.locator('input[type="file"]').setInputFiles(files);
   await expect(page.getByRole('button', { name: /^Bỏ ảnh/ })).toHaveCount(files.length);
-  const next = page.getByRole('button', { name: 'Tiếp' });
-  if (await next.isVisible()) await next.click();
   await page.getByLabel('Chú thích').fill(caption);
   if (pet) await page.getByRole('button', { name: pet, exact: true }).click();
-  await page.getByRole('button', { name: 'Đăng', exact: true }).filter({ visible: true }).click();
+  await page.getByRole('button', { name: 'Đăng', exact: true }).click();
   await expect(page.getByText('Đã đăng')).toBeVisible({ timeout: 30_000 });
 }
 

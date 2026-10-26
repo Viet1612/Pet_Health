@@ -41,7 +41,7 @@ export function VisitForm({
   today: string;
   /** Ô ảnh (PhotoPicker khi tạo, PhotoUploader khi sửa). */
   photos: ReactNode;
-  /** "3/5 · JPG, PNG, HEIC ≤ 5 MB" */
+  /** "3/5 · JPG, PNG, HEIC · ảnh lớn tự nén" */
   photosHeader: string;
   /** Ví dụ nút "Xóa lần khám" ở dạng sửa. */
   extraActions?: ReactNode;
@@ -193,7 +193,7 @@ export function VisitForm({
 
       {/* Phone: nút dính đáy (trên BottomNav); ≥ 768 px: Hủy · Lưu căn phải. */}
       <div className="bg-surface border-divider sticky bottom-[calc(64px+env(safe-area-inset-bottom))] -mx-4 flex gap-3 border-t px-4 py-3 md:static md:mx-0 md:justify-end md:border-0 md:p-0">
-        <Button variant="secondary" className="hidden md:inline-flex" onClick={onCancel}>
+        <Button variant="secondary" className="max-md:hidden" onClick={onCancel}>
           {t.cancel}
         </Button>
         <Button type="submit" loading={pending} disabled={tooLong} className="flex-1 md:flex-none">
