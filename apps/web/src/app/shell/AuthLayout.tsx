@@ -1,5 +1,5 @@
 import { Outlet } from '@tanstack/react-router';
-import { CalendarCheck, NotebookPen, PawPrint, TrendingUp } from 'lucide-react';
+import { CalendarCheck, Images, NotebookPen, PawPrint, TrendingUp } from 'lucide-react';
 
 import { m } from '../../i18n';
 import { OfflineBanner } from '../../ui/OfflineBanner';
@@ -23,9 +23,9 @@ function Logo({ inverted = false }: { inverted?: boolean }) {
   );
 }
 
-const FEATURE_ICONS = [TrendingUp, CalendarCheck, NotebookPen];
+const FEATURE_ICONS = [TrendingUp, CalendarCheck, NotebookPen, Images];
 
-/** Cột giới thiệu (desktop): nền primary, logo, khẩu hiệu, 3 tính năng chính. */
+/** Cột giới thiệu (desktop): nền primary, logo, khẩu hiệu, 4 tính năng chính (gồm Bản tin). */
 function IntroPanel() {
   return (
     <aside className="bg-primary text-on-primary relative hidden w-[45%] max-w-[1100px] shrink-0 overflow-hidden lg:flex">

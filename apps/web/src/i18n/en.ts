@@ -846,7 +846,7 @@ export const en: Messages = {
   auth: {
     tagline: "Your pet's health record",
     intro:
-      "Keep your pet's profile, weight, health records and vaccinations in one place, with a reminder before every milestone.",
+      "Keep your pet's profile, weight, health records and vaccinations in one place, with a reminder before every milestone, and share your pets' photos with friends.",
     features: [
       { title: 'Weight tracking', body: 'A weight chart over time for each pet.' },
       {
@@ -856,6 +856,10 @@ export const en: Messages = {
       {
         title: 'Health records and memories',
         body: 'Keep visits, prescriptions and special moments.',
+      },
+      {
+        title: 'Pet photo feed',
+        body: 'Share photos of your pets, follow friends, like and comment. Health data always stays private.',
       },
     ],
     email: 'Email',
