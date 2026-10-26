@@ -129,3 +129,32 @@ test('thông báo: B, C thích (gộp 1 dòng), B bình luận, C theo dõi → 
   ).toBe(true);
   for (const x of [a, b, c]) await x.s.dispose();
 });
+
+test('chặn ẩn tim + bình luận của người bị chặn (cả với người thứ ba); bỏ chặn thì hiện lại', async () => {
+  const a = await person('A');
+  const b = await person('B');
+  const c = await person('C');
+  const id = await post(a.s);
+  await b.s.call('PUT', `/posts/${id}/like`);
+  await b.s.call('POST', `/posts/${id}/comments`, { body: 'Bé xinh' }, { idempotent: true });
+
+  await a.s.call('PUT', `/blocks/${b.username}`);
+  for (const viewer of [a.s, c.s]) {
+    expect((await viewer.call('GET', `/posts/${id}`)).body.post).toMatchObject({
+      likeCount: 0,
+      commentCount: 0,
+    });
+  }
+  expect((await c.s.call('GET', `/posts/${id}/comments`)).body.items).toEqual([]);
+  // A vẫn tìm thấy B để bỏ chặn.
+  const found = await a.s.call('GET', `/search/profiles?q=${b.username}`);
+  expect(found.body.items[0]).toMatchObject({ username: b.username, blockedByMe: true });
+
+  await a.s.call('DELETE', `/blocks/${b.username}`);
+  expect((await c.s.call('GET', `/posts/${id}`)).body.post).toMatchObject({
+    likeCount: 1,
+    commentCount: 1,
+  });
+  expect((await a.s.call('GET', `/posts/${id}/comments`)).body.items[0].body).toBe('Bé xinh');
+  for (const x of [a, b, c]) await x.s.dispose();
+});

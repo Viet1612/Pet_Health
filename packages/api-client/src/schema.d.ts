@@ -3698,6 +3698,7 @@ export interface paths {
                 displayName: string;
                 avatarThumbUrl: string | null;
                 followedByMe: boolean;
+                blockedByMe: boolean;
                 isMe: boolean;
               }[];
               nextCursor: string | null;
@@ -3747,6 +3748,7 @@ export interface paths {
                 displayName: string;
                 avatarThumbUrl: string | null;
                 followedByMe: boolean;
+                blockedByMe: boolean;
                 isMe: boolean;
               }[];
               nextCursor: string | null;
@@ -3794,6 +3796,7 @@ export interface paths {
                 displayName: string;
                 avatarThumbUrl: string | null;
                 followedByMe: boolean;
+                blockedByMe: boolean;
                 isMe: boolean;
               }[];
             };
@@ -3906,6 +3909,7 @@ export interface paths {
                 displayName: string;
                 avatarThumbUrl: string | null;
                 followedByMe: boolean;
+                blockedByMe: boolean;
                 isMe: boolean;
               }[];
             };

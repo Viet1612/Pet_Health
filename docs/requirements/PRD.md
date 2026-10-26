@@ -774,8 +774,8 @@ Số story khớp với [User Stories](../design/User_Stories.md) E8. Đăng ký
 - **Given** app đang mở, **When** có hoạt động mới, **Then** số trên chuông cập nhật trong vòng 30 giây mà không cần tải lại.
 
 **AC — US-079 (Chặn, chống spam)**
-- **Given** C chặn A, **When** C tìm A, **Then** không thấy A; **When** A mở hồ sơ C, **Then** báo không tìm thấy.
-- **Given** C bỏ chặn A, **Then** hai bên tìm thấy nhau lại; theo dõi trước đó không tự khôi phục.
+- **Given** C chặn A, **When** A tìm C hoặc mở hồ sơ C, **Then** không thấy / báo không tìm thấy; **When** C tìm A, **Then** vẫn thấy A kèm nút "Bỏ chặn".
+- **Given** C bỏ chặn A, **Then** hai bên tìm thấy nhau lại; tim và bình luận của A trên bài C hiện lại; theo dõi trước đó không tự khôi phục.
 - **Given** một tài khoản vượt ngưỡng (ví dụ bình luận thứ 31 trong 10 phút), **Then** bị từ chối kèm "Bạn thao tác quá nhanh, thử lại sau N phút"; tài khoản tạo chưa đủ 24 giờ có ngưỡng đăng bài và bình luận bằng 1/3.
 
 **AC — Không lộ dữ liệu (xuyên suốt)** ↔ BRD AC-054

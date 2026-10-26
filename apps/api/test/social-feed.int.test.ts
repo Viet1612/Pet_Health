@@ -193,7 +193,7 @@ describe('tim, bình luận, thông báo hoạt động (F-09, F-11)', () => {
 });
 
 describe('chặn (F-12)', () => {
-  it('B chặn C: xóa follow hai chiều, tim + bình luận của C trên bài B; ẩn hai chiều; bỏ chặn không khôi phục', async () => {
+  it('B chặn C: xóa follow hai chiều, ẩn tim + bình luận của C trên bài B (cả người thứ ba); bỏ chặn thì hiện lại, follow không khôi phục', async () => {
     const postB = await addPost(B, 400);
     await env.workerDb
       .insertInto('follows')
@@ -230,19 +230,21 @@ describe('chặn (F-12)', () => {
       )
       .execute();
     expect(left).toEqual([]);
-    const likes = await env.workerDb
+    // Dữ liệu vẫn còn (ẩn), nhưng người thứ ba (A) không thấy tim / bình luận của C trên bài B.
+    const raw = await env.workerDb
       .selectFrom('post_likes')
-      .select('user_id')
+      .select('hidden_by_block')
       .where('post_id', '=', postB)
       .execute();
-    const comments = await env.workerDb
-      .selectFrom('post_comments')
-      .select('id')
-      .where('post_id', '=', postB)
-      .execute();
-    expect([likes, comments]).toEqual([[], []]);
+    expect(raw).toEqual([{ hidden_by_block: true }]);
+    const seenByThird = () =>
+      withUserTx(env.appDb, A, async (trx) => ({
+        likes: await engagementRepository.likeCount(trx, postB),
+        comments: (await engagementRepository.comments(trx, postB, null, 20)).length,
+      }));
+    expect(await seenByThird()).toEqual({ likes: 0, comments: 0 });
 
-    // C không thấy hồ sơ / bài của B, không tìm ra B; B thấy hồ sơ C nhưng tìm không ra C.
+    // C không thấy hồ sơ / bài của B, không tìm ra B; B vẫn thấy hồ sơ C và tìm ra C (để bỏ chặn).
     const byC = await withUserTx(env.appDb, C, async (trx) => ({
       profile: await trx
         .selectFrom('profiles')
@@ -261,9 +263,14 @@ describe('chặn (F-12)', () => {
         .execute(),
       search: await followRepository.search(trx, B, 'carol', 20),
     }));
-    expect(byB).toEqual({ profile: [{ user_id: C }], search: [] });
+    expect(byB.profile).toEqual([{ user_id: C }]);
+    expect(byB.search.map((r) => [r.username, r.blocked_by_me])).toEqual([['carol', true]]);
 
-    await withUserTx(env.appDb, B, (trx) => blockRepository.unblock(trx, B, C));
+    await withUserTx(env.appDb, B, async (trx) => {
+      await blockRepository.unblock(trx, B, C);
+      await blockRepository.setHidden(trx, B, C, false);
+    });
+    expect(await seenByThird()).toEqual({ likes: 1, comments: 1 });
     const after = await withUserTx(env.appDb, C, (trx) =>
       followRepository.search(trx, C, 'mochi.cute', 20),
     );

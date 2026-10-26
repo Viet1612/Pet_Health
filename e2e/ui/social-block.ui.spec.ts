@@ -6,7 +6,9 @@ import { expect, test } from '@playwright/test';
 import { ApiSession, PASSWORD } from '../support/api';
 import { ORIGIN } from '../support/env';
 
-test('C chặn A, tìm không ra; bỏ chặn ở Cài đặt → tìm lại được', async ({ page }) => {
+test('C chặn A: tìm vẫn thấy A kèm "Bỏ chặn"; bỏ chặn ở Cài đặt → nút "Theo dõi" trở lại', async ({
+  page,
+}) => {
   const tag = randomUUID().slice(0, 6);
   const a = await ApiSession.register();
   const aUser = `e2e_a_${tag}`;
@@ -28,9 +30,11 @@ test('C chặn A, tìm không ra; bỏ chặn ở Cài đặt → tìm lại đ�
   await page.getByRole('dialog').getByRole('button', { name: 'Chặn', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Bỏ chặn' })).toBeVisible();
 
+  // Người chặn vẫn tìm thấy người bị chặn, kèm nút "Bỏ chặn" thay cho "Theo dõi".
   await page.goto(`${ORIGIN}/search`);
   await page.getByLabel('Tìm theo username hoặc tên').fill(aUser);
-  await expect(page.getByText(`Không tìm thấy ai cho "${aUser}"`)).toBeVisible();
+  await expect(page.getByRole('link', { name: new RegExp(`@${aUser}`) })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Bỏ chặn' })).toBeVisible();
 
   await page.goto(`${ORIGIN}/settings`);
   await page
@@ -44,4 +48,5 @@ test('C chặn A, tìm không ra; bỏ chặn ở Cài đặt → tìm lại đ�
   await page.goto(`${ORIGIN}/search`);
   await page.getByLabel('Tìm theo username hoặc tên').fill(aUser);
   await expect(page.getByRole('link', { name: new RegExp(`@${aUser}`) })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Theo dõi', exact: true })).toBeVisible();
 });

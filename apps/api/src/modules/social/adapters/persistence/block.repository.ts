@@ -17,8 +17,9 @@ export const blockRepository = {
   },
 
   /**
-   * Dọn dữ liệu giữa hai người **trước** khi ghi dòng chặn (sau đó RLS không còn thấy nhau): follow
-   * hai chiều, tim và bình luận của người bị chặn trên bài của mình, thông báo hai chiều.
+   * Dọn dữ liệu giữa hai người **trước** khi ghi dòng chặn (sau đó RLS không còn thấy nhau): xóa
+   * follow hai chiều và thông báo hai chiều; **ẩn** (không xóa) tim và bình luận của người bị chặn
+   * trên bài của mình để bỏ chặn thì hiện lại.
    */
   async cleanup(q: Q, me: string, other: string): Promise<void> {
     await q
@@ -30,12 +31,7 @@ export const blockRepository = {
         ]),
       )
       .execute();
-    await sql`
-      DELETE FROM post_likes l USING posts p
-      WHERE l.post_id = p.id AND p.owner_id = ${me} AND l.user_id = ${other}`.execute(q);
-    await sql`
-      DELETE FROM post_comments c USING posts p
-      WHERE c.post_id = p.id AND p.owner_id = ${me} AND c.owner_id = ${other}`.execute(q);
+    await blockRepository.setHidden(q, me, other, true);
     await q
       .deleteFrom('social_notifications')
       .where((eb) =>
@@ -45,6 +41,16 @@ export const blockRepository = {
         ]),
       )
       .execute();
+  },
+
+  /** Ẩn / hiện tim và bình luận của `other` trên bài của `me` (RLS: chủ bài được sửa cờ này). */
+  async setHidden(q: Q, me: string, other: string, hidden: boolean): Promise<void> {
+    await sql`
+      UPDATE post_likes l SET hidden_by_block = ${hidden} FROM posts p
+      WHERE l.post_id = p.id AND p.owner_id = ${me} AND l.user_id = ${other}`.execute(q);
+    await sql`
+      UPDATE post_comments c SET hidden_by_block = ${hidden} FROM posts p
+      WHERE c.post_id = p.id AND p.owner_id = ${me} AND c.owner_id = ${other}`.execute(q);
   },
 
   async block(q: Q, blockerId: string, blockedId: string, now: Date): Promise<void> {

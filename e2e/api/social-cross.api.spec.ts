@@ -72,9 +72,16 @@ test('3 tài khoản: đăng → theo dõi → tim, bình luận → thông báo
     204,
   );
 
-  // 4. C chặn A → C không thấy A ở tìm kiếm, không mở được hồ sơ / bài.
+  // 4. C chặn A → C không mở được bài của A; A không tìm / mở được hồ sơ C.
   await c.s.call('PUT', `/blocks/${a.username}`);
-  expect((await c.s.call('GET', `/search/profiles?q=${a.username}`)).body.items).toEqual([]);
+  // C (người chặn) vẫn tìm thấy A để bỏ chặn; A (người bị chặn) không tìm thấy C.
+  expect(
+    (await c.s.call('GET', `/search/profiles?q=${a.username}`)).body.items.map((p: any) => [
+      p.username,
+      p.blockedByMe,
+    ]),
+  ).toEqual([[a.username, true]]);
+  expect((await a.s.call('GET', `/search/profiles?q=${c.username}`)).body.items).toEqual([]);
   expect((await c.s.call('GET', `/posts/${withPet}`)).status).toBe(404);
   // Tim của C trên bài A không bị xóa (chỉ xóa tim của người bị chặn trên bài người chặn).
   expect((await a.s.call('GET', `/profiles/${c.username}`)).status).toBe(404);

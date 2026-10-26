@@ -55,7 +55,10 @@ export const engagementRepository = {
       SELECT pr.user_id, pr.username, pr.display_name, pr.avatar_key,
              EXISTS (SELECT 1 FROM follows me
                      WHERE me.follower_id = ${viewerId} AND me.followee_id = pr.user_id)
-               AS followed_by_me
+               AS followed_by_me,
+             EXISTS (SELECT 1 FROM blocks bl
+                     WHERE bl.blocker_id = ${viewerId} AND bl.blocked_id = pr.user_id)
+               AS blocked_by_me
       FROM post_likes l JOIN profiles pr ON pr.user_id = l.user_id
       WHERE l.post_id = ${postId}
       ORDER BY l.created_at DESC, pr.user_id

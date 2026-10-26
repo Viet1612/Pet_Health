@@ -839,10 +839,10 @@ E8 có 10 story (US-070→079) cho tính năng xã hội ở Giai đoạn 2: đ�
 
 **Tiêu chí chấp nhận**
 
-- **When** chọn "Chặn @x" (menu "⋯" trên hồ sơ, bài hoặc bình luận) và xác nhận, **Then** theo dõi hai chiều bị gỡ; tim, bình luận của người bị chặn trên bài mình bị xóa.
+- **When** chọn "Chặn @x" (menu "⋯" trên hồ sơ, bài hoặc bình luận) và xác nhận, **Then** theo dõi hai chiều bị gỡ; tim, bình luận của người bị chặn trên bài mình bị ẩn với mọi người.
 - **Given** A chặn B, **Then** B không thấy hồ sơ, bài, bình luận của A ở bản tin, tìm kiếm, chi tiết bài; B không theo dõi, thích, bình luận được bài của A (404).
-- **Given** A chặn B, **Then** A vẫn mở được hồ sơ B (bài bị ẩn) để bấm "Bỏ chặn"; B không hiện trong kết quả tìm của A.
-- **When** bỏ chặn (trên hồ sơ hoặc Cài đặt → Đã chặn), **Then** hai bên thấy lại nhau; theo dõi, tim, bình luận đã xóa không tự khôi phục.
+- **Given** A chặn B, **Then** A vẫn mở được hồ sơ B (bài bị ẩn) và vẫn tìm thấy B trong tìm kiếm, kèm nút "Bỏ chặn".
+- **When** bỏ chặn (trên hồ sơ hoặc Cài đặt → Đã chặn), **Then** hai bên thấy lại nhau; tim, bình luận đã ẩn hiện lại; theo dõi đã gỡ không tự khôi phục.
 - Tối đa 50 lượt chặn/ngày.
 
 ## Ma trận truy vết

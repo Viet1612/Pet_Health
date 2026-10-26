@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 
 import { m } from '../../i18n';
+import { UnblockButton } from './BlockControls';
 import { FollowButton } from './FollowButton';
 import type { Person } from './queries';
 import { UserAvatar } from './UserAvatar';
@@ -22,6 +23,9 @@ export function PersonRow({ person }: { person: Person }) {
       </Link>
       {person.isMe ? (
         <span className="text-small text-text-muted shrink-0">{m.social.follow.you}</span>
+      ) : person.blockedByMe ? (
+        // Người mình đã chặn vẫn hiện trong tìm kiếm để bỏ chặn (F-12).
+        <UnblockButton username={person.username} />
       ) : (
         <FollowButton username={person.username} following={person.followedByMe} size="sm" />
       )}

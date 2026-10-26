@@ -151,6 +151,7 @@ export interface Pets {
 export interface PostComments {
   body: string;
   created_at: Timestamp;
+  hidden_by_block: Generated<boolean>;
   id: string;
   owner_id: string;
   post_id: string;
@@ -158,6 +159,7 @@ export interface PostComments {
 
 export interface PostLikes {
   created_at: Timestamp;
+  hidden_by_block: Generated<boolean>;
   post_id: string;
   user_id: string;
 }

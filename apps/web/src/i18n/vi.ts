@@ -729,7 +729,7 @@ export const vi = {
       unblock: 'Bỏ chặn',
       confirmTitle: (u: string) => `Chặn @${u}?`,
       confirmBody:
-        'Họ sẽ không thấy bài và hồ sơ của bạn, và bạn cũng không thấy bài của họ. Theo dõi hai chiều, lượt thích và bình luận của họ trên bài bạn sẽ bị xóa.',
+        'Họ sẽ không thấy bài và hồ sơ của bạn, và bạn cũng không thấy bài của họ. Theo dõi hai chiều bị gỡ; lượt thích và bình luận của họ trên bài bạn bị ẩn, bỏ chặn thì hiện lại.',
       confirm: 'Chặn',
       blocked: (u: string) => `Đã chặn @${u}`,
       unblocked: (u: string) => `Đã bỏ chặn @${u}`,

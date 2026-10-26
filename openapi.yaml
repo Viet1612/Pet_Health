@@ -5197,6 +5197,8 @@ paths:
                             - "null"
                         followedByMe:
                           type: boolean
+                        blockedByMe:
+                          type: boolean
                         isMe:
                           type: boolean
                       required:
@@ -5204,6 +5206,7 @@ paths:
                         - displayName
                         - avatarThumbUrl
                         - followedByMe
+                        - blockedByMe
                         - isMe
                       additionalProperties: false
                   nextCursor:
@@ -5253,6 +5256,8 @@ paths:
                             - "null"
                         followedByMe:
                           type: boolean
+                        blockedByMe:
+                          type: boolean
                         isMe:
                           type: boolean
                       required:
@@ -5260,6 +5265,7 @@ paths:
                         - displayName
                         - avatarThumbUrl
                         - followedByMe
+                        - blockedByMe
                         - isMe
                       additionalProperties: false
                   nextCursor:
@@ -5306,6 +5312,8 @@ paths:
                             - "null"
                         followedByMe:
                           type: boolean
+                        blockedByMe:
+                          type: boolean
                         isMe:
                           type: boolean
                       required:
@@ -5313,6 +5321,7 @@ paths:
                         - displayName
                         - avatarThumbUrl
                         - followedByMe
+                        - blockedByMe
                         - isMe
                       additionalProperties: false
                 required:
@@ -5409,6 +5418,8 @@ paths:
                             - "null"
                         followedByMe:
                           type: boolean
+                        blockedByMe:
+                          type: boolean
                         isMe:
                           type: boolean
                       required:
@@ -5416,6 +5427,7 @@ paths:
                         - displayName
                         - avatarThumbUrl
                         - followedByMe
+                        - blockedByMe
                         - isMe
                       additionalProperties: false
                 required:

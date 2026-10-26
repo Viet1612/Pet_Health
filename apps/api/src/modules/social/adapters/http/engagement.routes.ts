@@ -40,7 +40,11 @@ const zComment = z.object({
   createdAt: z.iso.datetime(),
   canDelete: z.boolean(),
 });
-const zPerson = zAuthor.extend({ followedByMe: z.boolean(), isMe: z.boolean() });
+const zPerson = zAuthor.extend({
+  followedByMe: z.boolean(),
+  blockedByMe: z.boolean(),
+  isMe: z.boolean(),
+});
 const zLikeState = z.object({ liked: z.boolean(), likeCount: z.number().int() });
 const zIdParams = z.object({ id: z.string() });
 

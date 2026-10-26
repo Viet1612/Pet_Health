@@ -11,6 +11,8 @@ export interface PersonRow {
   display_name: string;
   avatar_key: string | null;
   followed_by_me: boolean;
+  /** Mình đã chặn người này (tìm kiếm vẫn hiện để bỏ chặn). */
+  blocked_by_me: boolean;
 }
 
 /** Danh sách theo dõi: thêm thời điểm theo dõi để phân trang keyset. */
@@ -69,7 +71,10 @@ export const followRepository = {
              f.created_at AS followed_at,
              EXISTS (SELECT 1 FROM follows me
                      WHERE me.follower_id = ${viewerId} AND me.followee_id = pr.user_id)
-               AS followed_by_me
+               AS followed_by_me,
+             EXISTS (SELECT 1 FROM blocks bl
+                     WHERE bl.blocker_id = ${viewerId} AND bl.blocked_id = pr.user_id)
+               AS blocked_by_me
       FROM follows f
       JOIN profiles pr ON pr.user_id = ${other}
       WHERE ${mine} = ${userId}
@@ -90,13 +95,14 @@ export const followRepository = {
       SELECT pr.user_id, pr.username, pr.display_name, pr.avatar_key,
              EXISTS (SELECT 1 FROM follows me
                      WHERE me.follower_id = ${viewerId} AND me.followee_id = pr.user_id)
-               AS followed_by_me
+               AS followed_by_me,
+             EXISTS (SELECT 1 FROM blocks bl
+                     WHERE bl.blocker_id = ${viewerId} AND bl.blocked_id = pr.user_id)
+               AS blocked_by_me
       FROM profiles pr
       WHERE (lower(pr.username::text) LIKE lower(${escaped}) || '%'
              OR social_fold(pr.display_name) LIKE '%' || social_fold(${escaped}) || '%')
-        -- Người mình đã chặn vẫn thấy hồ sơ (để bỏ chặn) nhưng không hiện trong tìm kiếm.
-        AND NOT EXISTS (SELECT 1 FROM blocks b
-                        WHERE b.blocker_id = ${viewerId} AND b.blocked_id = pr.user_id)
+
       ORDER BY (lower(pr.username::text) = lower(${raw})) DESC,
                (SELECT count(*) FROM follows f WHERE f.followee_id = pr.user_id) DESC,
                pr.username

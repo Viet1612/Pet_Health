@@ -825,7 +825,7 @@ export const en: Messages = {
       unblock: 'Unblock',
       confirmTitle: (u: string) => `Block @${u}?`,
       confirmBody:
-        "They won't see your posts or profile, and you won't see their posts. Follows both ways and their likes and comments on your posts will be removed.",
+        "They won't see your posts or profile, and you won't see their posts. Follows both ways are removed; their likes and comments on your posts are hidden and come back if you unblock.",
       confirm: 'Block',
       blocked: (u: string) => `Blocked @${u}`,
       unblocked: (u: string) => `Unblocked @${u}`,

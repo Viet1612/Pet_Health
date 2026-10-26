@@ -27,8 +27,8 @@ async function targetOf(trx: Trx, rawUsername: string): Promise<string> {
 }
 
 /**
- * `PUT /blocks/{username}`: xóa follow hai chiều, tim / bình luận của người bị chặn trên bài mình,
- * thông báo hai chiều; rồi ghi dòng chặn. Sau đó RLS ẩn mọi nội dung hai chiều. Idempotent.
+ * `PUT /blocks/{username}`: xóa follow và thông báo hai chiều, ẩn tim / bình luận của người bị chặn
+ * trên bài mình; rồi ghi dòng chặn. Sau đó RLS ẩn mọi nội dung hai chiều. Idempotent.
  */
 export async function blockUser(
   deps: BlocksDeps,
@@ -50,14 +50,19 @@ export async function blockUser(
   return { blocked: true };
 }
 
-/** `DELETE /blocks/{username}`: bỏ chặn (không khôi phục follow, tim, bình luận đã xóa). */
+/**
+ * `DELETE /blocks/{username}`: bỏ chặn. Tim và bình luận của họ trên bài mình hiện lại; theo dõi
+ * hai chiều đã gỡ thì không tự khôi phục.
+ */
 export async function unblockUser(
   trx: Trx,
   viewerId: string,
   rawUsername: string,
 ): Promise<{ blocked: false }> {
   const target = await targetOf(trx, rawUsername);
+  // Xóa dòng chặn trước: lúc đó chủ bài mới thấy (và sửa được) các dòng đang ẩn.
   await blockRepository.unblock(trx, viewerId, target);
+  await blockRepository.setHidden(trx, viewerId, target, false);
   return { blocked: false };
 }
 

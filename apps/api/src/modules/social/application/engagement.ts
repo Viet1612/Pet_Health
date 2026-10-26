@@ -115,12 +115,14 @@ const person = (
     display_name: string;
     avatar_key: string | null;
     followed_by_me: boolean;
+    blocked_by_me: boolean;
   },
 ): PersonView => ({
   username: r.username,
   displayName: r.display_name,
   avatarThumbUrl: r.avatar_key ? deps.media.signUrl(thumbKeyOf(r.avatar_key)) : null,
   followedByMe: r.followed_by_me,
+  blockedByMe: r.blocked_by_me,
   isMe: r.user_id === viewerId,
 });
 

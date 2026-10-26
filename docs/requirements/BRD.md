@@ -668,7 +668,7 @@ Bổ sung ở v1.4 (2026-10-26, DEC-023→DEC-030). Bản tin là tính năng x�
 | BR-049 | Hệ thống **phải** hiển thị bản tin gồm bài của chính chủ nuôi và người họ theo dõi, mới nhất trước, không xếp hạng theo tương tác. | Xem bài của người mình quan tâm | Phase2-ideas §2 | Must | AC-049 | T |
 | BR-050 | Chủ nuôi **phải** thả tim và bình luận (một cấp) được trên bài của người khác. Người viết bình luận và chủ bài **phải** xóa được bình luận đó. | Tương tác, tự kiểm soát bài của mình | Phase2-ideas §2 | Should | AC-050 | T |
 | BR-051 | Hệ thống **phải** báo cho chủ nuôi khi có người thích, bình luận bài của họ hoặc theo dõi họ, tách khỏi nhắc mốc y tế. | Biết có tương tác mà không làm lẫn nhắc lịch | DEC-029 | Should | AC-051 | T |
-| BR-052 | Chủ nuôi **phải** chặn và bỏ chặn được người khác. Khi chặn, hai bên không thấy bài, hồ sơ, bình luận của nhau; theo dõi hai chiều, tim và bình luận của người bị chặn trên bài người chặn bị gỡ. | Tự bảo vệ khi không có kiểm duyệt (DEC-025) | DEC-025 | Should | AC-052 | T |
+| BR-052 | Chủ nuôi **phải** chặn và bỏ chặn được người khác. Khi chặn, hai bên không thấy bài, hồ sơ, bình luận của nhau; theo dõi hai chiều bị gỡ; tim và bình luận của người bị chặn trên bài người chặn bị ẩn, bỏ chặn thì hiện lại. | Tự bảo vệ khi không có kiểm duyệt (DEC-025) | DEC-025 | Should | AC-052 | T |
 | BR-053 | Hệ thống **phải** giới hạn số lần đăng bài, bình luận, thích, theo dõi, chặn và tìm kiếm của mỗi tài khoản theo BRU-015. | Chống spam khi không có kiểm duyệt | DEC-025 | Should | AC-053 | T |
 | BR-054 | Bản tin **không được** làm lộ email hay bất kỳ dữ liệu sức khỏe nào (giống, ngày sinh, cân nặng, sổ y tế, lịch mốc, thông báo nhắc) cho người khác. Thú cưng gắn trong bài chỉ hiện tên. | Giữ BR-026 khi có dữ liệu công khai | DEC-027 | Must | AC-054 | T |
 
@@ -683,7 +683,7 @@ Bổ sung ở v1.4 (2026-10-26, DEC-023→DEC-030). Bản tin là tính năng x�
 | AC-049 | BR-049 | A theo dõi B, không theo dõi D → bản tin của A có bài của A và B, không có bài của D, mới nhất trước; cuộn không trùng, không sót |
 | AC-050 | BR-050 | 10 lần thích song song → 1 lượt thích. Chủ bài xóa được bình luận của người khác; người thứ ba không xóa được |
 | AC-051 | BR-051 | B thích bài A → A thấy số trên chuông tăng; tự thích bài mình không báo. Nhiều người thích cùng một bài → một dòng gộp. Thông báo hoạt động không hiện ở tab nhắc lịch |
-| AC-052 | BR-052 | C chặn A → C tìm A không ra, A mở hồ sơ C bị báo không tồn tại. Bỏ chặn → tìm lại được, theo dõi không tự khôi phục |
+| AC-052 | BR-052 | C chặn A → A tìm C không ra, mở hồ sơ C bị báo không tồn tại; C vẫn tìm thấy A kèm nút "Bỏ chặn". Tim, bình luận của A trên bài C bị ẩn. Bỏ chặn → hai bên thấy lại nhau, tim và bình luận hiện lại, theo dõi không tự khôi phục |
 | AC-053 | BR-053 | Vượt ngưỡng → bị từ chối kèm thời gian chờ |
 | AC-054 | BR-054 | Dùng tài khoản B gọi mọi chức năng đọc của bản tin trên dữ liệu A: không có email, giống, ngày sinh, cân nặng, triệu chứng, chẩn đoán, đơn thuốc hay ảnh sổ y tế |
 

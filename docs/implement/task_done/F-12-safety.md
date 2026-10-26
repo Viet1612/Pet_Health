@@ -9,6 +9,13 @@
 
 ## Kết quả
 
+> **Cập nhật 2026-10-26 (theo yêu cầu chủ dự án):**
+> - **Tìm kiếm:** người chặn **vẫn tìm thấy** người bị chặn, kèm nút "Bỏ chặn" (`blockedByMe`). Chiều ngược lại vẫn ẩn.
+> - **Tim và bình luận:** khi chặn, tim và bình luận của người bị chặn trên bài người chặn được **ẩn** (cột `hidden_by_block`, migration `202610261600_block_soft_hide`) thay vì xóa. Phần ẩn không ai thấy, kể cả người thứ ba, và không tính vào số đếm. Bỏ chặn thì hiện lại.
+> - Theo dõi hai chiều và thông báo vẫn bị xóa như trước.
+>
+> Các mục bên dưới mô tả bản đầu; chỗ nào khác thì theo ghi chú này.
+
 ### Chặn
 
 - **`PUT /blocks/{username}` (idempotent):** trong cùng transaction, **trước khi** ghi dòng chặn:

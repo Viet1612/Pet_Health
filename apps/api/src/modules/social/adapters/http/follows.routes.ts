@@ -21,6 +21,7 @@ const zPerson = z.object({
   displayName: z.string(),
   avatarThumbUrl: z.string().nullable(),
   followedByMe: z.boolean(),
+  blockedByMe: z.boolean(),
   isMe: z.boolean(),
 });
 const zFollowState = z.object({ following: z.boolean(), followerCount: z.number().int() });
