@@ -167,7 +167,9 @@ export default function WeightChartImpl({
           )}
       </p>
       <div ref={boxRef} aria-hidden className="w-full" />
-      {/* Bọc trong div sr-only: `caption` của table vẫn vẽ ra ngoài khi chỉ ẩn bảng. */}
+      {/* Bọc trong div sr-only: `caption` của table vẫn vẽ ra ngoài khi chỉ ẩn bảng. Bảng vẫn chiếm
+          bề rộng theo nội dung (có thể thò khỏi màn hình hẹp); `body { overflow-x: clip }` chặn việc
+          đó làm cả trang cuộn ngang. */}
       <div className="sr-only">
         <table>
           <caption>{caption}</caption>

@@ -78,7 +78,7 @@ function NavLink({ item, path, rail }: { item: NavItem; path: string; rail: bool
       to={item.to() as never}
       aria-current={active ? 'page' : undefined}
       className={cx(
-        'text-caption flex min-h-11 flex-col items-center justify-center gap-1',
+        'text-caption flex min-h-11 min-w-0 flex-col items-center justify-center gap-1 whitespace-nowrap',
         rail ? 'w-full py-2' : 'flex-1 py-1',
         active ? 'text-primary-soft-fg font-bold' : 'text-text-muted',
       )}
@@ -86,13 +86,21 @@ function NavLink({ item, path, rail }: { item: NavItem; path: string; rail: bool
       <span
         aria-hidden
         className={cx(
-          'inline-flex items-center justify-center rounded-full px-4 py-1',
+          'inline-flex items-center justify-center rounded-full px-3 py-1 min-[400px]:px-4',
           active && 'bg-primary-soft',
         )}
       >
         {item.icon}
       </span>
-      {item.label}
+      {/* 6 mục trên phone hẹp: chữ nhỏ hơn dưới 400 px, cắt "…" nếu vẫn không vừa. */}
+      <span
+        className={cx(
+          'max-w-full truncate px-0.5',
+          !rail && 'min-[400px]:text-caption text-[11px]',
+        )}
+      >
+        {item.label}
+      </span>
     </Link>
   );
 }

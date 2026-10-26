@@ -145,6 +145,10 @@
   }
   body {
     margin: 0;
+    /* Không bao giờ cuộn ngang cả trang trên điện thoại (phần tử lỡ tràn bị cắt, không xô lệch).
+       `hidden` cho trình duyệt cũ chưa có `clip`. */
+    overflow-x: hidden;
+    overflow-x: clip;
     background: var(--bg);
     color: var(--text);
     font-family: var(--font-sans);
