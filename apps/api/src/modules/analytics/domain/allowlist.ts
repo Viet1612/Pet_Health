@@ -40,6 +40,8 @@ const SCREEN = e(
 export const ALLOWLIST: Record<string, Record<string, Rule>> = {
   signup_started: { source: e('direct', 'login_page', 'other') },
   signup_completed: {},
+  post_liked: {},
+  post_commented: { length_bucket: e('short', 'medium', 'long') },
   pet_limit_reached: {},
   weight_target_set: {},
   email_verified: { hours_since_signup: int(0) },

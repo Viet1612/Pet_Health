@@ -79,7 +79,7 @@ export async function registerModules(api: FastifyInstance, deps: ModuleDeps): P
   await registerDashboardRoutes(api, { ...deps.dashboard, analytics }, deps.media);
   await registerSocialRoutes(
     api,
-    { clock: deps.identity.clock, rateLimiter: deps.identity.rateLimiter },
+    { clock: deps.identity.clock, rateLimiter: deps.identity.rateLimiter, analytics },
     deps.media,
   );
 }

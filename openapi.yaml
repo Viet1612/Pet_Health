@@ -3246,6 +3246,11 @@ paths:
                     type: integer
                     minimum: -9007199254740991
                     maximum: 9007199254740991
+                  socialUnreadCount:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                    description: Hoạt động chưa xem (F-11)
                   banner:
                     type: object
                     properties:
@@ -3347,6 +3352,7 @@ paths:
                     additionalProperties: false
                 required:
                   - unreadCount
+                  - socialUnreadCount
                 additionalProperties: false
   /notifications:
     get:
@@ -5308,6 +5314,412 @@ paths:
                       additionalProperties: false
                 required:
                   - items
+                additionalProperties: false
+  /posts/{id}/like:
+    put:
+      summary: Thả tim (idempotent)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  liked:
+                    type: boolean
+                  likeCount:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                  - liked
+                  - likeCount
+                additionalProperties: false
+    delete:
+      summary: Bỏ tim (idempotent)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  liked:
+                    type: boolean
+                  likeCount:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                  - liked
+                  - likeCount
+                additionalProperties: false
+  /posts/{id}/likes:
+    get:
+      summary: Người thả tim (tối đa 100, mới nhất trước)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                        displayName:
+                          type: string
+                        avatarThumbUrl:
+                          type:
+                            - string
+                            - "null"
+                        followedByMe:
+                          type: boolean
+                        isMe:
+                          type: boolean
+                      required:
+                        - username
+                        - displayName
+                        - avatarThumbUrl
+                        - followedByMe
+                        - isMe
+                      additionalProperties: false
+                required:
+                  - items
+                additionalProperties: false
+  /posts/{id}/comments:
+    get:
+      summary: Bình luận, cũ trước, 20/trang
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: cursor
+          required: false
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        author:
+                          type: object
+                          properties:
+                            username:
+                              type: string
+                            displayName:
+                              type: string
+                            avatarThumbUrl:
+                              type:
+                                - string
+                                - "null"
+                          required:
+                            - username
+                            - displayName
+                            - avatarThumbUrl
+                          additionalProperties: false
+                        body:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date-time
+                          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                        canDelete:
+                          type: boolean
+                      required:
+                        - id
+                        - author
+                        - body
+                        - createdAt
+                        - canDelete
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                required:
+                  - items
+                  - nextCursor
+                additionalProperties: false
+    post:
+      summary: Viết bình luận (1–500 ký tự); 30 bình luận/10 phút
+      tags:
+        - social
+      description: Bắt buộc Idempotency-Key.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  default: ""
+                  description: 1–500 ký tự
+                  type: string
+              additionalProperties: false
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+        - schema:
+            type: string
+          in: header
+          name: idempotency-key
+          required: false
+      responses:
+        "201":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      author:
+                        type: object
+                        properties:
+                          username:
+                            type: string
+                          displayName:
+                            type: string
+                          avatarThumbUrl:
+                            type:
+                              - string
+                              - "null"
+                        required:
+                          - username
+                          - displayName
+                          - avatarThumbUrl
+                        additionalProperties: false
+                      body:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                        pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                      canDelete:
+                        type: boolean
+                    required:
+                      - id
+                      - author
+                      - body
+                      - createdAt
+                      - canDelete
+                    additionalProperties: false
+                required:
+                  - comment
+                additionalProperties: false
+  /comments/{id}:
+    delete:
+      summary: Xóa bình luận (người viết hoặc chủ bài)
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: id
+          required: true
+      responses:
+        "204":
+          description: Default Response
+  /social-notifications:
+    get:
+      summary: Thông báo hoạt động (tim gộp theo bài, bình luận, theo dõi), 30/trang
+      tags:
+        - social
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: cursor
+          required: false
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        kind:
+                          type: string
+                          enum:
+                            - LIKE
+                            - COMMENT
+                            - FOLLOW
+                        actors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              username:
+                                type: string
+                              displayName:
+                                type: string
+                              avatarThumbUrl:
+                                type:
+                                  - string
+                                  - "null"
+                            required:
+                              - username
+                              - displayName
+                              - avatarThumbUrl
+                            additionalProperties: false
+                        actorCount:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        post:
+                          anyOf:
+                            - type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                  pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                                thumbUrl:
+                                  type:
+                                    - string
+                                    - "null"
+                              required:
+                                - id
+                                - thumbUrl
+                              additionalProperties: false
+                            - type: "null"
+                        commentId:
+                          anyOf:
+                            - type: string
+                              format: uuid
+                              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                            - type: "null"
+                        commentExcerpt:
+                          type:
+                            - string
+                            - "null"
+                        unread:
+                          type: boolean
+                        createdAt:
+                          type: string
+                          format: date-time
+                          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                      required:
+                        - id
+                        - kind
+                        - actors
+                        - actorCount
+                        - post
+                        - commentId
+                        - commentExcerpt
+                        - unread
+                        - createdAt
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                required:
+                  - items
+                  - nextCursor
+                additionalProperties: false
+  /social-notifications/read-all:
+    post:
+      summary: Đánh dấu đã xem mọi thông báo hoạt động tạo trước `upTo`
+      tags:
+        - social
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                upTo:
+                  type: string
+                  format: date-time
+                  pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
+              additionalProperties: false
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                  - updated
                 additionalProperties: false
 servers:
   - url: /api/v1

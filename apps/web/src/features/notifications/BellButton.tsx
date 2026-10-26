@@ -5,14 +5,27 @@ import { Bell } from 'lucide-react';
 import { m } from '../../i18n';
 import { summaryQuery } from './queries';
 
-/** CMP-07: chuông 44 × 44 kèm badge số chưa xem (ẩn khi 0, "9+" khi > 9); bấm → Thông báo. */
+/**
+ * CMP-07: chuông 44 × 44 kèm badge số chưa xem = nhắc lịch + hoạt động (F-11); ẩn khi 0, "9+" khi
+ * > 9; bấm → Thông báo.
+ */
 export function BellButton() {
   const { data } = useQuery(summaryQuery);
-  const n = data?.unreadCount ?? 0;
+  const reminders = data?.unreadCount ?? 0;
+  const activity = data?.socialUnreadCount ?? 0;
+  const n = reminders + activity;
   return (
     <Link
       to="/notifications"
-      aria-label={n > 0 ? m.notifications.bellUnread(n) : m.notifications.bell}
+      // Chỉ có hoạt động mới → mở thẳng tab "Hoạt động".
+      search={reminders === 0 && activity > 0 ? { tab: 'activity' } : {}}
+      aria-label={
+        activity > 0
+          ? m.notifications.bellBoth(reminders, activity)
+          : n > 0
+            ? m.notifications.bellUnread(n)
+            : m.notifications.bell
+      }
       className="text-text hover:bg-surface-2 duration-fast relative inline-flex size-11 items-center justify-center rounded-full transition-colors"
     >
       <Bell size={24} aria-hidden />

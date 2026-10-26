@@ -6,6 +6,7 @@ import type { ClockPort } from '../../platform/clock/clock.js';
 import type { Database } from '../../platform/db/kysely.js';
 import { petQuery } from '../pets/index.js';
 import { milestoneQuery } from '../scheduling/index.js';
+import { socialQuery } from '../social/index.js';
 import { notificationsRoutes } from './adapters/http/notifications.routes.js';
 import { notificationRepository } from './adapters/persistence/notification.repository.js';
 import { getNotificationSummary } from './application/get-summary.js';
@@ -31,6 +32,7 @@ export async function registerNotificationsRoutes(
     clock: deps.clock,
     pets: petQuery,
     milestones: milestoneQuery,
+    social: socialQuery,
     ...(deps.analytics ? { analytics: deps.analytics } : {}),
   });
 }

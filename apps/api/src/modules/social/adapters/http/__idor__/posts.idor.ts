@@ -56,3 +56,22 @@ exemptFromIdor(
   '/profiles/:username/posts',
   'Lưới bài đã đăng của hồ sơ công khai (D1); bài nháp và người đã chặn nhau bị RLS lọc',
 );
+
+// `/comments/:id`: bình luận của chủ trên bài đã đăng của chủ. Người khác (không phải người viết,
+// không phải chủ bài) xóa → 404.
+registerIdorParam('/comments/:id', 'id', {
+  async create({ db, owner }) {
+    const postId = await draftPost(db, owner.userId, 1);
+    await sql`UPDATE posts SET status = 'PUBLISHED' WHERE id = ${postId}`.execute(db);
+    const id = newId();
+    await sql`
+      INSERT INTO post_comments (id, post_id, owner_id, body, created_at)
+      VALUES (${id}, ${postId}, ${owner.userId}, 'Bình luận', now())`.execute(db);
+    return id;
+  },
+  async snapshot({ db, ownerId }) {
+    const { rows } = await sql`
+      SELECT id, body FROM post_comments WHERE owner_id = ${ownerId} ORDER BY id`.execute(db);
+    return rows;
+  },
+});

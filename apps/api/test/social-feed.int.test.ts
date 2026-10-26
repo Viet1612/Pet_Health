@@ -1,6 +1,10 @@
 // Bản tin (F-08) và tìm người (F-07) trên PostgreSQL 16 thật (Testcontainers, cần Docker).
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import {
+  activityRepository,
+  engagementRepository,
+} from '../src/modules/social/adapters/persistence/engagement.repository.js';
 import { followRepository } from '../src/modules/social/adapters/persistence/follow.repository.js';
 import { postRepository } from '../src/modules/social/adapters/persistence/post.repository.js';
 import { withUserTx } from '../src/platform/db/with-user-tx.js';
@@ -124,5 +128,64 @@ describe('theo dõi và tìm người', () => {
     expect((await search('ho')).map((r) => r.username)).toEqual(['dave']);
     expect(await search('example.test')).toEqual([]);
     expect(await search('%')).toEqual([]);
+  });
+});
+
+describe('tim, bình luận, thông báo hoạt động (F-09, F-11)', () => {
+  it('10 lần thả tim song song → 1 dòng tim, 1 thông báo; tự thích bài mình không báo', async () => {
+    const postId = await addPost(C, 300);
+    await Promise.all(
+      Array.from({ length: 10 }, () =>
+        withUserTx(env.appDb, A, (trx) => engagementRepository.like(trx, postId, A, new Date())),
+      ),
+    );
+    await Promise.all(
+      Array.from({ length: 10 }, () =>
+        withUserTx(env.appDb, A, (trx) =>
+          activityRepository.add(trx, {
+            ownerId: C,
+            actorId: A,
+            kind: 'LIKE',
+            postId,
+            now: new Date(),
+          }),
+        ),
+      ),
+    );
+    await withUserTx(env.appDb, C, (trx) =>
+      activityRepository.add(trx, {
+        ownerId: C,
+        actorId: C,
+        kind: 'LIKE',
+        postId,
+        now: new Date(),
+      }),
+    );
+    expect(
+      await withUserTx(env.appDb, A, (trx) => engagementRepository.likeCount(trx, postId)),
+    ).toBe(1);
+    expect(await withUserTx(env.appDb, C, (trx) => activityRepository.unreadCount(trx, C))).toBe(1);
+  });
+
+  it('nhiều người thích một bài → một dòng gộp; người khác không đọc được thông báo của C', async () => {
+    const postId = await addPost(C, 301);
+    for (const actor of [A, B, D]) {
+      await withUserTx(env.appDb, actor, (trx) =>
+        activityRepository.add(trx, {
+          ownerId: C,
+          actorId: actor,
+          kind: 'LIKE',
+          postId,
+          now: new Date(),
+        }),
+      );
+    }
+    const rows = await withUserTx(env.appDb, C, (trx) => activityRepository.list(trx, C, null, 30));
+    const row = rows.find((r) => r.post_id === postId);
+    expect(row).toMatchObject({ kind: 'LIKE', actor_count: 3, unread: true });
+    expect(row?.actors).toHaveLength(3);
+    expect(
+      await withUserTx(env.appDb, A, (trx) => activityRepository.list(trx, C, null, 30)),
+    ).toEqual([]);
   });
 });

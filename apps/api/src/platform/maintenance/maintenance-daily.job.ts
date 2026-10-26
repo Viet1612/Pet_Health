@@ -50,6 +50,13 @@ export const STEPS: Record<string, Step> = {
       'notifications',
       sql`appear_on < ${isoDate(new Date(now.getTime() - 90 * DAY_MS))}::date`,
     ),
+  /** Thông báo hoạt động (F-11) hơn 90 ngày. */
+  social_notifications: ({ db }, now) =>
+    deleteInBatches(
+      db,
+      'social_notifications',
+      sql`created_at < ${new Date(now.getTime() - 90 * DAY_MS)}`,
+    ),
   idempotency_keys: ({ db }, now) =>
     deleteInBatches(db, 'idempotency_keys', sql`created_at < ${new Date(now.getTime() - DAY_MS)}`),
   sessions: ({ db }, now) => deleteInBatches(db, 'sessions', sql`expires_at < ${now}`),

@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart, Loader2 } from 'lucide-react';
 import { useRef, useState, type KeyboardEvent } from 'react';
 
 import { m } from '../../i18n';
@@ -14,13 +14,24 @@ const t = m.social.post;
 export function PhotoCarousel({
   photos,
   onImageError,
+  onDoubleTap,
 }: {
   photos: Post['photos'];
   onImageError?: () => void;
+  /** Nhấn đúp ảnh (F-10): chỉ thả tim, hiện tim lớn 600 ms (tắt khi giảm chuyển động). */
+  onDoubleTap?: () => void;
 }) {
   const track = useRef<HTMLDivElement>(null);
+  const lastTap = useRef(0);
   const [index, setIndex] = useState(0);
+  const [burst, setBurst] = useState(0);
   const n = photos.length;
+
+  const doubleTap = () => {
+    if (!onDoubleTap) return;
+    onDoubleTap();
+    setBurst((b) => b + 1);
+  };
 
   const go = (i: number) => {
     const el = track.current;
@@ -51,6 +62,20 @@ export function PhotoCarousel({
         ref={track}
         tabIndex={0}
         onKeyDown={onKeyDown}
+        onDoubleClick={() => {
+          // Chạm đúp trên điện thoại đã xử lý ở onTouchEnd.
+          if (Date.now() - lastTap.current > 600) doubleTap();
+        }}
+        onTouchEnd={(e) => {
+          if (e.changedTouches.length !== 1) return;
+          const now = Date.now();
+          if (now - lastTap.current < 300) {
+            lastTap.current = now;
+            doubleTap();
+          } else {
+            lastTap.current = now;
+          }
+        }}
         onScroll={(e) => {
           const el = e.currentTarget;
           setIndex(Math.round(el.scrollLeft / Math.max(1, el.clientWidth)));
@@ -81,6 +106,15 @@ export function PhotoCarousel({
           </div>
         ))}
       </div>
+      {burst > 0 && (
+        <span
+          key={burst}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 motion-safe:animate-[ph-heart-pop_600ms_ease-out]"
+        >
+          <Heart size={96} className="fill-white text-white drop-shadow-lg" />
+        </span>
+      )}
       {n > 1 && (
         <>
           <button

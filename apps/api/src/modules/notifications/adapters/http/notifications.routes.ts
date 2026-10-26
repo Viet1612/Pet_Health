@@ -9,7 +9,11 @@ import { zUuid } from '../../../../platform/http/user-tx.js';
 import { getNotificationSummary } from '../../application/get-summary.js';
 import { listNotifications } from '../../application/list-notifications.js';
 import { markAllRead, markRead } from '../../application/mark-read.js';
-import type { MilestoneQueryPort, NotificationsAppDeps } from '../../application/ports.js';
+import type {
+  MilestoneQueryPort,
+  NotificationsAppDeps,
+  SocialActivityPort,
+} from '../../application/ports.js';
 import type { PetQueryPort } from '../../../pets/index.js';
 
 export const zNotification = z.object({
@@ -36,6 +40,7 @@ export interface NotificationsRouteDeps {
   pets: PetQueryPort;
   milestones: MilestoneQueryPort;
   analytics?: AnalyticsPort;
+  social?: SocialActivityPort;
 }
 
 function ownerOf(req: FastifyRequest): string {
@@ -59,6 +64,7 @@ export const notificationsRoutes: FastifyPluginAsyncZod<NotificationsRouteDeps> 
         querystring: z.object({ pet: z.string().default('all').describe('all hoặc petId') }),
         response: {
           200: zUnread.extend({
+            socialUnreadCount: z.number().int().describe('Hoạt động chưa xem (F-11)'),
             banner: z
               .object({
                 top: zNotification,

@@ -111,6 +111,25 @@
   }
 }
 
+/* Nhấn đúp ảnh để thích (F-10): tim lớn bật lên rồi mờ dần trong 600 ms. */
+@keyframes ph-heart-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  40% {
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
 @keyframes ph-countdown {
   from {
     width: 100%;

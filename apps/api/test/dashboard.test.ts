@@ -20,7 +20,7 @@ function fakePorts(pets = PETS) {
     listPets: () => Promise.resolve(pets),
     notificationSummary: () => {
       calls.push('sync+summary');
-      return Promise.resolve({ unreadCount: 5 });
+      return Promise.resolve({ unreadCount: 5, socialUnreadCount: 0 });
     },
     checklistForToday: (_t, _o, petIds) => {
       calls.push(`routines:${petIds.join(',')}`);

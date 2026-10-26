@@ -19,6 +19,8 @@ import { useToast } from '../../ui/toast';
 import { petsQuery } from '../pets';
 import { CAPTION_MAX } from './composer';
 import { PetChips } from './PetChips';
+import { CommentsPanel } from './CommentsPanel';
+import { LikeBar, useLikeAction } from './LikeBar';
 import { PhotoCarousel } from './PhotoCarousel';
 import { POST_KEY, postQuery, useDeletePost, useUpdatePost, type Post } from './queries';
 import { UserAvatar } from './UserAvatar';
@@ -159,6 +161,8 @@ export function PostDetailScreen({ postId }: { postId: string }) {
   const queryClient = useQueryClient();
   const post = useQuery(postQuery(postId));
   const remove = useDeletePost(postId);
+  const like = useLikeAction({ id: postId });
+  const side = useRef<HTMLDivElement>(null);
   const [dialog, setDialog] = useState<'edit' | 'delete' | null>(null);
 
   if (post.isPending) {
@@ -223,9 +227,18 @@ export function PostDetailScreen({ postId }: { postId: string }) {
       <PhotoCarousel
         photos={p.photos}
         onImageError={() => void queryClient.invalidateQueries({ queryKey: [...POST_KEY, postId] })}
+        onDoubleTap={() => {
+          if (!p.likedByMe) like(true);
+        }}
       />
-      <div className="flex flex-col gap-3 p-4">
+      <div ref={side} className="flex flex-col gap-3 p-4">
         <div className="hidden lg:block">{header}</div>
+        <LikeBar
+          post={p}
+          onComment={() => {
+            side.current?.querySelector('textarea')?.focus();
+          }}
+        />
         {p.pets.length > 0 && (
           <ul aria-label={t.pets} className="m-0 flex list-none flex-wrap gap-2 p-0">
             {p.pets.map((pet) => (
@@ -240,6 +253,7 @@ export function PostDetailScreen({ postId }: { postId: string }) {
           </ul>
         )}
         {p.caption && <Caption text={p.caption} />}
+        <CommentsPanel postId={p.id} />
       </div>
 
       {dialog === 'edit' && (

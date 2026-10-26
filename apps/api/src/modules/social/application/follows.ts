@@ -10,6 +10,7 @@ import {
 } from '../../../platform/errors/app-error.js';
 import type { RateLimiter } from '../../../platform/rate-limit/rate-limiter.js';
 import { thumbKeyOf, type MediaService } from '../../media/index.js';
+import { activityRepository } from '../adapters/persistence/engagement.repository.js';
 import { followRepository, type PersonRow } from '../adapters/persistence/follow.repository.js';
 import { profileRepository } from '../adapters/persistence/profile.repository.js';
 import { normalizeUsername } from '../domain/username.js';
@@ -82,7 +83,15 @@ export async function follow(
         params: { max: FOLLOWS_PER_DAY },
       });
     }
-    await followRepository.follow(trx, viewerId, target, deps.clock.now());
+    const now = deps.clock.now();
+    if (await followRepository.follow(trx, viewerId, target, now)) {
+      await activityRepository.add(trx, {
+        ownerId: target,
+        actorId: viewerId,
+        kind: 'FOLLOW',
+        now,
+      });
+    }
   }
   return { following: true, followerCount: await followRepository.followerCount(trx, target) };
 }
@@ -94,7 +103,9 @@ export async function unfollow(
   rawUsername: string,
 ): Promise<{ following: false; followerCount: number }> {
   const target = await targetOf(trx, rawUsername);
-  await followRepository.unfollow(trx, viewerId, target);
+  if (await followRepository.unfollow(trx, viewerId, target)) {
+    await activityRepository.removeUnreadFollow(trx, viewerId, target);
+  }
   return { following: false, followerCount: await followRepository.followerCount(trx, target) };
 }
 

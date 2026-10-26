@@ -14,12 +14,54 @@ import { groupByDay } from './group-by-day';
 import { NotificationItem } from './NotificationItem';
 import { listQuery, useMarkRead, type AppNotification } from './queries';
 import { track } from '../../api/analytics';
+import { cx } from '../../ui/cx';
+import { ActivityList } from '../social';
 import { SUMMARY_KEY } from './queries';
 
 const t = m.notifications;
 
-/** SCR-17 · Thông báo (8:364): nhóm theo ngày, mới nhất trước, cuộn tải thêm. */
-export function NotificationsScreen() {
+export type NotificationsTab = 'reminders' | 'activity';
+
+/** Hai tab "Nhắc lịch" (giữ nguyên S4-05) | "Hoạt động" (F-11). */
+function Tabs({ tab, onTab }: { tab: NotificationsTab; onTab: (t: NotificationsTab) => void }) {
+  return (
+    <div
+      role="tablist"
+      aria-label={t.title}
+      className="bg-surface-2 grid grid-cols-2 gap-1 rounded-full p-1"
+    >
+      {(['reminders', 'activity'] as const).map((key) => (
+        <button
+          key={key}
+          type="button"
+          role="tab"
+          aria-selected={tab === key}
+          onClick={() => {
+            onTab(key);
+          }}
+          className={cx(
+            'text-body min-h-11 rounded-full font-semibold',
+            tab === key ? 'bg-surface text-primary-soft-fg shadow-sm' : 'text-text-muted',
+          )}
+        >
+          {t.tabs[key]}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * SCR-17 · Thông báo (8:364). Tab "Nhắc lịch": nhóm theo ngày, mới nhất trước, cuộn tải thêm. Tab
+ * "Hoạt động": tim, bình luận, theo dõi (F-11).
+ */
+export function NotificationsScreen({
+  tab = 'reminders',
+  onTab = () => undefined,
+}: {
+  tab?: NotificationsTab;
+  onTab?: (t: NotificationsTab) => void;
+}) {
   const router = useRouter();
   const toast = useToast();
   const markRead = useMarkRead();
@@ -72,7 +114,7 @@ export function NotificationsScreen() {
           }}
         />
         <h1 className="text-h1 flex-1">{t.title}</h1>
-        {hasUnread && first && (
+        {tab === 'reminders' && hasUnread && first && (
           <Button
             variant="ghost"
             aria-label={t.markAllLabel}
@@ -84,8 +126,11 @@ export function NotificationsScreen() {
           </Button>
         )}
       </div>
+      <Tabs tab={tab} onTab={onTab} />
 
-      {query.isPending ? (
+      {tab === 'activity' ? (
+        <ActivityList />
+      ) : query.isPending ? (
         <div aria-busy="true" className="flex flex-col gap-2">
           {[0, 1, 2, 3].map((i) => (
             <Skeleton key={i} shape="list-item" />

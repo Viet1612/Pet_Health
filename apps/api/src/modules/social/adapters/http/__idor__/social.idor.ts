@@ -24,3 +24,19 @@ for (const [method, url] of [
     'Tham số là username công khai; thao tác chỉ ghi dòng follows của chính người gọi (RLS)',
   );
 }
+
+// F-09: tim và bình luận trên bài đã đăng (đọc công khai có chủ đích); ghi chỉ dòng của chính
+// người gọi (RLS `user_id`/`owner_id = app_user()`).
+for (const [method, url] of [
+  ['PUT', '/posts/:id/like'],
+  ['DELETE', '/posts/:id/like'],
+  ['GET', '/posts/:id/likes'],
+  ['GET', '/posts/:id/comments'],
+  ['POST', '/posts/:id/comments'],
+] as const) {
+  exemptFromIdor(
+    method,
+    url,
+    'Bài đã đăng đọc công khai; tim/bình luận chỉ ghi dòng của người gọi',
+  );
+}

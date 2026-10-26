@@ -380,6 +380,9 @@ export const en: Messages = {
     back: 'Back',
     bell: 'Notifications',
     bellUnread: (n: number) => `Notifications, ${String(n)} unread`,
+    bellBoth: (reminders: number, activity: number) =>
+      `Notifications, ${String(reminders)} reminders, ${String(activity)} new activity`,
+    tabs: { reminders: 'Reminders', activity: 'Activity' },
     markAll: 'Mark as read',
     markAllLabel: 'Mark as read: all',
     today: 'Today',
@@ -414,6 +417,8 @@ export const en: Messages = {
       EMAIL_TAKEN: 'This email is already in use',
       USERNAME_TAKEN: 'Username is already taken',
       FOLLOW_LIMIT_REACHED: 'You have followed too many people today',
+      COMMENT_RATE_LIMITED: 'You are commenting too fast. Try again in a few minutes.',
+      LIKE_RATE_LIMITED: 'Too many actions. Try again later.',
       POST_LIMIT_REACHED: 'You have reached the limit of 30 posts today',
       POST_ALREADY_PUBLISHED: 'This post is already published',
       PHOTO_POSITION_TAKEN: 'This photo slot is already used',
@@ -776,6 +781,41 @@ export const en: Messages = {
       comments: (n: number) => `View ${String(n)} comment${n === 1 ? '' : 's'}`,
       end: "You're all caught up",
       pullToRefresh: 'Release to refresh',
+    },
+    like: {
+      like: 'Like',
+      unlike: 'Unlike',
+      label: (liked: boolean, n: number) =>
+        `${liked ? 'Unlike' : 'Like'}, ${String(n)} like${n === 1 ? '' : 's'}`,
+      likers: 'Likes',
+      failed: "Couldn't save",
+    },
+    comments: {
+      title: 'Comments',
+      open: 'Comment',
+      label: 'Write a comment',
+      placeholder: 'Add a comment…',
+      send: 'Post',
+      empty: 'No comments yet. Be the first!',
+      more: 'View more comments',
+      menu: (name: string) => `Options for ${name}'s comment`,
+      delete: 'Delete comment',
+      deleteTitle: 'Delete this comment?',
+      deleted: 'Comment deleted',
+      failed: 'Not sent',
+      retry: 'Retry',
+      left: (n: number) => `${String(n)} characters left`,
+    },
+    activity: {
+      liked: (who: string, others: number) =>
+        others > 0
+          ? `${who} and ${String(others)} other${others === 1 ? '' : 's'} liked your post`
+          : `${who} liked your post`,
+      commented: (who: string) => `${who} commented:`,
+      followed: (who: string) => `${who} started following you`,
+      emptyTitle: 'No activity yet',
+      emptyBody: 'When people like or comment on your posts or follow you, it shows up here.',
+      unread: 'New',
     },
     complete: {
       title: 'Complete your account',

@@ -6,6 +6,9 @@ import { useState } from 'react';
 import { m } from '../../i18n';
 import { formatRelative } from '../../lib/format';
 import { cx } from '../../ui/cx';
+import { ResponsiveDialog } from '../../ui/ResponsiveDialog';
+import { CommentsPanel } from './CommentsPanel';
+import { LikeBar, useLikeAction } from './LikeBar';
 import { PhotoCarousel } from './PhotoCarousel';
 import { Caption } from './PostDetailScreen';
 import { FEED_KEY, type Post } from './queries';
@@ -15,11 +18,16 @@ const t = m.social.feed;
 
 /**
  * Thẻ bài trên bản tin (F-08): đầu bài, ảnh vuốt (khung vuông cố định, không giật), chip thú cưng,
- * chú thích rút gọn 2 dòng + "xem thêm". Tim và bình luận thêm ở F-10.
+ * chú thích rút gọn 2 dòng + "xem thêm"; ♥ / nhấn đúp ảnh để thích, 💬 mở sheet bình luận (F-10).
  */
 export function PostCard({ post }: { post: Post }) {
   const queryClient = useQueryClient();
+  const like = useLikeAction(post);
   const [expanded, setExpanded] = useState(false);
+  const [commenting, setCommenting] = useState(false);
+  const openComments = () => {
+    setCommenting(true);
+  };
   const long = (post.caption?.length ?? 0) > 120 || (post.caption?.split('\n').length ?? 0) > 2;
 
   return (
@@ -48,11 +56,12 @@ export function PostCard({ post }: { post: Post }) {
       <PhotoCarousel
         photos={post.photos}
         onImageError={() => void queryClient.invalidateQueries({ queryKey: FEED_KEY })}
+        onDoubleTap={() => {
+          if (!post.likedByMe) like(true);
+        }}
       />
-      <div className="flex flex-col gap-2 p-3">
-        {post.likeCount > 0 && (
-          <p className="text-small font-semibold">{t.likes(post.likeCount)}</p>
-        )}
+      <div className="flex flex-col gap-2 px-3 pt-1 pb-3">
+        <LikeBar post={post} onComment={openComments} />
         {post.pets.length > 0 && (
           <ul aria-label={m.social.post.pets} className="m-0 flex list-none flex-wrap gap-2 p-0">
             {post.pets.map((pet) => (
@@ -85,15 +94,26 @@ export function PostCard({ post }: { post: Post }) {
           </div>
         )}
         {post.commentCount > 0 && (
-          <Link
-            to="/p/$postId"
-            params={{ postId: post.id }}
-            className="text-small text-text-muted inline-flex min-h-11 items-center"
+          <button
+            type="button"
+            onClick={openComments}
+            className="text-small text-text-muted inline-flex min-h-11 items-center self-start"
           >
             {t.comments(post.commentCount)}
-          </Link>
+          </button>
         )}
       </div>
+      {commenting && (
+        <ResponsiveDialog
+          open
+          onClose={() => {
+            setCommenting(false);
+          }}
+          title={m.social.comments.title}
+        >
+          <CommentsPanel postId={post.id} autoFocus />
+        </ResponsiveDialog>
+      )}
     </article>
   );
 }

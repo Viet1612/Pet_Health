@@ -1,9 +1,11 @@
-import { ApiError, type paths } from '@ph/api-client';
+import { ApiError, idempotencyHeaders, type paths } from '@ph/api-client';
 import {
   infiniteQueryOptions,
   queryOptions,
   useMutation,
   useQueryClient,
+  type InfiniteData,
+  type QueryClient,
 } from '@tanstack/react-query';
 
 import { api, unwrap } from '../../api/client';
@@ -238,4 +240,148 @@ export const feedQuery = infiniteQueryOptions({
 
 export async function feedNewCount(since: string): Promise<number> {
   return unwrap(await api.GET('/feed/new-count', { params: { query: { since } } })).count;
+}
+
+export type Comment =
+  paths['/posts/{id}/comments']['get']['responses'][200]['content']['application/json']['items'][number];
+export type Activity =
+  paths['/social-notifications']['get']['responses'][200]['content']['application/json']['items'][number];
+
+export const COMMENTS_KEY = ['social', 'comments'] as const;
+export const ACTIVITY_KEY = ['social', 'activity'] as const;
+
+type FeedPages = InfiniteData<{ items: Post[]; nextCursor: string | null }>;
+
+/** Đổi một bài ở mọi cache đang chứa nó (bản tin, chi tiết bài). */
+function patchPost(queryClient: QueryClient, postId: string, patch: (p: Post) => Post): void {
+  queryClient.setQueryData<Post>([...POST_KEY, postId], (p) => (p ? patch(p) : p));
+  queryClient.setQueryData<FeedPages>(FEED_KEY, (data) =>
+    data
+      ? {
+          ...data,
+          pages: data.pages.map((page) => ({
+            ...page,
+            items: page.items.map((p) => (p.id === postId ? patch(p) : p)),
+          })),
+        }
+      : data,
+  );
+}
+
+function findPost(queryClient: QueryClient, postId: string): Post | undefined {
+  return (
+    queryClient.getQueryData<Post>([...POST_KEY, postId]) ??
+    queryClient
+      .getQueryData<FeedPages>(FEED_KEY)
+      ?.pages.flatMap((p) => p.items)
+      .find((p) => p.id === postId)
+  );
+}
+
+/**
+ * Thả / bỏ tim (F-10): đổi ngay mọi cache chứa bài; các lần bấm cùng một bài gửi tuần tự
+ * (`scope`), lỗi thì hoàn lại. Kết quả server ghi đè số tim.
+ */
+export function useToggleLike(postId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    scope: { id: `like:${postId}` },
+    mutationFn: async (like: boolean) => {
+      const params = { params: { path: { id: postId } } };
+      return unwrap(
+        like
+          ? await api.PUT('/posts/{id}/like', params)
+          : await api.DELETE('/posts/{id}/like', params),
+      );
+    },
+    onMutate: (like) => {
+      const before = findPost(queryClient, postId);
+      patchPost(queryClient, postId, (p) =>
+        p.likedByMe === like
+          ? p
+          : { ...p, likedByMe: like, likeCount: Math.max(0, p.likeCount + (like ? 1 : -1)) },
+      );
+      return { before };
+    },
+    onError: (_err, _like, context) => {
+      const before = context?.before;
+      if (before) {
+        patchPost(queryClient, postId, (p) => ({
+          ...p,
+          likedByMe: before.likedByMe,
+          likeCount: before.likeCount,
+        }));
+      }
+    },
+    onSuccess: (state) => {
+      patchPost(queryClient, postId, (p) => ({
+        ...p,
+        likedByMe: state.liked,
+        likeCount: state.likeCount,
+      }));
+    },
+  });
+}
+
+export const likersQuery = (postId: string) =>
+  queryOptions({
+    queryKey: [...PEOPLE_KEY, 'likers', postId],
+    queryFn: async (): Promise<Person[]> =>
+      unwrap(await api.GET('/posts/{id}/likes', { params: { path: { id: postId } } })).items,
+    staleTime: 30_000,
+  });
+
+/** Bình luận của bài, cũ trước, 20/trang ("Xem thêm" tải các bình luận mới hơn). */
+export const commentsQuery = (postId: string) =>
+  infiniteQueryOptions({
+    queryKey: [...COMMENTS_KEY, postId],
+    queryFn: async ({ pageParam }) =>
+      unwrap(
+        await api.GET('/posts/{id}/comments', {
+          params: { path: { id: postId }, query: pageParam ? { cursor: pageParam } : {} },
+        }),
+      ),
+    initialPageParam: '',
+    getNextPageParam: (last) => last.nextCursor ?? undefined,
+    staleTime: 30_000,
+  });
+
+export async function postComment(postId: string, body: string, key: string): Promise<Comment> {
+  return unwrap(
+    await api.POST('/posts/{id}/comments', {
+      params: { path: { id: postId } },
+      body: { body },
+      headers: idempotencyHeaders(key),
+    }),
+  ).comment;
+}
+
+/** Sau khi thêm / xóa bình luận: làm mới danh sách và số bình luận trên thẻ bài. */
+export function afterCommentsChanged(queryClient: QueryClient, postId: string, delta: number) {
+  patchPost(queryClient, postId, (p) => ({
+    ...p,
+    commentCount: Math.max(0, p.commentCount + delta),
+  }));
+  void queryClient.invalidateQueries({ queryKey: [...COMMENTS_KEY, postId] });
+}
+
+export async function deleteComment(id: string): Promise<void> {
+  await api.DELETE('/comments/{id}', { params: { path: { id } } });
+}
+
+export const activityQuery = infiniteQueryOptions({
+  queryKey: ACTIVITY_KEY,
+  queryFn: async ({ pageParam }) =>
+    unwrap(
+      await api.GET('/social-notifications', {
+        params: { query: pageParam ? { cursor: pageParam } : {} },
+      }),
+    ),
+  initialPageParam: '',
+  getNextPageParam: (last) => last.nextCursor ?? undefined,
+  staleTime: 0,
+});
+
+export async function readAllActivity(upTo: string): Promise<void> {
+  await api.POST('/social-notifications/read-all', { body: { upTo } });
 }

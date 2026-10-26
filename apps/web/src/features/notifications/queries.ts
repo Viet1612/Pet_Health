@@ -68,6 +68,7 @@ export function useMarkRead() {
     }
     if (prevSummary) {
       queryClient.setQueryData<NotificationSummary>(SUMMARY_KEY, {
+        ...prevSummary,
         unreadCount: affected ? Math.max(0, prevSummary.unreadCount - cleared) : 0,
       });
     }
@@ -78,7 +79,7 @@ export function useMarkRead() {
           : await api.POST('/notifications/read', { body: { ids: target.ids, reason: 'USER' } }),
       );
       queryClient.setQueryData<NotificationSummary>(SUMMARY_KEY, (s) =>
-        s ? { ...s, unreadCount } : { unreadCount },
+        s ? { ...s, unreadCount } : { unreadCount, socialUnreadCount: 0 },
       );
     } catch (err) {
       if (prevList) queryClient.setQueryData(LIST_KEY, prevList);

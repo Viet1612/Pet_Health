@@ -2320,6 +2320,8 @@ export interface paths {
           content: {
             'application/json': {
               unreadCount: number;
+              /** @description Hoạt động chưa xem (F-11) */
+              socialUnreadCount: number;
               banner?: {
                 top: {
                   /** Format: uuid */
@@ -3800,6 +3802,367 @@ export interface paths {
     };
     put?: never;
     post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/posts/{id}/like': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** Thả tim (idempotent) */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              liked: boolean;
+              likeCount: number;
+            };
+          };
+        };
+      };
+    };
+    post?: never;
+    /** Bỏ tim (idempotent) */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              liked: boolean;
+              likeCount: number;
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/posts/{id}/likes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Người thả tim (tối đa 100, mới nhất trước) */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                username: string;
+                displayName: string;
+                avatarThumbUrl: string | null;
+                followedByMe: boolean;
+                isMe: boolean;
+              }[];
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/posts/{id}/comments': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Bình luận, cũ trước, 20/trang */
+    get: {
+      parameters: {
+        query?: {
+          cursor?: string;
+        };
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                /** Format: uuid */
+                id: string;
+                author: {
+                  username: string;
+                  displayName: string;
+                  avatarThumbUrl: string | null;
+                };
+                body: string;
+                /** Format: date-time */
+                createdAt: string;
+                canDelete: boolean;
+              }[];
+              nextCursor: string | null;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /**
+     * Viết bình luận (1–500 ký tự); 30 bình luận/10 phút
+     * @description Bắt buộc Idempotency-Key.
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: {
+          'idempotency-key'?: string;
+        };
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /**
+             * @description 1–500 ký tự
+             * @default
+             */
+            body?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              comment: {
+                /** Format: uuid */
+                id: string;
+                author: {
+                  username: string;
+                  displayName: string;
+                  avatarThumbUrl: string | null;
+                };
+                body: string;
+                /** Format: date-time */
+                createdAt: string;
+                canDelete: boolean;
+              };
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/comments/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Xóa bình luận (người viết hoặc chủ bài) */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/social-notifications': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Thông báo hoạt động (tim gộp theo bài, bình luận, theo dõi), 30/trang */
+    get: {
+      parameters: {
+        query?: {
+          cursor?: string;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: 'LIKE' | 'COMMENT' | 'FOLLOW';
+                actors: {
+                  username: string;
+                  displayName: string;
+                  avatarThumbUrl: string | null;
+                }[];
+                actorCount: number;
+                post: {
+                  /** Format: uuid */
+                  id: string;
+                  thumbUrl: string | null;
+                } | null;
+                commentId: string | null;
+                commentExcerpt: string | null;
+                unread: boolean;
+                /** Format: date-time */
+                createdAt: string;
+              }[];
+              nextCursor: string | null;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/social-notifications/read-all': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Đánh dấu đã xem mọi thông báo hoạt động tạo trước `upTo` */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** Format: date-time */
+            upTo?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              updated: number;
+            };
+          };
+        };
+      };
+    };
     delete?: never;
     options?: never;
     head?: never;

@@ -9,6 +9,8 @@ const BANNER_IDS_MAX = 50;
 export interface NotificationSummary {
   /** Số chưa xem của cả tài khoản (chuông), không phụ thuộc `pet`. */
   unreadCount: number;
+  /** Thông báo hoạt động (tim, bình luận, theo dõi) chưa xem — tab "Hoạt động" (F-11). */
+  socialUnreadCount: number;
   banner?: { top: NotificationView; moreCount: number; notificationIds: string[] };
 }
 
@@ -41,6 +43,7 @@ export async function getNotificationSummary(
     const [top] = views;
     return {
       unreadCount: unread.length,
+      socialUnreadCount: (await deps.social?.unreadActivityCount(trx, ownerId)) ?? 0,
       ...(top
         ? {
             banner: {

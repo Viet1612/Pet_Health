@@ -375,6 +375,9 @@ export const vi = {
     back: 'Quay lại',
     bell: 'Thông báo',
     bellUnread: (n: number) => `Thông báo, ${String(n)} chưa xem`,
+    bellBoth: (reminders: number, activity: number) =>
+      `Thông báo, ${String(reminders)} nhắc lịch, ${String(activity)} hoạt động mới`,
+    tabs: { reminders: 'Nhắc lịch', activity: 'Hoạt động' },
     markAll: 'Đánh dấu đã xem',
     markAllLabel: 'Đánh dấu đã xem tất cả',
     today: 'Hôm nay',
@@ -684,6 +687,42 @@ export const vi = {
       comments: (n: number) => `Xem ${String(n)} bình luận`,
       end: 'Bạn đã xem hết bài mới',
       pullToRefresh: 'Thả ra để làm mới',
+    },
+    like: {
+      like: 'Thích',
+      unlike: 'Bỏ thích',
+      label: (liked: boolean, n: number) =>
+        `${liked ? 'Bỏ thích' : 'Thích'}, ${String(n)} lượt thích`,
+      likers: 'Lượt thích',
+      failed: 'Không lưu được',
+    },
+    comments: {
+      title: 'Bình luận',
+      open: 'Bình luận',
+      label: 'Viết bình luận',
+      placeholder: 'Thêm bình luận…',
+      send: 'Gửi',
+      empty: 'Chưa có bình luận nào. Hãy là người đầu tiên!',
+      more: 'Xem thêm bình luận',
+      menu: (name: string) => `Tùy chọn bình luận của ${name}`,
+      delete: 'Xóa bình luận',
+      deleteTitle: 'Xóa bình luận này?',
+      deleted: 'Đã xóa bình luận',
+      failed: 'Chưa gửi được',
+      retry: 'Thử lại',
+      left: (n: number) => `Còn ${String(n)} ký tự`,
+    },
+    activity: {
+      liked: (who: string, others: number) =>
+        others > 0
+          ? `${who} và ${String(others)} người khác đã thích bài của bạn`
+          : `${who} đã thích bài của bạn`,
+      commented: (who: string) => `${who} đã bình luận:`,
+      followed: (who: string) => `${who} đã bắt đầu theo dõi bạn`,
+      emptyTitle: 'Chưa có hoạt động nào',
+      emptyBody:
+        'Khi có người thích, bình luận bài của bạn hoặc theo dõi bạn, thông báo sẽ hiện ở đây.',
+      unread: 'Mới',
     },
     complete: {
       title: 'Bổ sung thông tin tài khoản',
