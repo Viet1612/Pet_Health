@@ -2,8 +2,9 @@
 # Sao lưu CSDL production mỗi đêm (bù cho DEC-020): pg_dump nén vào /srv/pethealth/backups, giữ 14
 # bản gần nhất. Cài cron (giờ máy chủ):
 #   ( crontab -l 2>/dev/null; echo "30 2 * * * bash $PWD/infra/ops/backup-db.sh >> /var/log/pethealth-backup.log 2>&1" ) | crontab -
-# Khôi phục: gunzip -c <tệp>.sql.gz | docker compose -f infra/compose.prod.yml exec -T postgres \
-#   sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+# Khôi phục (vào DB trống, trước khi deploy chạy migration; xem docs/deploy/DEPLOY.md mục B9):
+#   gunzip -c <tệp>.sql.gz | docker compose -f infra/compose.prod.yml exec -T postgres \
+#     psql -q -v ON_ERROR_STOP=1 -U app_owner -d pethealth
 set -euo pipefail
 umask 077
 

@@ -2,6 +2,8 @@
 
 Nhật ký sức khỏe thú cưng (web). Tài liệu: [docs/](docs/), kế hoạch: [docs/implement/Implement_plan.md](docs/implement/Implement_plan.md).
 
+**Hướng dẫn chạy dev và triển khai production (VPS, WSL2):** [docs/deploy/DEPLOY.md](docs/deploy/DEPLOY.md).
+
 ## Chạy trên máy dev
 
 Yêu cầu: Node 22, Docker Desktop, PostgreSQL 16 chạy ở `127.0.0.1:5432` (bản của ServBay), `gitleaks`.
