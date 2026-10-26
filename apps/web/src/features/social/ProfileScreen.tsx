@@ -19,7 +19,7 @@ function Stat({ value, label }: { value: number; label: string }) {
   return (
     <span className="flex flex-col items-center">
       <span className="text-h2 font-bold">{value.toLocaleString()}</span>
-      <span className="text-small text-text-muted">{label}</span>
+      <span className="text-caption text-text-muted text-center leading-tight">{label}</span>
     </span>
   );
 }

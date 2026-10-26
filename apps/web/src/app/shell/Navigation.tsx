@@ -1,8 +1,19 @@
+import { useQuery } from '@tanstack/react-query';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { CalendarDays, Heart, House, LogOut, Newspaper, PawPrint, Settings } from 'lucide-react';
+import {
+  CalendarDays,
+  Heart,
+  House,
+  LogOut,
+  Newspaper,
+  PawPrint,
+  Settings,
+  UserRound,
+} from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { useLogoutAction } from '../../features/session';
+import { myProfileQuery } from '../../features/social';
 import { m } from '../../i18n';
 import { getSelectedPetId } from '../../lib/selected-pet';
 import { cx } from '../../ui/cx';
@@ -41,7 +52,7 @@ const ITEMS: NavItem[] = [
     label: m.nav.feed,
     icon: <Newspaper size={24} />,
     to: () => '/feed',
-    isActive: (p) => p.startsWith('/feed') || p.startsWith('/u/'),
+    isActive: (p) => p.startsWith('/feed') || p.startsWith('/u/') || p.startsWith('/p/'),
   },
   {
     key: 'calendar',
@@ -103,9 +114,33 @@ function RailLogout() {
   );
 }
 
+/**
+ * Mục "Hồ sơ" (Phase 2): tới hồ sơ công khai của mình; chưa tải xong hồ sơ thì qua `/u/me` (tự
+ * chuyển tiếp, chưa có hồ sơ → Bản tin để tạo).
+ * Đang ở hồ sơ của mình thì "Hồ sơ" sáng, không phải "Bản tin".
+ */
+function profileItem(username: string | undefined): NavItem {
+  const mine = username ? `/u/${username}` : null;
+  return {
+    key: 'profile',
+    label: m.nav.profile,
+    icon: <UserRound size={24} />,
+    to: () => mine ?? '/u/me',
+    isActive: (p) => mine !== null && p.toLowerCase() === mine,
+  };
+}
+
 /** CMP-08: BottomNav ở < 768 px, SideRail 88 px ở ≥ 768 px (UXD-004). */
 export function Navigation() {
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const { data: profile } = useQuery(myProfileQuery);
+  const profileNav = profileItem(profile?.username);
+  const items = ITEMS.map((item) =>
+    item.key === 'feed'
+      ? { ...item, isActive: (p: string) => item.isActive(p) && !profileNav.isActive(p) }
+      : item,
+  );
+  items.push(profileNav);
 
   return (
     <>
@@ -116,7 +151,7 @@ export function Navigation() {
           'h-[calc(64px+env(safe-area-inset-bottom))] pb-[env(safe-area-inset-bottom)] md:hidden',
         )}
       >
-        {ITEMS.map((item) => (
+        {items.map((item) => (
           <NavLink key={item.key} item={item} path={path} rail={false} />
         ))}
       </nav>
@@ -126,7 +161,7 @@ export function Navigation() {
         className="border-divider bg-surface fixed inset-y-0 left-0 z-40 hidden w-22 flex-col items-center border-r pt-16 pb-4 md:flex"
       >
         <div className="flex w-full flex-1 flex-col items-center gap-2">
-          {ITEMS.map((item) => (
+          {items.map((item) => (
             <NavLink key={item.key} item={item} path={path} rail />
           ))}
         </div>

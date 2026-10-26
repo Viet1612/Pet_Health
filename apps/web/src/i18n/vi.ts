@@ -10,6 +10,7 @@ export const vi = {
     calendar: 'Lịch',
     feed: 'Bản tin',
     pets: 'Thú cưng',
+    profile: 'Hồ sơ',
     settings: 'Cài đặt',
   },
   topBar: {

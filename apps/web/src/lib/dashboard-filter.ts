@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-import { getSelectedPetId } from './selected-pet';
+import { getSelectedPetId, setSelectedPetId, subscribeSelectedPet } from './selected-pet';
 
 const KEY = 'ph.dashboardFilter';
 
@@ -9,22 +9,36 @@ export type DashboardFilter = 'all' | (string & {});
 
 const listeners = new Set<() => void>();
 // Bản sao trong bộ nhớ khi trình duyệt chặn localStorage.
-let memory: DashboardFilter | null = null;
+let memory: 'all' | 'pet' | null = null;
 
-/** Lọc đã lưu; mặc định thú cưng đang chọn (`ph.selectedPetId`), không có thì `'all'`. */
-export function getDashboardFilter(): DashboardFilter {
+function readMode(): 'all' | 'pet' | null {
   try {
-    return window.localStorage.getItem(KEY) ?? memory ?? getSelectedPetId() ?? 'all';
+    const raw = window.localStorage.getItem(KEY);
+    // Giá trị cũ là petId: coi như chế độ một thú cưng.
+    if (raw !== null) return raw === 'all' ? 'all' : 'pet';
   } catch {
-    return memory ?? getSelectedPetId() ?? 'all';
+    // dùng bản trong bộ nhớ
   }
+  return memory;
+}
+
+/**
+ * Chỉ lưu chế độ "Tất cả" hay "một thú cưng"; thú cưng cụ thể luôn là thú cưng đang chọn
+ * (`ph.selectedPetId`), nên chọn bé ở màn khác thì Dashboard cũng đổi theo.
+ */
+export function getDashboardFilter(): DashboardFilter {
+  if (readMode() === 'all') return 'all';
+  return getSelectedPetId() ?? 'all';
 }
 
 export function setDashboardFilter(filter: DashboardFilter): void {
-  if (getDashboardFilter() === filter) return;
-  memory = filter;
+  const mode = filter === 'all' ? 'all' : 'pet';
+  // Đổi thú cưng tự báo cho người nghe qua `subscribeSelectedPet`.
+  if (filter !== 'all') setSelectedPetId(filter);
+  if (readMode() === mode) return;
+  memory = mode;
   try {
-    window.localStorage.setItem(KEY, filter);
+    window.localStorage.setItem(KEY, mode);
   } catch {
     // Bỏ qua: chỉ mất tính năng nhớ lựa chọn.
   }
@@ -33,8 +47,10 @@ export function setDashboardFilter(filter: DashboardFilter): void {
 
 function subscribe(listener: () => void): () => void {
   listeners.add(listener);
+  const unsubscribePet = subscribeSelectedPet(listener);
   return () => {
     listeners.delete(listener);
+    unsubscribePet();
   };
 }
 

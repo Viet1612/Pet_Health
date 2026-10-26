@@ -14,6 +14,7 @@ export const en: Messages = {
     calendar: 'Calendar',
     feed: 'Feed',
     pets: 'Pets',
+    profile: 'Profile',
     settings: 'Settings',
   },
   topBar: {
