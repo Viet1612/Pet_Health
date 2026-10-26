@@ -12,3 +12,10 @@ test-results/
 
 # Thư mục tạm của TanStack Router plugin
 apps/web/.tanstack/
+
+# Script/công cụ chạy test cục bộ — chỉ commit report + artifact, không commit tool
+test_reports/_tools/
+
+# Rác tạm sinh ra khi chạy test (frame screencast, ảnh trung gian)
+test_reports/**/logs/tmp/
+test_reports/**/logs/frames/

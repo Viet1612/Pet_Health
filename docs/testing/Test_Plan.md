@@ -3,7 +3,7 @@
 > **Chuẩn áp dụng:** IEEE 829-2008 (Software Test Documentation), đối chiếu IEEE 29119-3 cho cấu trúc test case.
 > **Tài liệu chi tiết:** [Test_Cases.md](Test_Cases.md) — đặc tả test case, ma trận truy vết, lịch sử thực thi.
 > **Phạm vi:** Giai đoạn 1 (Nhật ký sức khỏe) + Giai đoạn 2 (Bản tin ảnh thú cưng) — bản đang chạy trên máy dev.
-> **Ngày lập:** 2026-10-26 · **Phiên bản:** 1.0 · **Trạng thái:** Draft — chờ Việt duyệt.
+> **Ngày lập:** 2026-10-26 · **Cập nhật:** 2026-10-26 · **Phiên bản:** 1.1 · **Trạng thái:** Draft — chờ Việt duyệt.
 
 ---
 
@@ -13,7 +13,7 @@
 |---|---|
 | Mã tài liệu | **PH-MTP-001** |
 | Tên tài liệu | Master Test Plan — Pet Health Web |
-| Phiên bản | **1.0** |
+| Phiên bản | **1.1** |
 | Ngày phát hành | 2026-10-26 |
 | Trạng thái | **Draft** (đã soạn xong, chờ PO/Dev duyệt) |
 | Mức bảo mật | Internal |
@@ -21,7 +21,7 @@
 | Người phê duyệt | Việt — Product Owner / Developer / QA |
 | Chuẩn | IEEE 829-2008 §5.1–5.16; IEEE 29119-3 (test case); IEEE 29148-2018 (truy vết yêu cầu) |
 | Baseline đầu vào | BRD v1.4 · PRD v1.4 · SRS v1.1 · SAD v1.2 · UI/UX Blueprint · User Stories 2026-10-26 · Implement_plan 2026-10-26 · `openapi.yaml` 1.0.0 |
-| Môi trường nền | Chỉ **máy dev** + CI. Chưa có staging/production (S2-06 bỏ qua, S7 chưa làm, F-01/R2 chưa làm). |
+| Môi trường nền | Có **ENV-05** — môi trường test công khai tại `https://pet.vietdeptrai.io.vn/`; máy dev + CI dùng cho unit/integration/contract. Chưa có staging riêng; không có production tách biệt. |
 
 ### 0.1 Lịch sử phiên bản
 
@@ -29,6 +29,7 @@
 |---|---|---|---|
 | 0.1 | 2026-10-26 | Claude | Bản nháp đầu tiên: phân tích đầu vào, 20 rủi ro, 16 mục IEEE 829, lịch 4 tuần |
 | 1.0 | 2026-10-26 | Claude | Hoàn thiện sau khi đối chiếu 141 FR, 41 NFR, 50 story, 86 API operation; tách Test_Cases.md |
+| 1.1 | 2026-10-26 | Claude | Bổ sung ENV-05 (`https://pet.vietdeptrai.io.vn/`) là môi trường test công khai; thêm DEL-19 (hồ sơ thực thi từng case: report + ảnh + video); liên kết `test_reports/` |
 
 ### 0.2 Phê duyệt
 
@@ -104,7 +105,7 @@
 |---|---:|---:|---:|---|
 | PERF | 7 | 7 | 0 | LCP/INP/CLS, API p95, bundle, email ≤1 phút, tạo thông báo ≤50 ms, quy mô SD-011, upload 5 MB |
 | SEC | 14 | 14 | 0 | Argon2id, cookie, HSTS, IDOR 100%, rate limit, URL ký 15 phút, CSP/XSS, dependency, log, secret, EXIF, pháp lý, rò dữ liệu Bản tin |
-| REL | 5 | 3 | 2 | NFR-REL-002 (backup) và REL-004/005 (giám sát/bounce) đã rút |
+| REL | 5 | 2 | 3 | NFR-REL-002 (backup) và REL-004/005 (giám sát/bounce) đã rút |
 | USA | 7 | 7 | 0 | 44 px, WCAG 2.1 AA, không chỉ màu, dark mode **không làm**, inputmode, ≤3 thao tác, vi/en |
 | MNT | 6 | 6 | 0 | OpenAPI 100%, business rule ở server, coverage 90/70, contract test, E2E G-3, E2E Bản tin |
 | PRT | 5 | 5 | 0 | Safari/Chrome, không cuộn ngang 360–1366, cookie/token, channel, storage độc lập |
@@ -217,11 +218,11 @@
 
 | Epic | Story | Số story | Ưu tiên | Điểm nhấn kiểm thử |
 |---|---|---|---:|---|
-| E1 — Tài khoản | US-001→008 | 8 | 6 P0, 1 P1, 1 P2 | Đăng ký/verify/login/reset/quyền/xóa |
-| E2 — Thú cưng | US-010→015 | 6 | 4 P0, 2 P1 | CRUD, tuổi, ảnh, giới hạn 10 |
+| E1 — Tài khoản | US-001→008 | 8 | 4 P0, 3 P1, 1 P2 | Đăng ký/verify/login/reset/quyền/xóa |
+| E2 — Thú cưng | US-010→015 | 6 | 3 P0, 3 P1 | CRUD, tuổi, ảnh, giới hạn 10 |
 | E3 — Cân nặng | US-020→023 | 4 | 3 P0, 1 P1 | Nhập, biểu đồ, mục tiêu, sửa/xóa |
 | E4 — Sổ y tế | US-030→034 | 5 | 3 P0, 2 P1 | Bản ghi, danh sách, ảnh, lightbox |
-| E5 — Mốc & nhắc | US-040→049 | 10 | 7 P0, 3 P1 | Vòng đời mốc, D7/D1/quá hạn, hoàn tác, tự tạo |
+| E5 — Mốc & nhắc | US-040→044, 046→049 | 9 | 6 P0, 3 P1 | Vòng đời mốc, D7/D1/quá hạn, hoàn tác, tự tạo |
 | E6 — Việc hằng ngày | US-050→053, 045 | 5 | 0 P0, 5 P1 | Checklist, reset ngày, lịch sử |
 | E7 — Dashboard | US-060→062 | 3 | 2 P0, 1 P1 | Tổng hợp, lọc, banner |
 | E8 — Bản tin | US-070→079 | 10 | 0 P0, 10 P1 | Hồ sơ, bài, feed, tim, bình luận, thông báo, chặn |
@@ -274,7 +275,7 @@
 | **Prepared By** | QA Architect (Claude) |
 | **Approved By** | Việt (chờ ký) |
 | **Supersedes** | Không (bản đầu tiên) |
-| **Liên quan** | PH-TC-001 (`Test_Cases.md`), PH-TR-001 (báo cáo thực thi, sẽ tạo theo mẫu §9) |
+| **Liên quan** | PH-TC-001 (`Test_Cases.md`), PH-TR-001 (báo cáo thực thi, sẽ tạo theo mẫu §15.5 của `Test_Cases.md`) |
 
 ## 2. Giới thiệu (5.2)
 
@@ -747,6 +748,8 @@ Tạm dừng toàn bộ hoặc một phần khi:
 | DEL-16 | Hướng dẫn chạy test | Markdown | C0 | Dev/QA |
 | DEL-17 | Dữ liệu test/seed | SQL/TS | C0 | QA |
 | DEL-18 | Bài học kinh nghiệm | Markdown | Sau phát hành | PO/Dev |
+| DEL-19 | Hồ sơ thực thi từng test case: test-case, report, `result.json`, ảnh, video, log | Markdown + PNG + WebM/MP4 + JSON | Mỗi lần chạy case | QA/PO |
+| DEL-20 | Danh mục + manifest trạng thái thực thi 393 case | Markdown + JSON | Cập nhật sau mỗi chu kỳ | QA/PO |
 
 ## 10. Nhiệm vụ kiểm thử (5.10)
 
@@ -793,8 +796,10 @@ Tạm dừng toàn bộ hoặc một phần khi:
 | ENV-02 | CI | GitHub Actions `ubuntu-latest`, Node 22, pnpm, PostgreSQL 16 Testcontainers | Theo `.nvmrc`, `ci.yml` | **Có** (chưa xác nhận lần chạy GitHub gần nhất) | Lint, unit, integration, contract, security, size |
 | ENV-03 | E2E local | API 3100, web 5174, DB `pethealth_e2e`, Mailpit, FakeClock, Chromium Playwright | `NODE_ENV=test`, `workers: 1`, viewport 390×844 và 834×1112 | **Có** | E2E API + UI, axe |
 | ENV-04 | Staging | Máy chủ riêng + Cloudflare Access, image GHCR, SMTP Gmail | S2-06 bỏ qua | **Không có** | G-4/G-6/G-7/G-10/G-14, ZAP, Schemathesis |
-| ENV-05 | Production | `ph-prod`, Caddy, Cloudflare Tunnel, R2 | S7 chưa làm; F-01 chưa làm | **Không có** | Smoke, TLS, R2, deliverability |
+| ENV-05 | Test công khai (theo yêu cầu của Việt) | Ứng dụng đã triển khai: web SPA, API `/api/v1`, worker, DB, lưu trữ media | Web `https://pet.vietdeptrai.io.vn/` · API `https://pet.vietdeptrai.io.vn/api/v1` · `healthz`/`readyz` = `200 {"status":"ok"}` | **Có** (đang chạy) | Nguồn chính cho thực thi 393 test case, UAT, smoke, E2E, kiểm thủ công có bằng chứng |
 | ENV-06 | Device lab | iPhone Safari, iPad 10,5" Safari, Android Chrome, desktop Chrome | Thiết bị thật | **Không có** | G-4, cảm ứng, xoay ngang |
+
+> **ENV-05 — quy ước thực thi:** đây là môi trường dùng chung, dữ liệu có thể không phải dữ liệu test. Chỉ dùng tài khoản test do PO cấp; **không** chạy migration/rollback, load test, quét bảo mật chủ động hoặc thao tác xóa diện rộng khi chưa có phê duyệt bằng văn bản. Mọi case chạy trên ENV-05 phải lưu report + ảnh + video trong `test_reports/<ID>/`; case thiếu bằng chứng không được đánh `Pass`.
 
 ### 11.2 Công cụ
 
@@ -817,6 +822,8 @@ Tạm dừng toàn bộ hoặc một phần khi:
 - Không dùng dữ liệu cá nhân thật; không commit `.env`, ảnh, DB dump.
 - Quyền DB: `app_rw` (RLS), `app_worker` (BYPASSRLS), `ph_owner` (migration) — test phải dùng đúng role.
 - Staging/production khi có: truy cập qua Cloudflare Access, không mở DB ra Internet.
+- ENV-05: chỉ dùng tài khoản test do PO cấp; che PII/secret trong ảnh, video, log; không thao tác phá hủy khi chưa được duyệt.
+- Máy chạy test cần công cụ chụp ảnh màn hình và quay video (≥1280×720), dung lượng trống ≥20 GB cho artifact của 393 case.
 
 ## 12. Trách nhiệm (5.12)
 
@@ -871,7 +878,7 @@ Tạm dừng toàn bộ hoặc một phần khi:
 | Vitest, Testcontainers | Trung bình | Docs + code hiện có |
 | Playwright, trace, FakeClock | Trung bình–cao | `e2e/` hiện có, Playwright docs |
 | axe/WCAG 2.1 AA | Trung bình | axe docs, checklist nội bộ |
-| k6/Lighthouse | Cơ bản | Hướng dẫn trong `Test_Cases.md` §13 |
+| k6/Lighthouse | Cơ bản | Hướng dẫn trong `Test_Cases.md` §9 |
 | OWASP Top 10, ZAP | Cơ bản | OWASP ASVS, ZAP baseline |
 | PostgreSQL RLS | Trung bình | SAD §2.3, migration/test hiện có |
 | IEEE 829/29119 | Cơ bản | Tài liệu này + prompt |
@@ -1003,7 +1010,7 @@ T-01 → T-02 → T-03 → T-04 → T-06 → T-07 → T-08 → T-10 → T-13 →
 | FG-1 | IDOR 100% + quét rò rỉ | **Đạt (dev)** | 136/136 + leak scan F-13 |
 | FG-2 | E2E 3 tài khoản phone/tablet | **Đạt (dev)** | 72/72, `social-cross.api.spec.ts` |
 | FG-3 | axe 0 serious/critical + 44 px | **Đạt (dev)** | 14 màn, phone + tablet, F-13/S6-04 |
-| FG-4 | Chuỗi vi/en + mã lỗi | **Đạt (dev)** | Typecheck `Messages`; chưa click hết bản tiếng Anh |
+| FG-4 | Chuỗi vi/en + mã lỗi | **Một phần** | Typecheck `Messages` Pass; chưa click hết bản tiếng Anh và trạng thái lỗi |
 | FG-5 | Analytics không PII/nội dung | **Đạt (dev)** | Allowlist + quét DB F-13/S6-05 |
 | FG-6 | Ảnh trên R2 trước production | **Pending** | F-01 chưa làm |
 
@@ -1047,6 +1054,7 @@ T-01 → T-02 → T-03 → T-04 → T-06 → T-07 → T-08 → T-10 → T-13 →
 | 5.16 Approvals | §16 | Đầy đủ |
 | Test case specification | `Test_Cases.md` §1–13 | Đầy đủ |
 | Traceability | `Test_Cases.md` §14 | Đầy đủ |
+| Execution guide | `Test_Cases.md` §15 | Đầy đủ |
 
 ## Phụ lục D — Kiểm soát thay đổi
 
