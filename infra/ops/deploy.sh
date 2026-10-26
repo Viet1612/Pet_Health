@@ -33,7 +33,7 @@ for _ in $(seq 1 40); do
   state=$(docker inspect -f '{{.State.Health.Status}}' "$("${COMPOSE[@]}" ps -q api)" 2>/dev/null || echo starting)
   if [[ $state == healthy ]]; then
     echo "✔ api healthy"
-    "${COMPOSE[@]}" ps --format 'table {{.Service}}\t{{.State}}\t{{.Health}}'
+    "${COMPOSE[@]}" ps --format 'table {{.Service}}\t{{.Status}}'
     exit 0
   fi
   sleep 3
