@@ -91,7 +91,7 @@ export function MilestoneItem({
       >
         <MilestoneTypeIcon type={milestone.type} />
         <span className="min-w-0 flex-1">
-          <span className="text-body block truncate font-semibold">{title}</span>
+          <span className="text-body block font-semibold">{title}</span>
           <span className="text-small text-text-muted block truncate">{dueLine(milestone)}</span>
           <span className="mt-1 block">
             <StatusChip milestone={milestone} />

@@ -1,6 +1,6 @@
 # Đặc tả Test Case & Ma trận Truy vết — Pet Health
 
-> **Tài liệu:** PH-TC-001 · **Phiên bản:** 1.0 · **Ngày:** 2026-10-26 · **Trạng thái:** Draft
+> **Tài liệu:** PH-TC-001 · **Phiên bản:** 1.1 · **Ngày:** 2026-10-26 · **Trạng thái:** Draft
 > **Tài liệu mẹ:** [Test_Plan.md](Test_Plan.md) (PH-MTP-001)
 > **Chuẩn:** IEEE 29119-3 (test case), IEEE 829-2008 (traceability)
 > **Phạm vi:** 141 FR · 41 NFR · 50 story · 86 API operation · GĐ1 + GĐ2 trên môi trường dev
@@ -45,7 +45,8 @@
 | ENV-01 | `http://localhost:3000/api/v1`, `http://localhost:5173`, DB `pethealth` | Dev thủ công |
 | ENV-02 | GitHub Actions | Unit/integration/contract/security/size |
 | ENV-03 | `http://localhost:3100/api/v1`, `http://localhost:5174`, DB `pethealth_e2e`, Mailpit `:8025` | E2E; `NODE_ENV=test`; FakeClock |
-| ENV-04/05 | Staging/production | **Chưa có** — case phụ thuộc ghi `Pending` |
+| ENV-04 | Staging riêng | **Chưa có** — case phụ thuộc ghi `Pending` |
+| ENV-05 | `https://pet.vietdeptrai.io.vn/`, API `https://pet.vietdeptrai.io.vn/api/v1` | Môi trường test công khai (đã hoàn thiện); `healthz`/`readyz` = 200; nguồn chính cho thực thi 393 case |
 
 ### 1.4 Dữ liệu test chuẩn
 
@@ -414,7 +415,7 @@
 | ID | Story | AC trọng tâm | Cách kiểm | Kỳ vọng | TC | Trạng thái |
 |---|---|---|---|---|---|---|
 | **UAT-001** | US-001 Đăng ký | Given email hợp lệ, When đăng ký, Then tài khoản tạo + email xác minh | Đăng ký bằng email mới, mở Mailpit | Tài khoản tạo, email tới ≤1 phút, đăng nhập được sau xác minh | TC-AUTH-001, 002, 017; E2E-01 | Not Run |
-| **UAT-002** | US-002 Xác minh email | Given chưa xác minh, When mở link, Then xác minh; link hết hạn có nút gửi lại | Mở link, mở lại, chờ hết hạn | Xác minh một lần; thông báo đúng; gửi lại được | TC-AUTH-002, 003, 004; DSH-007 | Not Run |
+| **UAT-002** | US-002 Xác minh email | Given chưa xác minh, When mở link, Then xác minh; link hết hạn có nút gửi lại | Mở link, mở lại, chờ hết hạn | Xác minh một lần; thông báo đúng; gửi lại được | TC-AUTH-002, 003, 004; TC-DSH-007 | Not Run |
 | **UAT-003** | US-003 Đăng nhập/xuất | Given tài khoản đã xác minh, When đăng nhập sai/đúng, Then thông báo không lộ tài khoản | Thử 4 tổ hợp, khóa 15 phút, logout | Cùng thông báo khi sai; khóa đúng; logout hủy phiên | TC-AUTH-005, 006, 007, 014 | Not Run |
 | **UAT-004** | US-004 Đặt lại mật khẩu | Given quên mật khẩu, When dùng link, Then đổi được một lần, phiên cũ hủy | Yêu cầu reset, dùng link 2 lần | Đổi được; link một lần; phiên khác 401 | TC-AUTH-008, 009 | Not Run |
 | **UAT-005** | US-005 Xóa tài khoản | Given đã đăng nhập, When xác nhận mật khẩu + xóa, Then toàn bộ dữ liệu mất | Xóa A, kiểm DB/media, B xem hồ sơ | Không đăng nhập lại; dữ liệu/media mất; B thấy 404 | TC-AUTH-016; E2E-05 | Not Run |
@@ -938,7 +939,7 @@
 
 **Tổng hợp NFR:** 41 còn hiệu lực · 41 có test case hoặc quyết định chấp nhận · 3 đã rút (REL-002/004/005) · 7 **Pending** do thiếu staging/production/thiết bị/pháp lý.
 
-### 14.4 Ma trận API → Test case (86 operation)
+### 14.4 Ma trận API → Test case
 
 | # | Operation | Nhóm | TC chính | IDOR | Contract |
 |---|---|---|---|---|---|
@@ -1097,7 +1098,7 @@
 | DB dev | PostgreSQL 16 (ServBay), DB `pethealth`, role `ph_owner`/`app_rw`/`app_worker` | `psql -c '\dt'` |
 | Mailpit | Cổng 1025/8025 | Mở `http://localhost:8025` |
 | Docker | Cho Testcontainers (integration) | `docker info` |
-| Cổng trống | 3000, 3100, 5173, 5174, 5432, 8025 | `netstat -ano \| findstr` |
+| Cổng trống | 3000, 3100, 5173, 5174, 5432, 8025 | `netstat -ano` (lọc theo cổng) |
 | Biến môi trường | `.env` từ `.env.example`; **không** commit | `Get-Content .env` |
 | Dữ liệu | DB E2E `pethealth_e2e` sạch; `.data/` đủ chỗ | — |
 
@@ -1222,10 +1223,10 @@ pnpm e2e
 | Hạng mục | Số lượng | Đã có bằng chứng | Ghi chú |
 |---|---:|---:|---|
 | FR | 141 | 141 thiết kế | 61 P0 / 79 P1 / 1 P2 |
-| NFR còn hiệu lực | 41 | 34 thiết kế + 3 withdrawn + 7 Pending | Pending do môi trường/pháp lý |
+| NFR còn hiệu lực | 41 | 34 có test chạy được trên dev + 7 Pending | 3 NFR đã rút nằm ngoài 41: REL-002/004/005 |
 | Story | 50 | 50 có UAT | UAT chưa chạy |
 | API operation | 86 | 86 có TC | Contract CI |
-| Gate G | 18 | 6 đạt dev, 5 một phần, 4 pending, 2 withdrawn | Xem §14.5 |
+| Gate G | 18 | 7 đạt dev, 4 một phần, 1 chưa đo, 4 pending, 2 withdrawn | Xem §14.5 |
 | Gate FG | 6 | 4 đạt dev, 1 một phần, 1 pending | FG-6/R2 |
 | Test case chức năng | 141 chính + 27 âm/biên | 168 TC | Mỗi FR có TC chính; 27 case âm/biên |
 | Test case xuyên suốt | DB 23 · CON 10 · API 16 · E2E 26 · UAT 50 · REG 12 · PERF 12 · SEC 22 · ACC 12 · UI 14 · REL 8 · OPS 10 · MNT 10 | 225 | Tổng cộng 393 ID test case |
@@ -1247,4 +1248,76 @@ pnpm e2e
 
 ---
 
-**Hết tài liệu PH-TC-001 v1.0.**
+## 16. Hồ sơ thực thi từng test case
+
+Mỗi ID ở §2–13 có một hồ sơ riêng trong [`../test_reports/`](../../test_reports/README.md). Hồ sơ là **đặc tả thực thi**, không phải kết quả test.
+
+### 16.1 Nguyên tắc
+
+1. **Một case — một thư mục:** `test_reports/<ID>/`, tên thư mục đúng bằng mã case, không thêm hậu tố.
+2. **Không đổi ID:** dùng đúng mã trong tài liệu này; không tạo ID mới khi chạy.
+3. **Bằng chứng là điều kiện của verdict:** thiếu report, ảnh hoặc video thì **không** được đánh `Pass`.
+4. **Mặc định `Not Run`:** chỉ chuyển trạng thái sau khi có artifact thực tế trên ENV-05.
+5. **Case đã rút** (`OPS-08`, `OPS-09`): không thực thi; đóng bằng `N/A (Withdrawn)` kèm ảnh/video xác nhận quyết định.
+6. **Không dùng baseline dev làm bằng chứng ENV-05:** kết quả cũ chỉ là tham chiếu.
+
+### 16.2 Cấu trúc thư mục
+
+| Tệp / thư mục | Bắt buộc | Nội dung |
+|---|---|---|
+| `test-case.md` | Có (tự động) | Hồ sơ này: mục tiêu, truy vết, tiền điều kiện, bước, kỳ vọng, nhiệm vụ agent, bằng chứng |
+| `report.md` | Khi chạy | Report theo [`REPORT_TEMPLATE.md`](../../test_reports/_templates/REPORT_TEMPLATE.md): verdict, actual từng bước, evidence, defect |
+| `result.json` | Khi chạy | Metadata máy đọc theo [`result.json`](../../test_reports/_templates/result.json) |
+| `screenshots/` | Khi chạy | Tối thiểu **số bước + 2** ảnh: `01-initial.png`, `NN-step-NN.png`, `NN-final.png` |
+| `video/` | Khi chạy | `recording.webm` hoặc `.mp4`; quay liên tục cả case; case withdrawn dùng `withdrawn-confirmation.webm` |
+| `logs/` | Khi chạy | Console/network/HTTP/DB log liên quan |
+
+### 16.3 Nhiệm vụ agent
+
+| Mã | Nhiệm vụ | Điều kiện hoàn thành |
+|---|---|---|
+| **A1** | Chuẩn bị & xác nhận môi trường | Mở ENV-05, đăng nhập/chuẩn bị tài khoản; ghi thời điểm, trình duyệt, build/commit |
+| **A2** | Thực thi kịch bản | Làm đủ số bước trong `test-case.md`, ghi actual từng bước |
+| **A3** | Chụp ảnh bằng chứng | Đủ số ảnh tối thiểu, thấy URL/terminal và kết quả; che PII/secret |
+| **A4** | Quay video | Một video liên tục từ trước bước 1 đến sau kiểm tra cuối |
+| **A5** | Viết report | `report.md` + `result.json` đúng mẫu, verdict có căn cứ, link mọi evidence |
+| **A6** | Kiểm tra & cập nhật | Mở lại ảnh/video; cập nhật `INDEX.md` + `manifest.json`; chạy checker artifact |
+| **W1–W6** | Case withdrawn | Xác nhận quyết định, chụp 2 ảnh, quay video 10–30 giây, report `N/A`, cập nhật danh mục |
+
+Quy trình chi tiết: [`../test_reports/RUNBOOK.md`](../../test_reports/RUNBOOK.md).
+
+### 16.4 Trạng thái và điều kiện
+
+| Trạng thái | Điều kiện |
+|---|---|
+| `Not Run` | Chưa thực thi; mặc định cho mọi case mới sinh |
+| `Pass` | Mọi quan sát khớp kỳ vọng; đủ ảnh + video + report + `result.json`; không còn defect S1/S2 |
+| `Fail` | Có quan sát sai kỳ vọng, hoặc thiếu bằng chứng buộc kết luận không đạt |
+| `Blocked` | Thiếu tài khoản/quyền/môi trường/dữ liệu; ghi rõ cần gì để gỡ |
+| `N/A (Withdrawn)` | Case đã rút theo quyết định; vẫn có ảnh/video/report xác nhận |
+
+### 16.5 Danh mục và sinh lại hồ sơ
+
+| Việc | Lệnh / tệp |
+|---|---|
+| Danh mục 393 case | [`../test_reports/INDEX.md`](../../test_reports/INDEX.md) |
+| Manifest máy đọc | [`../test_reports/manifest.json`](../../test_reports/manifest.json) |
+| Sinh lại hồ sơ từ tài liệu này | `node test_reports/_tools/generate-test-reports.mjs` |
+| Kiểm tra artifact sau khi chạy | `node test_reports/_tools/check-artifacts.mjs` |
+| Mẫu report / result / case | [`../test_reports/_templates/`](../../test_reports/_templates/) |
+
+### 16.6 Cần cấp khi thực thi
+
+| Hạng mục | Dùng cho | Người cấp |
+|---|---|---|
+| Tài khoản test A/B/C đã xác minh email + hộp thư test | Hầu hết case UI/API/E2E/UAT | PO/Dev |
+| Quyền tạo/sửa/xóa dữ liệu test trên ENV-05 | Case CRUD, xóa, reset | PO/Dev |
+| `DATABASE_URL` read-only hoặc snapshot DB | DB-01→DB-23, case kiểm dữ liệu | Dev/DevOps |
+| Quyền xem log/CI/dashboard | OPS, REL, MNT | Dev/DevOps |
+| Phê duyệt chạy load test (k6/Lighthouse) | PERF-01→PERF-12 | PO |
+| Phê duyệt kiểm thử bảo mật trong phạm vi | SEC-01→SEC-22 | PO/Security |
+| PO/người đại diện + lịch sign-off | UAT-001→UAT-079 | PO |
+
+---
+
+**Hết tài liệu PH-TC-001 v1.1.**

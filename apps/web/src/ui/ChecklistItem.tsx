@@ -54,10 +54,7 @@ export function ChecklistItem({
       <span className="text-small text-text-muted w-12 shrink-0 tabular-nums">{time}</span>
       <span className="flex min-w-0 flex-1 flex-col">
         <span
-          className={cx(
-            'text-body truncate',
-            checked ? 'text-text-muted line-through' : 'font-semibold',
-          )}
+          className={cx('text-body', checked ? 'text-text-muted line-through' : 'font-semibold')}
         >
           {label}
         </span>

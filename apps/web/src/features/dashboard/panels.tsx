@@ -121,7 +121,7 @@ function MilestoneRow({
         params={{ milestoneId: item.id }}
         className="min-w-0 flex-1"
       >
-        <span className="text-body block truncate font-semibold">{title}</span>
+        <span className="text-body block font-semibold">{title}</span>
         <span className="text-small text-text-muted block">
           {m.milestones.due(formatDate(item.dueOn))}
         </span>
@@ -216,7 +216,7 @@ export function WeightListPanel({
               className="hover:bg-surface-2 flex min-h-14 items-center gap-3 rounded-md px-1 py-2"
             >
               <span className="min-w-0 flex-1">
-                <span className="text-body block truncate font-semibold">{r.petName}</span>
+                <span className="text-body block font-semibold">{r.petName}</span>
                 {r.measuredOn && (
                   <span className="text-small text-text-muted block">
                     {t.measuredOn(formatDate(r.measuredOn))}

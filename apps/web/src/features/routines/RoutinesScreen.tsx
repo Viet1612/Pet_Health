@@ -181,7 +181,7 @@ export function RoutinesScreen({
                     <span className="bg-primary-soft text-primary-soft-fg text-small rounded-full px-2 py-0.5 font-semibold tabular-nums">
                       {r.timeOfDay}
                     </span>
-                    <span className="text-body min-w-0 flex-1 truncate">{r.name}</span>
+                    <span className="text-body min-w-0 flex-1">{r.name}</span>
                     <RowMenu
                       label={t.options(r.name)}
                       onEdit={() => {

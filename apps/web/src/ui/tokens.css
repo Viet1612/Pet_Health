@@ -149,6 +149,9 @@
        `hidden` cho trình duyệt cũ chưa có `clip`. */
     overflow-x: hidden;
     overflow-x: clip;
+    /* Chữ dài không có dấu cách (tên việc, chú thích, username…) tự xuống dòng thay vì kéo giãn
+       khung; `anywhere` còn tính vào bề rộng tối thiểu nên flex/grid không bị nội dung đẩy rộng. */
+    overflow-wrap: anywhere;
     background: var(--bg);
     color: var(--text);
     font-family: var(--font-sans);

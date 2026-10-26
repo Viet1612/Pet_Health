@@ -38,7 +38,10 @@ type Action = 'routine' | 'milestone' | 'weight';
 /** Skeleton cùng lưới với nội dung thật (21:2473), kích thước cố định để không xô lệch. */
 function DashboardSkeleton() {
   return (
-    <div aria-busy="true" className="grid gap-4 md:grid-cols-[3fr_2fr]">
+    <div
+      aria-busy="true"
+      className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]"
+    >
       <Skeleton className="h-24 rounded-lg md:col-span-2" />
       <div className="flex flex-col gap-4 md:order-2">
         <div className="bg-surface flex flex-col gap-2 rounded-lg p-4">
@@ -157,7 +160,8 @@ export function DashboardScreen({ timezoneToday }: { timezoneToday: string }) {
       <div
         aria-busy={query.isPlaceholderData || undefined}
         className={cx(
-          'grid items-start gap-4 transition-opacity md:grid-cols-[3fr_2fr]',
+          // minmax(0, …): nội dung dài (tên việc không có dấu cách…) không kéo giãn cột ra ngoài màn hình.
+          'grid grid-cols-1 items-start gap-4 transition-opacity md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]',
           query.isPlaceholderData && 'pointer-events-none opacity-60',
           hasTop
             ? "md:[grid-template-areas:'top_top'_'weight_routines'_'milestones_routines']"
