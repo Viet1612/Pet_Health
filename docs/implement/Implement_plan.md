@@ -6,6 +6,8 @@ Giai đoạn 1 được xây trong **8 sprint × 2 tuần (16 tuần)** cho 40 u
 
 **Nguồn:** [SAD](../design/SAD.md), [User Stories](../design/User_Stories.md), [PRD](../requirements/PRD.md) §5.1 (launch gate G-1→G-18), [SRS](../requirements/SRS.md), [UI/UX Blueprint](../design/UI_UX_Blueprint.md), file Figma [Pet Health](https://www.figma.com/design/LFyXuFes0btRKxTORNwgpo).
 
+**Giai đoạn 2 — Bản tin ảnh thú cưng** (đăng ảnh, theo dõi, thả tim, bình luận, chặn) xem [mục 10](#10-giai-đoạn-2--bản-tin-ảnh-thú-cưng). Phần này được làm trên máy dev trước, rồi triển khai production cùng S7.
+
 ---
 
 ## 1. Nguyên tắc triển khai
@@ -300,3 +302,106 @@ Một story chỉ được tính là xong khi đạt đủ:
 | S6 | US-007 | US-008, US-005 (P2) |
 | **Tổng** | **21** | **19** |
 
+
+---
+
+## 10. Giai đoạn 2 — Bản tin ảnh thú cưng
+
+2026-10-26 · Việt
+
+**Bản tin** là tính năng xã hội lấy phần lõi của Instagram: người dùng đăng ảnh thú cưng, theo dõi nhau, thả tim, bình luận, nhận thông báo hoạt động và chặn người khác. Không có story, video, nhắn tin, hashtag hay trang khám phá. Phạm vi lấy từ [Phase2-ideas](../requirements/Phase2-ideas.md) §2 (kiểu B rút gọn). Bản tin chưa có PRD/SRS riêng: quy tắc nghiệp vụ nằm trong từng task ở [tasks-feed/](tasks-feed/README.md), kết quả ở [task_done/](task_done/README.md#bản-tin-phase-2).
+
+**Trạng thái:** 12/13 task xong trên máy dev, chưa push. Task còn lại là F-01 (lưu ảnh lên Cloudflare R2), làm cùng đợt triển khai production (S7).
+
+### 10.1 Quyết định thiết kế
+
+| # | Câu hỏi | Quyết định |
+|---|---|---|
+| D1 | Ai xem được bài? | Mọi tài khoản **đã đăng nhập**. Khách chưa đăng nhập không xem được; không có trang công khai cho máy tìm kiếm |
+| D2 | Kiểm duyệt nội dung | **Không có chức năng báo cáo** (không báo cáo, không tự ẩn, không kiểm duyệt). Người dùng tự bảo vệ bằng **chặn** + giới hạn chống spam. Gỡ bài vi phạm bằng SQL (ghi chú vận hành ở [F-13](task_done/F-13-cross-account-tests.md)) |
+| D3 | Hạn mức ảnh | Tối đa 5 ảnh/bài, 30 bài/ngày. Server nhận tệp ≤ 5 MB; ảnh lớn hơn (tới 50 MB) được **nén ở trình duyệt** trước khi gửi, áp dụng cho mọi chỗ tải ảnh |
+| D4 | Tách dữ liệu sức khỏe | Mô-đun mới `social`. **Bảng sức khỏe giữ nguyên RLS `owner_isolation`**; bảng xã hội dùng chính sách riêng "đọc công khai, ghi chỉ chủ" |
+| D5 | Hiển thị bài và hồ sơ | Bài hiện tên người dùng (avatar, tên hiển thị, `@username`). **Gắn thú cưng là tùy chọn** (0–5 bé), chỉ hiện tên bé. Mỗi tài khoản có **một** bản tin và **một** hồ sơ chứa mọi ảnh, không chia theo từng bé |
+| D6 | Thông báo xã hội | Bảng riêng `social_notifications`; chuông dùng chung, đếm cả nhắc lịch và hoạt động; màn Thông báo có 2 tab "Nhắc lịch" và "Hoạt động" |
+| D7 | Thông tin tài khoản | Đăng ký **bắt buộc nickname và ngày sinh**, kèm ô nhập lại mật khẩu. Tài khoản cũ được hỏi bổ sung một lần khi mở app. Ngày sinh không hiện trên hồ sơ công khai |
+| D8 | Thứ tự làm | Làm bản tin trên máy dev trước (ảnh lưu đĩa local, thử nhiều tài khoản qua máy tính và điện thoại qua Tailscale), rồi triển khai production một thể (S7 + F-01) |
+
+### 10.2 Lộ trình theo đợt
+
+```mermaid
+flowchart LR
+    D1["Đợt 1<br/>Nền tảng<br/>F-02, F-03"] --> D2["Đợt 2<br/>Đăng bài<br/>F-04→F-06"]
+    D1 --> D3["Đợt 3<br/>Theo dõi + Bản tin<br/>F-07, F-08"]
+    D2 --> D3
+    D2 --> D4["Đợt 4<br/>Tương tác<br/>F-09→F-11"]
+    D3 --> D4
+    D4 --> D5["Đợt 5<br/>An toàn + Kiểm thử<br/>F-12, F-13"]
+    D5 --> P["Production<br/>S7 + F-01 (R2)"]
+```
+
+| Đợt | Task | Nội dung | Trạng thái | Commit |
+|---|---|---|---|---|
+| 1 · Nền tảng | F-02, F-03 | Hồ sơ công khai (username, tên hiển thị, giới thiệu, ảnh đại diện); nickname + ngày sinh khi đăng ký; schema `social` và RLS | Xong | `302bc46` |
+| 2 · Đăng bài | F-04 → F-06 | API bài đăng (nháp → tải ảnh → tự đăng), màn soạn bài một màn, lưới hồ sơ 3 cột, chi tiết bài vuốt ảnh, sửa / xóa | Xong | `6eed3cc`, `a26ada5` |
+| 3 · Theo dõi + Bản tin | F-07, F-08 | Theo dõi / bỏ theo dõi, danh sách theo dõi, tìm người không dấu; bản tin cuộn vô hạn, kéo làm mới, "Có bài mới" | Xong | `6d240a9` |
+| 4 · Tương tác | F-09 → F-11 | Thả tim (cả nhấn đúp ảnh), bình luận, thông báo hoạt động (tim gộp theo bài) | Xong | `4905d32` |
+| 5 · An toàn + Kiểm thử | F-12, F-13 | Chặn, gom ngưỡng chống spam; quét rò rỉ chéo tài khoản, E2E 3 tài khoản, i18n, analytics + funnel | Xong | `0ae475d` |
+| Production | F-01 | Chuyển ảnh sang Cloudflare R2 qua `ObjectStoragePort` | Chờ S7 | — |
+
+Các bản sửa theo góp ý khi dùng thử (không thuộc task nào):
+
+- `553c05e`: mục "Hồ sơ" trên thanh điều hướng; bộ lọc Dashboard đi theo thú cưng đang chọn.
+- `bda0633`: nút trùng trên điện thoại, nhập lại mật khẩu, đầu Bản tin gọn hơn, radio ngôn ngữ, soạn bài một màn, nén ảnh > 5 MB.
+- `d67251c`: chuông và tab Hoạt động tự cập nhật mỗi 30 s khi tab đang mở.
+
+### 10.3 Kiến trúc bổ sung
+
+**Mô-đun `social`** (`apps/api/src/modules/social`) theo cùng bố cục domain / application / adapters như Giai đoạn 1. Mô-đun này chỉ đọc mô-đun khác qua cổng công khai: `petQuery.getNames` để kiểm thú cưng của người đăng, `MediaService` để xử lý ảnh. Mô-đun `notifications` đọc số hoạt động chưa xem qua `socialQuery`.
+
+```mermaid
+flowchart TB
+    identity --> social
+    media --> social
+    pets -->|"petQuery (tên, chủ)"| social
+    social -->|"socialQuery (số hoạt động)"| notifications
+    social --> analytics
+```
+
+| Thành phần | Nội dung |
+|---|---|
+| **Bảng** | `profiles`, `posts`, `post_photos`, `follows`, `post_likes`, `post_comments`, `blocks`, `social_notifications`. Cột thêm vào `users`: `nickname`, `birth_date` |
+| **RLS** | Mọi bảng xã hội bật RLS + FORCE. Đọc: người đã đăng nhập và `not_blocked()` (hai người đã chặn nhau không thấy nhau); bài nháp chỉ chủ thấy. Ghi: chỉ chủ dòng. Người chặn vẫn thấy hồ sơ người bị chặn để bỏ chặn |
+| **Tên thú cưng trên bài** | Hàm `post_pet_names()` (`SECURITY DEFINER`) chỉ trả `(id, tên)` của bé gắn trong bài mà người xem thấy được. Bảng `pets` vẫn giữ `owner_isolation` |
+| **Ảnh bài** | Dùng lại pipeline Giai đoạn 1 với biến thể `POST_PHOTO`: cạnh dài 1080 px, thumbnail vuông 360 px, bỏ EXIF/GPS. Khóa `u/{user}/posts/{post}/{photo}.jpg`. Ảnh cuối cùng READY thì bài chuyển `PUBLISHED` |
+| **Tìm kiếm** | Extension `unaccent` + `pg_trgm`; hàm `social_fold()` IMMUTABLE; tiền tố username hoặc chuỗi con tên hiển thị, không dấu |
+| **Số đếm** | Số bài, người theo dõi, tim, bình luận đếm khi đọc (không có trigger đếm, tránh vướng RLS) |
+| **Chống spam** | `SOCIAL_LIMITS` một chỗ: đăng bài 30/ngày, bình luận 30/10 phút, thích 300/giờ, theo dõi 200/ngày, chặn 50/ngày, tìm 60/phút. Tài khoản < 24 h: đăng bài và bình luận còn 1/3 |
+| **Bảo trì** | `maintenance.daily` thêm 2 bước: xóa bài nháp > 24 h, xóa thông báo hoạt động > 90 ngày |
+| **Analytics** | Event `profile_created`, `post_created`, `post_liked`, `post_like_received`, `post_commented`, `user_followed`, `user_blocked`, `feed_viewed`; view `analytics_funnel_social` (tạo hồ sơ → bài đầu → tim đầu → theo dõi ≥ 3) |
+
+**Màn hình mới:**
+
+- `/feed` (bản tin), `/feed/new` (soạn bài).
+- `/u/{username}` (hồ sơ + lưới) cùng `/followers`, `/following`; `/p/{id}` (chi tiết bài + bình luận); `/search` (tìm người).
+- Tab "Hoạt động" ở `/notifications`; trong Cài đặt có thêm mục "Hồ sơ công khai", "Nickname và ngày sinh", "Đã chặn".
+- Thanh điều hướng có 6 mục: Tổng quan, Sức khỏe, Bản tin, Lịch, Thú cưng, Hồ sơ.
+
+### 10.4 Kiểm thử và kết quả
+
+| Tầng | Nội dung | Kết quả |
+|---|---|---|
+| Unit | Username, ngày sinh, ngưỡng tài khoản mới, nén / chọn ảnh, đổi thứ tự ảnh, gắn bé | 209 Pass |
+| Integration (Testcontainers) | RLS từng bảng xã hội; chặn ẩn hai chiều; phân trang bản tin không trùng / sót khi có bài mới chen vào; 10 request song song (theo dõi, tim) chỉ tạo 1 dòng; tìm không dấu | Pass |
+| IDOR | Fixture `/posts/:id`, `/post-photos/:id`, `/comments/:id`; **quét rò rỉ**: phiên B gọi 9 route đọc trên dữ liệu A, phản hồi không có email, giống, ngày sinh, cân nặng, triệu chứng, chẩn đoán, đơn thuốc hay khóa ảnh khám | 136/136 Pass |
+| E2E (phone 390 + tablet 834) | Đăng bài, lưới, chi tiết, sửa / xóa; tìm → theo dõi → bản tin; nhấn đúp tim, bình luận, tab Hoạt động; chặn / bỏ chặn; luồng 3 tài khoản tới xóa tài khoản; ảnh > 5 MB được nén rồi đăng | 72/72 Pass |
+| Trợ năng (axe) | `/feed`, `/feed/new`, `/u/{username}`, `/p/{id}`, `/search`, danh sách theo dõi, tab Hoạt động | 0 lỗi serious/critical |
+
+### 10.5 Việc còn lại và rủi ro
+
+| ID | Nội dung | Khi nào |
+|---|---|---|
+| F-01 | Chuyển ảnh sang R2: đổi `ObjectStoragePort`, chép ảnh hiện có, theo dõi dung lượng (gói miễn phí 10 GB) | Cùng S7 |
+| R6 | Không có báo cáo nội dung (D2): bài vi phạm phải gỡ tay bằng SQL | Xem lại nếu mở cho người ngoài |
+| R7 | Số đếm tính khi đọc: chưa đo p95 với dữ liệu lớn (50 người × 200 bài) | Load test S7-03 |
+| R8 | Thông báo cập nhật theo chu kỳ 30 s, không đẩy tức thời | Xem lại khi làm app điện thoại (push) |
+| — | App điện thoại (PWA → Capacitor) trong Phase2-ideas §1 | Chưa lên kế hoạch |
