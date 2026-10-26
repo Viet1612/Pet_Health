@@ -2,7 +2,7 @@
 
 Mỗi task làm xong có một tệp kết quả trong thư mục này, cùng tên với tệp task trong [../tasks/](../tasks/README.md). Bảng dưới đây là tiến độ tổng; mới nhất ở cuối.
 
-**Tiến độ:** 47 / 54 task
+**Tiến độ:** 48 / 54 task
 
 Cột Commit được điền ở lần commit kế tiếp (một commit không chứa được mã của chính nó).
 
@@ -56,12 +56,13 @@ Cột Commit được điền ở lần commit kế tiếp (một commit không 
 | S6-04 | Rà soát trợ năng (axe 0 lỗi serious/critical, vùng chạm 44 px, skip link); dark mode không làm | Xong phần trợ năng; dark mode bỏ theo quyết định chỉ dùng giao diện sáng | 2026-10-26 | `9cd6323` | [S6-04](S6-04-dark-mode-a11y.md) |
 | S6-05 | Analytics tự lưu: bảng phân vùng, danh sách trắng, event server/client, 3 view funnel | Xong, E2E API kiểm DB Pass | 2026-10-26 | `6e15042` | [S6-05](S6-05-analytics.md) |
 | S6-06 | Job `maintenance.daily`: 8 bước dọn dẹp theo lô, partition analytics, heartbeat kiểm DB | Xong, test tích hợp Pass | 2026-10-26 | `89b64e5` | [S6-06](S6-06-maintenance-job.md) |
+| S7-01 | Stack production trên một máy (WSL2): compose, CSP, tunnel, deploy / status / backup | Xong, đang chạy tại pet.vietdeptrai.io.vn | 2026-10-26 | — | [S7-01](S7-01-production-stack.md) |
 
 ## Bản tin (Phase 2)
 
 Task ở [../tasks-feed/](../tasks-feed/README.md). Làm trên máy dev trước; F-01 (R2) làm cùng đợt triển khai production.
 
-**Tiến độ:** 12 / 13 task (còn F-01 R2, làm cùng đợt triển khai production)
+**Tiến độ:** 13 / 13 task
 
 | Task | Tên | Trạng thái | Ngày | Commit | Kết quả |
 |---|---|---|---|---|---|
@@ -75,5 +76,6 @@ Task ở [../tasks-feed/](../tasks-feed/README.md). Làm trên máy dev trước
 | F-09 | API thả tim, bình luận (idempotent, rate limit, xóa bởi người viết / chủ bài) | Xong, E2E API + IDOR Pass | 2026-10-26 | `4905d32` | [F-09](F-09-likes-comments-api.md) |
 | F-10 | Giao diện tim (nhấn đúp), danh sách người thích, bình luận (sheet / chi tiết bài) | Xong, E2E giao diện + axe Pass | 2026-10-26 | `4905d32` | [F-10](F-10-likes-comments-ui.md) |
 | F-11 | Thông báo hoạt động: tim gộp, bình luận, theo dõi; chuông + tab "Hoạt động" | Xong, E2E + test tích hợp Pass | 2026-10-26 | `4905d32` | [F-11](F-11-social-notifications.md) |
-| F-12 | Chặn người dùng, gom ngưỡng chống spam (tài khoản < 24 h còn 1/3) | Xong, E2E + test tích hợp Pass | 2026-10-26 | — | [F-12](F-12-safety.md) |
-| F-13 | Quét rò rỉ chéo tài khoản, E2E 6 bước, i18n, analytics + funnel bản tin | Xong trên dev (R2 chờ F-01) | 2026-10-26 | — | [F-13](F-13-cross-account-tests.md) |
+| F-12 | Chặn người dùng, gom ngưỡng chống spam (tài khoản < 24 h còn 1/3) | Xong, E2E + test tích hợp Pass | 2026-10-26 | `0ae475d` | [F-12](F-12-safety.md) |
+| F-13 | Quét rò rỉ chéo tài khoản, E2E 6 bước, i18n, analytics + funnel bản tin | Xong trên dev (R2 chờ F-01) | 2026-10-26 | `0ae475d` | [F-13](F-13-cross-account-tests.md) |
+| F-01 | Lưu ảnh lên Cloudflare R2 (`HybridStorage`: incoming trên đĩa, ảnh đã xử lý trên R2) | Xong, dùng trên production | 2026-10-26 | `7ac17a1` | [F-01](F-01-r2-storage.md) |
