@@ -30,6 +30,12 @@ const configSchema = z
     // Ảnh (S2-02): thư mục gốc lưu tệp và khóa ký URL /media (≥ 32 ký tự, openssl rand -base64 32).
     MEDIA_ROOT: z.string().min(1).default('./.data/media'),
     MEDIA_SIGNING_KEY: z.string().min(32),
+    // Kho ảnh (F-01): `disk` (máy dev) hoặc `r2` (production; `incoming/` vẫn trên đĩa).
+    STORAGE_DRIVER: z.enum(['disk', 'r2']).default('disk'),
+    R2_ACCOUNT_ID: z.string().default(''),
+    R2_BUCKET: z.string().default(''),
+    R2_ACCESS_KEY_ID: z.string().default(''),
+    R2_SECRET_ACCESS_KEY: z.string().default(''),
 
     // Chỉ cho máy dev: mở web bằng IP mạng LAN (http://192.168.x.x:5173). Origin thêm được CSRF chấp
     // nhận; cookie phiên bỏ `Secure` (đổi tên `__Host-ph_sid` → `ph_sid`) vì trình duyệt chỉ nhận
@@ -49,7 +55,17 @@ const configSchema = z
   .refine((c) => c.NODE_ENV !== 'production' || c.SESSION_COOKIE_SECURE, {
     error: 'SESSION_COOKIE_SECURE=false chỉ dùng cho máy dev',
     path: ['SESSION_COOKIE_SECURE'],
-  });
+  })
+  .refine(
+    (c) =>
+      c.STORAGE_DRIVER !== 'r2' ||
+      [c.R2_ACCOUNT_ID, c.R2_BUCKET, c.R2_ACCESS_KEY_ID, c.R2_SECRET_ACCESS_KEY].every(Boolean),
+    {
+      error:
+        'STORAGE_DRIVER=r2 cần R2_ACCOUNT_ID, R2_BUCKET, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY',
+      path: ['STORAGE_DRIVER'],
+    },
+  );
 
 export type Config = z.infer<typeof configSchema>;
 

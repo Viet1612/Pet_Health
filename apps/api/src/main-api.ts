@@ -5,7 +5,7 @@ import { PasswordHasher } from './modules/identity/application/password-hasher.j
 import { configureSessionCookie, CookieSessionResolver } from './modules/identity/index.js';
 import { registerModules, registerRootModuleRoutes, type ModuleDeps } from './modules/index.js';
 import { RateLimiter } from './platform/rate-limit/rate-limiter.js';
-import { LocalDiskStorage } from './platform/storage/local-disk-storage.js';
+import { createStorage } from './platform/storage/create-storage.js';
 
 const SHUTDOWN_TIMEOUT_MS = 15_000;
 
@@ -32,7 +32,7 @@ const moduleDeps: ModuleDeps = {
   notifications: { clock: runtime.clock },
   media: {
     // Container api chỉ ghi được `incoming/` (mount ro cho phần còn lại).
-    storage: new LocalDiskStorage(config.MEDIA_ROOT),
+    storage: createStorage(config),
     jobQueue: runtime.jobQueue,
     clock: runtime.clock,
     signingKey: config.MEDIA_SIGNING_KEY,

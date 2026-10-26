@@ -109,6 +109,8 @@ RUN ldconfig
 COPY --from=heic-check /tmp/heic-ok /tmp/heic-ok
 COPY --from=build --chown=node:node /out /app
 COPY --chmod=755 infra/docker-entrypoint.sh /app/docker-entrypoint.sh
+# Thư mục ảnh thuộc user `node`: volume Docker rỗng lần đầu mount sẽ chép quyền này (S7-01).
+RUN mkdir -p /data/media/incoming && chown -R node:node /data
 
 ENV NODE_ENV=production
 WORKDIR /app

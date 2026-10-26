@@ -16,7 +16,7 @@ import { EMAIL_QUEUE } from './platform/email/jobs.js';
 import { SmtpEmailAdapter } from './platform/email/smtp-email-adapter.js';
 import { startHeartbeat } from './platform/heartbeat.js';
 import { MAINTENANCE_CRON, runMaintenance } from './platform/maintenance/maintenance-daily.job.js';
-import { LocalDiskStorage } from './platform/storage/local-disk-storage.js';
+import { createStorage } from './platform/storage/create-storage.js';
 
 const config = loadConfigOrExit();
 const runtime = await createRuntime(config, 'worker');
@@ -48,7 +48,7 @@ if (!heifInput && config.NODE_ENV === 'production') {
   runtime.logger.fatal('sharp không đọc được HEIF/HEIC; kiểm tra libvips trong image');
   process.exit(1);
 }
-const storage = new LocalDiskStorage(config.MEDIA_ROOT);
+const storage = createStorage(config);
 const processImageHandler = createMediaProcessHandler({
   db: runtime.db,
   storage,
