@@ -81,7 +81,7 @@ jobs:
         run: git fetch --depth=1 origin "${{ github.base_ref }}" && git show "FETCH_HEAD:openapi.yaml" > /tmp/openapi-base.yaml
       - name: Không có thay đổi phá vỡ tương thích
         if: github.event_name == 'pull_request'
-        uses: oasdiff/oasdiff-action/breaking@9ce3a29eb0e6478dd0140932a678c7fb59d08f22 # v0.1.20
+        uses: oasdiff/oasdiff-action/breaking@14ca7009a63c417dfe27b7c44359c4bcccaf8eee # v0.2.1
         with:
           base: /tmp/openapi-base.yaml
           revision: openapi.yaml
